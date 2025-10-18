@@ -4,12 +4,12 @@ Welcome to the WiTCON frontend directory!
 
 **Tech Stack:**
 - React via Vite
-- JavaScript
+- TypeScript
 - Tailwind CSS
 
 ## Installation steps
 
-0. Ensure you already have Node and npm installed (you can check by running `node -v && npm -v`)
+0. Ensure you already have Node, npm and TypeScript installed globally (you can check by running `node -v && npm -v && tsc -v` from your computer's global terminal/shell). If any of those commands return as not recognized, please install it.
 1. From your terminal, wherever you want to create the directory from, run `git clone https://github.com/wicsfiu/witcon2026.git`.
 2. Open the newly created folder on VSCode
 3. From VSCode terminal, cd into the `witcon-frontend` folder. You **must** cd into this folder before installing your node modules 
