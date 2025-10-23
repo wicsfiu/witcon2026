@@ -4,8 +4,8 @@ Welcome to the WiTCON frontend directory!
 
 **Tech Stack:**
 - React via Vite
-- TypeScript
-- Tailwind CSS
+- TypeScript 
+- Tailwind CSS V4 (**Important:** V4 config no longer uses a tailwind.config.js file so all global styles will fall under `index.css`)
 
 ## Installation steps
 
