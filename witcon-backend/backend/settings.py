@@ -37,8 +37,7 @@ ALLOWED_HOSTS = [
     '127.0.0.1', 
     'localhost',
     "3.16.147.188",
-    "witcon-frontend.vercel.app",
-    "witcon-frontend-ozo4a54e0.vercel.app",
+    "witcon2026.vercel.app",
     "witcon.duckdns.org",
     "0.0.0.0"
 ]
@@ -77,8 +76,7 @@ MIDDLEWARE = [
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:5173",
     "http://127.0.0.1:5173",
-    "https://witcon-frontend.vercel.app",
-    "https://witcon-frontend-ozo4a54e0.vercel.app",
+    "https://witcon2026.vercel.app",
     "https://witcon.duckdns.org",
 ]
 
