@@ -509,3 +509,5 @@ return (
     </form>
   </section>
 )};
+export default Register;
+
