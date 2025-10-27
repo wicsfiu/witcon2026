@@ -1,7 +1,8 @@
 import { useState } from 'react';
 import type { ChangeEvent, FormEvent } from 'react';
 
-// Data Interfaces
+//comment
+
 interface FormData {
   firstName: string;
   lastName: string;
@@ -37,50 +38,13 @@ interface FormErrors {
   [key: string]: string;
 }
 
-const countries = ['United States', 'Chile', 'Argentina', 'Peru', 'Mexico', 'Colombia', 'Brazil', 'Other'];
+const countries = ['United States', 'Peru', 'Mexico', 'Colombia', 'Brazil', 'Other'];
 const states = ['Florida', 'California', 'Texas', 'New York', 'Illinois', 'Other'];
 const schools = [
   'Florida International University',
   'University of Miami',
   'Miami Dade College',
   'Other',
-];
-const fieldOptions = [
-  'Computer Science',
-  'Information Technology',
-  'Software Engineering',
-  'Computer Engineering',
-  'Data Science',
-  'Cybersecurity',
-  'Information Systems',
-  'Web Development',
-  'Game Development',
-  'Business',
-  'Engineering',
-  'Mathematics',
-  'Biology',
-  'Chemistry',
-  'Physics',
-  'Psychology',
-  'Other',
-];
-const raceOptions = [
-  "Asian",
-  "Black or African American",
-  "Hispanic or Latino",
-  "White",
-  "Native American or Alaska Native",
-  "Pacific Islander",
-  "Middle Eastern or North African",
-  "Mixed",
-  "Other"
-];
-
-const levelOfStudyOptions = [
-  "Undergraduate",
-  "Graduate",
-  "High School",
-  "Other"
 ];
 const yearLevels = ['Freshman', 'Sophomore', 'Junior', 'Senior', 'Graduate'];
 const genderOptions = ['Woman', 'Man', 'Non-binary', 'Other'];
@@ -165,17 +129,10 @@ const Register: React.FC = () => {
     if (!formData.country) newErrors.country = 'Required';
     if (formData.country === 'United States' && !formData.state) newErrors.state = 'Required';
     if (!formData.genderIdentity) newErrors.genderIdentity = 'Required';
-    if (!formData.raceEthnicity) newErrors.raceEthnicity = "Required";
-    if (formData.raceEthnicity === "Other" && !formData.raceOther)
-        newErrors.raceOther = "Required";
-    if (!formData.levelOfStudy) newErrors.levelOfStudy = "Required";
-    if (formData.levelOfStudy === "Undergraduate" && !formData.yearLevel)
-        newErrors.yearLevel = "Required";
-    if (formData.levelOfStudy === "Other" && !formData.studyOther)
-        newErrors.studyOther = "Required";
-    if (!formData.fieldOfStudy) newErrors.fieldOfStudy = "Required";
-    if (formData.fieldOfStudy === "Other" && !formData.fieldOther)
-        newErrors.fieldOther = "Required";
+    if (!formData.raceEthnicity) newErrors.raceEthnicity = 'Required';
+    if (!formData.levelOfStudy) newErrors.levelOfStudy = 'Required';
+    if (formData.levelOfStudy === 'Undergraduate' && !formData.yearLevel) newErrors.yearLevel = 'Required';
+    if (!formData.fieldOfStudy) newErrors.fieldOfStudy = 'Required';
     if (!formData.school) newErrors.school = 'Required';
     if (formData.school === 'Florida International University' && !formData.pantherID) newErrors.pantherID = 'Required';
     if (formData.school === 'Florida International University' && formData.pantherID && !validatePantherID(formData.pantherID)) newErrors.pantherID = 'Invalid Panther ID';
@@ -320,7 +277,7 @@ return (
         {errors.dateOfBirth && <div className="text-red-600 text-sm">{errors.dateOfBirth}</div>}
       </div>
 
-    {/* Country of Residence */}
+    {/* Country */}
         <div>
           <label htmlFor="country">Country *</label>
           <select
@@ -358,38 +315,7 @@ return (
     </div>
     )}
 
-    {/* Race / Ethnicity */}
-    <div>
-      <label htmlFor="raceEthnicity">Race / Ethnicity *</label>
-      <select
-          id="raceEthnicity"
-          value={formData.raceEthnicity}
-          onChange={(e) => handleInputChange("raceEthnicity", e.target.value)}
-          className="w-full border rounded px-3 py-2"
-          required
-        >
-          <option value="">Select race / ethnicity</option>
-          {raceOptions.map((race) => (
-          <option key={race} value={race}>{race}</option>
-          ))}
-        </select>
-        {errors.raceEthnicity && <p className="text-red-600 text-sm">{errors.raceEthnicity}</p>}
-      </div>
-
-    {/* Show "Other" text box if needed */}
-        {formData.raceEthnicity === "Other" && (
-      <input
-          type="text"
-          placeholder="Please specify"
-          value={formData.raceOther}
-          onChange={(e) => handleInputChange("raceOther", e.target.value)}
-          className="w-full border rounded px-3 py-2 mt-2"
-          required
-      />
-      )}
-
-
-  {/* School */}
+    {/* School */}
     <div>
       <label htmlFor="school">School *</label>
     <select
@@ -438,83 +364,7 @@ return (
         {errors.schoolOther && <div className="text-red-600 text-sm">{errors.schoolOther}</div>}
     </div>
     )}
-    
-    <label className="block mb-2 font-semibold">Field of Study *</label>
-    <select
-        name="fieldOfStudy"
-        value={formData.fieldOfStudy}
-        onChange={(e) => handleInputChange('fieldOfStudy', e.target.value)}
-        className="w-full border rounded px-3 py-2"
-    >
-    <option value="">Select field</option>
-        {fieldOptions.map((field) => (
-    <option key={field} value={field}>
-      {field}
-    </option>
-      ))}
-    </select>
-
-  {formData.fieldOfStudy === 'Other' && (
-    <input
-      type="text"
-      name="fieldOther"
-      value={formData.fieldOther}
-      onChange={(e) => handleInputChange('fieldOther', e.target.value)}
-      placeholder="Enter your field of study"
-      className="w-full border rounded px-3 py-2 mt-2"
-    />
-  )}
-
-  {/* Level of Study */}
-  <div>
-    <label htmlFor="levelOfStudy">Level of Study *</label>
-      <select
-          id="levelOfStudy"
-          value={formData.levelOfStudy}
-          onChange={(e) => handleInputChange("levelOfStudy", e.target.value)}
-          className="w-full border rounded px-3 py-2"
-          required
-      >
-        <option value="">Select level</option>
-          {levelOfStudyOptions.map((level) => (
-        <option key={level} value={level}>{level}</option>
-        ))}
-      </select>
-        {errors.levelOfStudy && <p className="text-red-600 text-sm">{errors.levelOfStudy}</p>}
-    </div>
-
-  {/* If Undergraduate → require Year Level */}
-    {formData.levelOfStudy === "Undergraduate" && (
-    <div>
-      <label htmlFor="yearLevel">Year Level *</label>
-        <select
-            id="yearLevel"
-            value={formData.yearLevel}
-            onChange={(e) => handleInputChange("yearLevel", e.target.value)}
-            className="w-full border rounded px-3 py-2"
-            required
-        >
-          <option value="">Select year level</option>
-          {yearLevels.map(level => (
-          <option key={level} value={level}>{level}</option>
-          ))}
-        </select>
-        {errors.yearLevel && <div className="text-red-600 text-sm">{errors.yearLevel}</div>}
-    </div>
-    )}
-
-    {/* Show Other input when needed */}
-      {formData.levelOfStudy === "Other" && (
-        <input
-            type="text"
-            placeholder="Enter your level of study"
-            value={formData.studyOther}
-            onChange={(e) => handleInputChange("studyOther", e.target.value)}
-            className="w-full border rounded px-3 py-2 mt-2"
-            required
-        />
-      )}
-
+      
 
     {/* Gender Identity */}
       <div>
@@ -534,6 +384,23 @@ return (
         {errors.genderIdentity && <div className="text-red-600 text-sm">{errors.genderIdentity}</div>}
       </div>
 
+      {/* Year Level */}
+      <div>
+        <label htmlFor="yearLevel">Year Level *</label>
+        <select
+          id="yearLevel"
+          value={formData.yearLevel}
+          onChange={(e) => handleInputChange('yearLevel', e.target.value)}
+          className="w-full border rounded px-3 py-2"
+          required
+        >
+          <option value="">Select year level</option>
+          {yearLevels.map(level => (
+            <option key={level} value={level}>{level}</option>
+          ))}
+        </select>
+        {errors.yearLevel && <div className="text-red-600 text-sm">{errors.yearLevel}</div>}
+      </div>
 
       {/* Food Allergies */}
       <div>
@@ -582,50 +449,6 @@ return (
         />
         {errors.resume && <div className="text-red-600 text-sm">{errors.resume}</div>}
       </div>
-      <hr className="my-6" />
-
-  <h3 className="text-lg font-bold mb-3">Social Profiles (Optional)</h3>
-
-    <label className="block mb-1 font-semibold">LinkedIn</label>
-      <input
-        type="url"
-        name="linkedin"
-        value={formData.linkedin}
-        onChange={(e) => handleInputChange('linkedin', e.target.value)}
-        placeholder="https://linkedin.com/in/yourprofile"
-        className="w-full border rounded px-3 py-2 mb-3"
-    />
-
-    <label className="block mb-1 font-semibold">GitHub Profile</label>
-      <input
-        type="url"
-        name="github"
-        value={formData.github}
-        onChange={(e) => handleInputChange('github', e.target.value)}
-        placeholder="https://github.com/yourusername"
-        className="w-full border rounded px-3 py-2 mb-3"
-    />
-
-    <label className="block mb-1 font-semibold">Personal Website</label>
-      <input
-        type="url"
-        name="website"
-        value={formData.website}
-        onChange={(e) => handleInputChange('website', e.target.value)}
-        placeholder="https://yourwebsite.com"
-        className="w-full border rounded px-3 py-2 mb-3"
-    />
-
-    <label className="block mb-1 font-semibold">Discord Username</label>
-      <input
-        type="text"
-        name="discord"
-        value={formData.discord}
-        onChange={(e) => handleInputChange('discord', e.target.value)}
-        placeholder="username#1234"
-        className="w-full border rounded px-3 py-2"
-    />
-
 
       {/* Shirt Size */}
       <div>
@@ -687,3 +510,4 @@ return (
   </section>
 )};
 export default Register;
+
