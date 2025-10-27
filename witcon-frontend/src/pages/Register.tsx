@@ -1,7 +1,8 @@
 import { useState } from 'react';
 import type { ChangeEvent, FormEvent } from 'react';
 
-// Data Interfaces
+//comment
+
 interface FormData {
   firstName: string;
   lastName: string;
@@ -37,7 +38,7 @@ interface FormErrors {
   [key: string]: string;
 }
 
-const countries = ['United States', 'Chile', 'Argentina', 'Peru', 'Mexico', 'Colombia', 'Brazil', 'Other'];
+const countries = ['United States', 'Peru', 'Mexico', 'Colombia', 'Brazil', 'Other'];
 const states = ['Florida', 'California', 'Texas', 'New York', 'Illinois', 'Other'];
 const schools = [
   'Florida International University',
@@ -509,3 +510,4 @@ return (
   </section>
 )};
 export default Register;
+
