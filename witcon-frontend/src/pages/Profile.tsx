@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import type { ChangeEvent } from 'react';
 import { Camera, Edit, X, FileText, ExternalLink } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
