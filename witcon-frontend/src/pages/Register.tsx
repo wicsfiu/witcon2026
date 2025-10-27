@@ -2,38 +2,34 @@ import { useState } from 'react';
 import type { ChangeEvent, FormEvent } from 'react';
 
 interface FormData {
-  firstName: string;
-  lastName: string;
-  email: string;
-  confirmEmail: string;
-  password: string;
-  dateOfBirth: string;
-  country: string;
-  state: string;
-  genderIdentity: string;
-  genderOther: string;
-  yearLevel: string;
-  raceEthnicity: string;
-  raceOther: string;
-  levelOfStudy: string;
-  studyOther: string;
-  fieldOfStudy: string;
-  fieldOther: string;
-  school: string;
-  schoolOther: string;
-  pantherID: string;
-  linkedin: string;
-  github: string;
-  website: string;
-  discord: string;
-  foodAllergies: string[];
-  shirtSize: string;
-  codeOfConduct: boolean;
-  photographyConsent: boolean;
+    firstName: string;
+    lastName: string;
+    email: string;
+    confirmEmail: string;
+    password: string;
+    dateOfBirth: string;
+    country: string;
+    state: string;
+    raceEthnicity: string;
+    raceOther: string;
+    levelOfStudy: string;
+    studyOther: string;
+    fieldOfStudy: string;
+    fieldOther: string;
+    school: string;
+    schoolOther: string;
+    pantherID: string;
+    linkedin: string;
+    github: string;
+    website: string;
+    discord: string;
+    shirtSize: string;
+    codeOfConduct: boolean;
+    photographyConsent: boolean;
 }
 
 interface FormErrors {
-  [key: string]: string;
+    [key: string]: string;
 }
 
 const countries = ['United States', 'Peru', 'Mexico', 'Colombia', 'Brazil', 'Other'];
@@ -202,65 +198,6 @@ const Register: React.FC = () => {
         fd.append(k, v.toString());
       }
     });
-    if (resumeFile) fd.append('resume', resumeFile);
-
-    try {
-      const res = await fetch(url, { method: 'POST', body: fd });
-      if (!res.ok) {
-        const data = await res.json().catch(() => ({}));
-        setErrors(data);
-      } else {
-        setIsSubmitted(true);
-      }
-    } catch (err) {
-      setErrors({ submit: 'Registration failed. Please try again.' });
-    }
-  };
-
-if (isSubmitted) {
-  return (
-    <section className="space-y-4">
-      <h2 className="text-2xl font-bold">Registration Successful!</h2>
-      <div className="bg-white border rounded p-4">
-        <p>Thank you for registering for WiTCON 2025!</p>
-        <p>A confirmation email has been sent to {formData.email}.</p>
-      </div>
-    </section>
-  );
-}
-
-return (
-  <section className="space-y-4">
-    <h2 className="text-2xl font-bold">Registration</h2>
-    <form onSubmit={handleSubmit} className="space-y-4">
-
-      {/* First Name */}
-      <div>
-        <label htmlFor="firstName">First Name *</label>
-        <input
-          id="firstName"
-          type="text"
-          value={formData.firstName}
-          onChange={(e) => handleInputChange('firstName', e.target.value)}
-          className="w-full border rounded px-3 py-2"
-          required
-        />
-        {errors.firstName && <div className="text-red-600 text-sm">{errors.firstName}</div>}
-      </div>
-
-      {/* Last Name */}
-      <div>
-        <label htmlFor="lastName">Last Name *</label>
-        <input
-          id="lastName"
-          type="text"
-          value={formData.lastName}
-          onChange={(e) => handleInputChange('lastName', e.target.value)}
-          className="w-full border rounded px-3 py-2"
-          required
-        />
-        {errors.lastName && <div className="text-red-600 text-sm">{errors.lastName}</div>}
-      </div>
 
       {/* Email */}
       <div>
@@ -392,45 +329,260 @@ return (
     <div>
       <label htmlFor="school">School *</label>
     <select
-        id="school"
-        value={formData.school}
-        onChange={(e) => handleInputChange('school', e.target.value)}
+        id="genderIdentity"
+        value={formData.genderIdentity[0] || ''} // store single selection in array
+        onChange={(e) => handleInputChange('genderIdentity', [e.target.value])}
         className="w-full border rounded px-3 py-2"
         required
     >
-        <option value="">Select school</option>
-        {schools.map((s) => (
-        <option key={s} value={s}>{s}</option>
+        <option value="">Select gender identity</option>
+        {genderOptions.map(option => (
+            <option key={option} value={option}>{option}</option>
         ))}
     </select>
-    {errors.school && <div className="text-red-600 text-sm">{errors.school}</div>}
-    </div>
 
-    {/* Panther ID */}
-    {formData.school === 'Florida International University' && (
-    <div>
-        <label htmlFor="pantherID">Panther ID *</label>
+    {formData.genderIdentity.includes('Other') && (
         <input
-        id="pantherID"
-        type="text"
-        value={formData.pantherID}
-        onChange={(e) => handleInputChange('pantherID', e.target.value)}
-        className="w-full border rounded px-3 py-2"
-        required
+            type="text"
+            placeholder="Please specify"
+            value={formData.genderOther}
+            onChange={(e) => handleInputChange('genderOther', e.target.value)}
+            className="w-full border rounded px-3 py-2 mt-2"
         />
-        {errors.pantherID && <div className="text-red-600 text-sm">{errors.pantherID}</div>}
-    </div>
     )}
 
-    {/* School Other */}
-    {formData.school === 'Other' && (
-    <div>
-        <label htmlFor="schoolOther">Please specify your school *</label>
-        <input
-        id="schoolOther"
-        type="text"
-        value={formData.schoolOther}
-        onChange={(e) => handleInputChange('schoolOther', e.target.value)}
+    {errors.genderIdentity && <div className="text-red-600 text-sm">{errors.genderIdentity}</div>}
+</div>} */}
+
+
+                    <div>
+                        <label htmlFor="raceEthnicity" className="block font-medium">Race or Ethnicity *</label>
+                        <select
+                            id="raceEthnicity"
+                            value={formData.raceEthnicity}
+                            onChange={(e) => handleInputChange('raceEthnicity', e.target.value)}
+                            className="w-full border rounded px-3 py-2"
+                            required
+                        >
+                            <option value="">Select an option</option>
+                            {raceOptions.map(option => (
+                                <option key={option} value={option}>{option}</option>
+                            ))}
+                        </select>
+                        {formData.raceEthnicity === 'Other' && (
+                            <input
+                                type="text"
+                                placeholder="Please specify"
+                                value={formData.raceOther}
+                                onChange={(e) => handleInputChange('raceOther', e.target.value)}
+                                className="w-full border rounded px-3 py-2 mt-2"
+                            />
+                        )}
+                        {errors.raceEthnicity && <div className="text-red-600 text-sm">{errors.raceEthnicity}</div>}
+                    </div>
+                </div>
+
+                {/* Academic Information */}
+                <div className="bg-white border rounded p-4 space-y-4">
+                    <h3 className="font-semibold">Academic Information</h3>
+                    
+                    <div>
+                        <label htmlFor="levelOfStudy" className="block font-medium">Current Level of Study *</label>
+                        <select
+                            id="levelOfStudy"
+                            value={formData.levelOfStudy}
+                            onChange={(e) => handleInputChange('levelOfStudy', e.target.value)}
+                            className="w-full border rounded px-3 py-2"
+                            required
+                        >
+                            <option value="">Select level</option>
+                            {studyLevels.map(level => (
+                                <option key={level} value={level}>{level}</option>
+                            ))}
+                        </select>
+                        {errors.levelOfStudy && <div className="text-red-600 text-sm">{errors.levelOfStudy}</div>}
+                    </div>
+
+                    {/*formData.levelOfStudy === 'Undergraduate' && (
+                        <div>
+                            <label htmlFor="yearLevel" className="block font-medium">Year Level *</label>
+                            <select
+                                id="yearLevel"
+                                value={formData.yearLevel}
+                                onChange={(e) => handleInputChange('yearLevel', e.target.value)}
+                                className="w-full border rounded px-3 py-2"
+                                required
+                            >
+                                <option value="">Select year</option>
+                                {yearLevels.map(year => (
+                                    <option key={year} value={year}>{year}</option>
+                                ))}
+                            </select>
+                            {errors.yearLevel && <div className="text-red-600 text-sm">{errors.yearLevel}</div>}
+                        </div>
+                    )*/}
+
+                    {formData.levelOfStudy === 'Other' && (
+                        <input
+                            type="text"
+                            placeholder="Please specify level of study"
+                            value={formData.studyOther}
+                            onChange={(e) => handleInputChange('studyOther', e.target.value)}
+                            className="w-full border rounded px-3 py-2"
+                        />
+                    )}
+
+                    <div>
+                        <label htmlFor="fieldOfStudy" className="block font-medium">Field of Study *</label>
+                        <select
+                            id="fieldOfStudy"
+                            value={formData.fieldOfStudy}
+                            onChange={(e) => handleInputChange('fieldOfStudy', e.target.value)}
+                            className="w-full border rounded px-3 py-2"
+                            required
+                        >
+                            <option value="">Select field</option>
+                            {fieldsOfStudy.map(field => (
+                                <option key={field} value={field}>{field}</option>
+                            ))}
+                        </select>
+                        {formData.fieldOfStudy === 'Other' && (
+                            <input
+                                type="text"
+                                placeholder="Please specify field of study"
+                                value={formData.fieldOther}
+                                onChange={(e) => handleInputChange('fieldOther', e.target.value)}
+                                className="w-full border rounded px-3 py-2 mt-2"
+                            />
+                        )}
+                        {errors.fieldOfStudy && <div className="text-red-600 text-sm">{errors.fieldOfStudy}</div>}
+                    </div>
+
+                    <div>
+                        <label htmlFor="school" className="block font-medium">School *</label>
+                        <select
+                            id="school"
+                            value={formData.school}
+                            onChange={(e) => handleInputChange('school', e.target.value)}
+                            className="w-full border rounded px-3 py-2"
+                            required
+                        >
+                            <option value="">Select school</option>
+                            {schools.map(school => (
+                                <option key={school} value={school}>{school}</option>
+                            ))}
+                        </select>
+                        {formData.school === 'Other' && (
+                            <input
+                                type="text"
+                                placeholder="Please specify school"
+                                value={formData.schoolOther}
+                                onChange={(e) => handleInputChange('schoolOther', e.target.value)}
+                                className="w-full border rounded px-3 py-2 mt-2"
+                            />
+                        )}
+                        {errors.school && <div className="text-red-600 text-sm">{errors.school}</div>}
+                    </div>
+
+                    {formData.school === 'Florida International University' && (
+                        <div>
+                            <label htmlFor="pantherID" className="block font-medium">Panther ID *</label>
+                            <input
+                                id="pantherID"
+                                type="text"
+                                value={formData.pantherID}
+                                onChange={(e) => handleInputChange('pantherID', e.target.value)}
+                                className="w-full border rounded px-3 py-2"
+                                placeholder="7 digits"
+                                maxLength={7}
+                                required
+                            />
+                            <div className="text-sm text-gray-600">Must be 7 digits</div>
+                            {errors.pantherID && <div className="text-red-600 text-sm">{errors.pantherID}</div>}
+                        </div>
+                    )}
+                </div>
+
+                {/* Social Profiles */}
+                <div className="bg-white border rounded p-4 space-y-4">
+                    <h3 className="font-semibold">Social Profiles (Optional)</h3>
+                    
+                    <div>
+                        <label htmlFor="linkedin" className="block font-medium">LinkedIn</label>
+                        <input
+                            id="linkedin"
+                            type="url"
+                            value={formData.linkedin}
+                            onChange={(e) => handleInputChange('linkedin', e.target.value)}
+                            className="w-full border rounded px-3 py-2"
+                            placeholder="https://linkedin.com/in/yourprofile"
+                        />
+                    </div>
+
+                    <div>
+                        <label htmlFor="github" className="block font-medium">GitHub Profile</label>
+                        <input
+                            id="github"
+                            type="url"
+                            value={formData.github}
+                            onChange={(e) => handleInputChange('github', e.target.value)}
+                            className="w-full border rounded px-3 py-2"
+                            placeholder="https://github.com/yourusername"
+                        />
+                    </div>
+
+                    <div>
+                        <label htmlFor="website" className="block font-medium">Personal Website</label>
+                        <input
+                            id="website"
+                            type="url"
+                            value={formData.website}
+                            onChange={(e) => handleInputChange('website', e.target.value)}
+                            className="w-full border rounded px-3 py-2"
+                            placeholder="https://yourwebsite.com"
+                        />
+                    </div>
+
+                    <div>
+                        <label htmlFor="discord" className="block font-medium">Discord Username</label>
+                        <input
+                            id="discord"
+                            type="text"
+                            value={formData.discord}
+                            onChange={(e) => handleInputChange('discord', e.target.value)}
+                            className="w-full border rounded px-3 py-2"
+                            placeholder="username#1234"
+                        />
+                    </div>
+                </div>
+
+                {/* Additional Information */}
+                <div className="bg-white border rounded p-4 space-y-4">
+                    <h3 className="font-semibold">Additional Information</h3>
+                    
+                    <div>
+                        <label htmlFor="resume" className="block font-medium">Resume *</label>
+                        <input
+                            id="resume"
+                            type="file"
+                            onChange={handleFileChange}
+                            className="w-full border rounded px-3 py-2"
+                            accept=".pdf,.doc,.docx"
+                            required
+                        />
+                        {errors.resume && <div className="text-red-600 text-sm">{errors.resume}</div>}
+                    </div>
+
+{/* <div>
+    <label htmlFor="foodAllergies" className="block font-medium">Food Allergies/Restrictions (Optional)</label>
+    <select
+        id="foodAllergies"
+        multiple
+        value={formData.foodAllergies}
+        onChange={(e) => {
+            const options = Array.from(e.target.selectedOptions, option => option.value);
+            handleInputChange('foodAllergies', options);
+        }}
         className="w-full border rounded px-3 py-2"
         required
         />
