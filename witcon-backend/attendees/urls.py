@@ -8,13 +8,14 @@
 #     path('', include(router.urls)), 
 # ]
 
+# attendees/urls.py
 from django.contrib import admin
 from django.urls import path, include
 from .views import AttendeeCreateView, router  # import your new view and existing router
 
 urlpatterns = [
     # Admin panel
-    path('admin/', admin.site.urls),
+    # path('admin/', admin.site.urls),
 
     # Public registration endpoint
     path('attendees/create/', AttendeeCreateView.as_view(), name='attendee-create'),
