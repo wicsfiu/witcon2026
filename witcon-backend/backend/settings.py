@@ -115,8 +115,13 @@ WSGI_APPLICATION = 'backend.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': os.getenv('RDS_DB_NAME', 'postgres'),
+        'USER': os.getenv('RDS_USERNAME', 'witcon_admin'),
+        'PASSWORD': os.getenv('RDS_PASSWORD', ''),
+        'HOST': os.getenv('RDS_HOSTNAME', 'witcon-postgres.c78mk6uyejq1.us-east-2.rds.amazonaws.com'),
+        'PORT': os.getenv('RDS_PORT', '5432'),
+        # 'OPTIONS': {'sslmode': 'require'}, 
     }
 }
 
