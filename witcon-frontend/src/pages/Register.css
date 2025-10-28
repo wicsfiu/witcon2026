@@ -1,0 +1,77 @@
+section {
+  background-color: #ffffff;
+  padding: 2rem;
+}
+
+form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+/* Form blocks */
+.bg-white {
+  background-color: #FADD9C;
+  border: 2px solid #F5A2D0; 
+  border-radius: 12px;
+  padding: 1.5rem;
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.1);
+  color: #894E35; 
+}
+
+/* Subheadings (like Profile Links, Basic Info, etc.) */
+h3 { 
+  color: #D25099; 
+  padding: 0.5rem 1rem;
+  border-radius: 6px;
+  font-size: 1.1rem;
+  font-weight: 700;
+}
+
+/* Inputs and selects */
+input, select {
+  border: 1.5px solid #F5A2D0;
+  border-radius: 6px;
+  padding: 0.5rem;
+  width: 100%;
+  color: #894E35;
+}
+
+input::placeholder,
+select::placeholder {
+  color: #B07E68; 
+}
+
+input:focus, select:focus {
+  outline: none;
+  border-color: #88CECF;
+  box-shadow: 0 0 4px #88CECF;
+}
+
+/* Submit button */
+button[type="submit"] {
+  background-color: #F5A2D0;
+  color: #ffffff;
+  font-weight: 600;
+  padding: 0.75rem;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+  transition: all 0.2s ease-in-out;
+}
+
+button[type="submit"]:hover {
+  background-color: #88CECF;
+}
+
+/* Labels */
+label {
+  font-weight: 600;
+  color: #894E35;
+}
+
+/* Error messages */
+.text-red-600 {
+  color: #d14b4b;
+  font-weight: 500;
+}
