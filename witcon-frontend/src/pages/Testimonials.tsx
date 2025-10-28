@@ -10,7 +10,7 @@ interface Testimonial {
     quote: string;
 }
 
-const testimonials = [
+const testimonials: Testimonial[] = [
     
     {   
         name: "Jesse Cline",
