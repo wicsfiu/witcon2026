@@ -1,6 +1,5 @@
 import { useState } from 'react';
 import type { ChangeEvent, FormEvent } from 'react';
-import './Register.css';
 
 
 interface FormData {
@@ -30,6 +29,7 @@ interface FormData {
     discord: string;
     shirtSize: string;
     foodAllergies: string[];
+    customAllergy: string;
     codeOfConduct: boolean;
     photographyConsent: boolean;
 }
@@ -66,6 +66,7 @@ export default function Register() {
         discord: '',
         shirtSize: '',
         foodAllergies: [],
+        customAllergy: '',
         codeOfConduct: false,
         photographyConsent: false
     });
@@ -73,6 +74,7 @@ export default function Register() {
     const [resumeFile, setResumeFile] = useState<File | null>(null);
     const [errors, setErrors] = useState<FormErrors>({});
     const [isSubmitted, setIsSubmitted] = useState(false);
+    const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
     // Options
     const countries = [
@@ -674,29 +676,30 @@ return (
                 </div>
 
                 {/* Additional Information */}
-                <div className="bg-white border rounded p-4 space-y-4">
-                    <h3 className="font-semibold">Additional Information</h3>
-                    
+                <div className="bg-secondary-mint border-2 border-primary rounded-xl p-4 space-y-4 text-textBrown shadow-sm relative">
+                    <h3 className="font-semibold text-heading bg-secondaryMint px-2 py-1 rounded-md inline-block">Additional Information</h3>
+                    {/* Resume */}
                     <div>
                         <label htmlFor="resume" className="block font-medium">Resume *</label>
                         <input
                             id="resume"
                             type="file"
                             onChange={handleFileChange}
-                            className="w-full border rounded px-3 py-2"
-                            accept=".pdf,.doc,.docx"
+                            className="w-full bg-white border-2 border-primary rounded-md px-3 py-2 text-textBrown focus:outline-none focus:border-secondary focus:ring-2 focus:ring-secondary/30"
+                            accept=".pdf"
                             required
                         />
                         {errors.resume && <div className="text-red-600 text-sm">{errors.resume}</div>}
                     </div>
 
+                    {/* Shirt size */}
                     <div>
                         <label htmlFor="shirtSize" className="block font-medium">Shirt Size *</label>
                         <select
                             id="shirtSize"
                             value={formData.shirtSize}
                             onChange={(e) => handleInputChange('shirtSize', e.target.value)}
-                            className="w-full border rounded px-3 py-2"
+                            className="w-full bg-white border-2 border-primary rounded-md px-3 py-2 text-textBrown focus:outline-none focus:border-secondary focus:ring-2 focus:ring-secondary/30"
                             required
                         >
                             <option value="">Select size</option>
@@ -706,25 +709,80 @@ return (
                         </select>
                         {errors.shirtSize && <div className="text-red-600 text-sm">{errors.shirtSize}</div>}
                     </div>
-                </div>
 
-                <div>
-                        <label htmlFor="foodAllergies" className="block font-medium">Food Allergies</label>
-                        <select
-                            id="foodAllergies"
-                            multiple
-                            value={formData.foodAllergies}
-                            onChange={(e) => {
-                            const selected = Array.from(e.target.selectedOptions, option => option.value);
-                            handleInputChange('foodAllergies', selected);
-                            }}
-                            className="w-full border rounded px-3 py-2"
-                        >
-                        {allergyOptions.map(allergy => (
-                            <option key={allergy} value={allergy}>{allergy}</option>
-                        ))}
-                    </select>
+                {/* Food Allergies dropdown */}
+                <div className="relative">
+                    <label htmlFor="foodAllergies" className="block font-semibold mb-2 text-textBrown">Food Allergies</label>
+                    {/* Dropdown container */}
+                    <button
+                        type="button"
+                        onClick={() => setIsDropdownOpen(!isDropdownOpen)}
+                        className="w-full bg-white border-2 border-primary text-textBrown rounded-md px-4 py-2 text-left flex justify-between items-center hover:bg-secondaryMint/80 transition-colors duration-200 ease-in-out focus:outline-none"
+                    >
+                        {formData.foodAllergies.length > 0
+                            ? formData.foodAllergies.join(", ")
+                            : "Select allergies"}
+                        <span className="text-heading ml-2">
+                            {isDropdownOpen ? "▲" : "▼"}
+                        </span>
+                    </button>
+
+                    {/* Dropdown menu */}
+                    {isDropdownOpen && (
+                        <div className="absolute z-10 mt-2 w-full bg-white border-2 border-primary rounded-md shadow-md max-h-48 overflow-y-auto p-3 space-y-2 text-textBrown">
+                            {allergyOptions.map((allergy) => (
+                                <div key={allergy} className="flex items-center gap-2">
+                                    <input
+                                        type="checkbox"
+                                        value={allergy}
+                                        checked={formData.foodAllergies.includes(allergy)}
+                                        onChange={() => {
+                                            const selected = formData.foodAllergies.includes(allergy)
+                                                ? formData.foodAllergies.filter((a) => a !== allergy)
+                                                : [...formData.foodAllergies, allergy];
+                                            handleInputChange("foodAllergies", selected);
+                                        }}
+                                        className="accent-primary w-4 h-4"
+                                    />
+                                    <span className="text-sm">{allergy}</span>
+                                </div>
+                            ))}
+                    
+                    {/* "Other" option */}
+                    <div className="flex items-center gap-2 mt-2">
+                        <input
+                            type="checkbox"
+                            value="Other"
+                            checked={formData.foodAllergies.includes("Other")}
+                            onChange={() => {
+                                const selected = formData.foodAllergies.includes("Other")
+                                    ? formData.foodAllergies.filter((a) => a !== "Other")
+                                    : [...formData.foodAllergies, "Other"];
+                                handleInputChange("foodAllergies", selected);
+                        }}
+                        className="accent-primary w-4 h-4"
+                    />
+                    <label className="text-sm">Other</label>
+                    </div>
+
+                    {/* Custom input when "Other" selected */}
+                    {formData.foodAllergies.includes("Other") && (
+                        <input
+                            type="text"
+                            placeholder="Please specify"
+                            value={formData.customAllergy || ""}
+                            onChange={(e) =>
+                                handleInputChange("customAllergy", e.target.value)
+                            }
+                            className="w-full border-2 border-primary rounded-md px-3 py-2 mt-2 text-textBrown focus:outline-none focus:border-secondary focus:ring-2 focus:ring-secondary/30"
+                        />
+                    )}
                 </div>
+            )}
+        </div>
+        </div>
+
+
 
                 {/* Agreements */}
                 <div className="bg-white border rounded p-4 space-y-4">
