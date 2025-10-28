@@ -1,5 +1,8 @@
 import { useState } from 'react';
 import type { ChangeEvent, FormEvent } from 'react';
+// Add: Food Allergies (as multiselect dropdown)
+// Add: Gender Identity (as dropdown)
+// Add: Year level (freshman, sophomore, etc)
 
 interface FormData {
     firstName: string;
