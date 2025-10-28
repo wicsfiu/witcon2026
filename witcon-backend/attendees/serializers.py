@@ -17,18 +17,18 @@ class AttendeeSerializer(serializers.ModelSerializer):
     state = serializers.CharField(required=False, allow_blank=True)
 
     # lists -> JSONField in model
-    # genderIdentity = serializers.ListField(
-    #     source='gender_identity',
-    #     child=serializers.CharField(),
-    #     required=False
-    # )
-    # genderOther = serializers.CharField(source='gender_other', required=False, allow_blank=True)
+    genderIdentity = serializers.ListField(
+        source='gender_identity',
+        child=serializers.CharField(),
+        required=False
+    )
+    genderOther = serializers.CharField(source='gender_other', required=False, allow_blank=True)
 
     raceEthnicity = serializers.CharField(source='race_ethnicity', required=False, allow_blank=True)
     raceOther = serializers.CharField(source='race_other', required=False, allow_blank=True)
 
     levelOfStudy = serializers.CharField(source='level_of_study', required=False, allow_blank=True)
-    # yearLevel = serializers.CharField(source='year_level', required=False, allow_blank=True)
+    yearLevel = serializers.CharField(source='year_level', required=False, allow_blank=True)
     studyOther = serializers.CharField(source='study_other', required=False, allow_blank=True)
 
     fieldOfStudy = serializers.CharField(source='field_of_study', required=False, allow_blank=True)
@@ -48,11 +48,11 @@ class AttendeeSerializer(serializers.ModelSerializer):
 
     resume = serializers.FileField(required=False, allow_null=True)
 
-    # foodAllergies = serializers.ListField(
-    #     source='food_allergies',
-    #     child=serializers.CharField(),
-    #     required=False
-    # )
+    foodAllergies = serializers.ListField(
+        source='food_allergies',
+        child=serializers.CharField(),
+        required=False
+    )
 
     shirtSize = serializers.CharField(source='shirt_size', required=False, allow_blank=True)
 
@@ -69,13 +69,13 @@ class AttendeeSerializer(serializers.ModelSerializer):
             'lastName', 
             'email', 'confirmEmail', 'password',
             'dateOfBirth', 'country', 'state',
-            # 'genderIdentity', 'genderOther',
+            'genderIdentity', 'genderOther',
             'raceEthnicity', 'raceOther',
             'levelOfStudy', 'studyOther',
             'fieldOfStudy', 'fieldOther',
             'school', 'schoolOther', 'pantherID',
             'linkedin', 'github', 'website', 'discord',
-            # 'foodAllergies', 
+            'foodAllergies', 
             'shirtSize',
             'codeOfConduct', 'photographyConsent',
             'resume',
@@ -91,20 +91,20 @@ class AttendeeSerializer(serializers.ModelSerializer):
 
         # if frontend sends arrays as JSON strings (common when FormData is used),
         # try to decode them into real lists
-        # for list_key in ('genderIdentity', 'foodAllergies'):
-        #     val = data.get(list_key)
-        #     if val is None:
-        #         continue
-        #     # If value is a string, try to parse JSON or comma-separated
-        #     if isinstance(val, str):
-        #         # try parse JSON
-        #         try:
-        #             parsed = json.loads(val)
-        #             data[list_key] = parsed
-        #         except Exception:
-        #             # fallback: comma separated values
-        #             data[list_key] = [x.strip() for x in val.split(',') if x.strip()]
-        # return super().to_internal_value(data)
+        for list_key in ('genderIdentity', 'foodAllergies'):
+            val = data.get(list_key)
+            if val is None:
+                continue
+            # If value is a string, try to parse JSON or comma-separated
+            if isinstance(val, str):
+                # try parse JSON
+                try:
+                    parsed = json.loads(val)
+                    data[list_key] = parsed
+                except Exception:
+                    # fallback: comma separated values
+                    data[list_key] = [x.strip() for x in val.split(',') if x.strip()]
+        return super().to_internal_value(data)
 
     # validate URLs if present (allow empty)
     def validate_linkedin(self, value):
