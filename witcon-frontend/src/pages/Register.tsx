@@ -8,7 +8,7 @@ interface FormData {
     lastName: string;
     email: string;
     confirmEmail: string;
-    password: string;
+    // password: string;
     dateOfBirth: string;
     country: string;
     state: string;
@@ -44,7 +44,7 @@ export default function Register() {
         lastName: '',
         email: '',
         confirmEmail: '',
-        password: '',
+        // password: '',
         dateOfBirth: '',
         country: '',
         state: '',
@@ -211,7 +211,7 @@ export default function Register() {
         if (!formData.email) newErrors.email = 'Required';
         if (!formData.confirmEmail) newErrors.confirmEmail = 'Required';
         if (formData.email !== formData.confirmEmail) newErrors.confirmEmail = 'Emails do not match';
-        if (!formData.password) newErrors.password = 'Required';
+        // if (!formData.password) newErrors.password = 'Required';
         if (!formData.dateOfBirth) newErrors.dateOfBirth = 'Required';
         else if (!validateAge(formData.dateOfBirth)) newErrors.dateOfBirth = 'Must be 18 or older by March 27, 2026';
         
