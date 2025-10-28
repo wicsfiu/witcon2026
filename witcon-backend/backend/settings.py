@@ -88,6 +88,13 @@ MEDIA_ROOT = BASE_DIR / "media"
 REST_FRAMEWORK = {
     "DEFAULT_PAGINATION_CLASS": "rest_framework.pagination.PageNumberPagination",
     "PAGE_SIZE": 20,
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework.authentication.SessionAuthentication',  
+        'rest_framework.authentication.BasicAuthentication',  # optional for testing
+    ],
+    'DEFAULT_PERMISSION_CLASSES': [
+        'rest_framework.permissions.IsAuthenticated',
+    ],
 }
 
 ROOT_URLCONF = 'backend.urls'
@@ -115,8 +122,13 @@ WSGI_APPLICATION = 'backend.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': os.getenv('RDS_DB_NAME', 'postgres'),
+        'USER': os.getenv('RDS_USERNAME', 'witcon_admin'),
+        'PASSWORD': os.getenv('RDS_PASSWORD', ''),
+        'HOST': os.getenv('RDS_HOSTNAME', 'witcon-postgres.c78mk6uyejq1.us-east-2.rds.amazonaws.com'),
+        'PORT': os.getenv('RDS_PORT', '5432'),
+        # 'OPTIONS': {'sslmode': 'require'}, 
     }
 }
 
