@@ -1,5 +1,7 @@
 import { useState } from 'react';
 import type { ChangeEvent, FormEvent } from 'react';
+import './Register.css';
+
 
 interface FormData {
     firstName: string;
@@ -12,7 +14,10 @@ interface FormData {
     state: string;
     raceEthnicity: string;
     raceOther: string;
+    gender: string;           
+    genderOther: string;
     levelOfStudy: string;
+    yearLevel: string;
     studyOther: string;
     fieldOfStudy: string;
     fieldOther: string;
@@ -24,6 +29,7 @@ interface FormData {
     website: string;
     discord: string;
     shirtSize: string;
+    foodAllergies: string[];
     codeOfConduct: boolean;
     photographyConsent: boolean;
 }
@@ -44,7 +50,10 @@ export default function Register() {
         state: '',
         raceEthnicity: '',
         raceOther: '',
+        gender: '',
+        genderOther: '',
         levelOfStudy: '',
+        yearLevel: '',
         studyOther: '',
         fieldOfStudy: '',
         fieldOther: '',
@@ -56,6 +65,7 @@ export default function Register() {
         website: '',
         discord: '',
         shirtSize: '',
+        foodAllergies: [],
         codeOfConduct: false,
         photographyConsent: false
     });
@@ -115,6 +125,9 @@ export default function Register() {
         'Prefer not to answer'
       ];
 
+    const yearLevels = ['Freshman', 'Sophomore', 'Junior', 'Senior'];
+    const genderOptions = ['Woman', 'Man', 'Non-binary', 'Other'];
+
     const fieldsOfStudy = [
         'Computer Science',
         'Information Technology',
@@ -154,9 +167,11 @@ export default function Register() {
         'Other'];
 
     const shirtSizes = ['S', 'M', 'L', 'XL'];
+    const allergyOptions = ['Peanuts', 'Tree Nuts', 'Dairy', 'Gluten', 'Shellfish', 'Soy', 'Eggs'];
+
 
     // Handle input change
-    const handleInputChange = (field: keyof FormData, value: string | boolean) => {
+    const handleInputChange = (field: keyof FormData, value: string | boolean | string[]) => {
         setFormData(prev => ({
             ...prev,
             [field]: value
@@ -190,6 +205,7 @@ export default function Register() {
     const validateForm = () => {
         const newErrors: FormErrors = {};
 
+        //Basic Information
         if (!formData.firstName) newErrors.firstName = 'Required';
         if (!formData.lastName) newErrors.lastName = 'Required';
         if (!formData.email) newErrors.email = 'Required';
@@ -198,25 +214,44 @@ export default function Register() {
         if (!formData.password) newErrors.password = 'Required';
         if (!formData.dateOfBirth) newErrors.dateOfBirth = 'Required';
         else if (!validateAge(formData.dateOfBirth)) newErrors.dateOfBirth = 'Must be 18 or older by March 27, 2026';
+        
+        //Demographics
         if (!formData.country) newErrors.country = 'Required';
         if (formData.country === 'United States' && !formData.state) newErrors.state = 'Required';
         if (!formData.raceEthnicity) newErrors.raceEthnicity = 'Required';
+        if (formData.raceEthnicity === 'Other' && !formData.raceOther) newErrors.raceOther = 'Required';
         if (!formData.levelOfStudy) newErrors.levelOfStudy = 'Required';
+        if (!formData.gender) newErrors.gender = 'Required';
+        if (formData.gender === 'Other' && !formData.genderOther) newErrors.genderOther = 'Required';
+
+        //Academic Information
+        if (!formData.levelOfStudy) newErrors.levelOfStudy = 'Required';
+        if (formData.levelOfStudy === 'Undergraduate' && !formData.yearLevel) newErrors.yearLevel = 'Required';
+        if (formData.levelOfStudy === 'Other' && !formData.studyOther) newErrors.studyOther = 'Required';
         if (!formData.fieldOfStudy) newErrors.fieldOfStudy = 'Required';
+        if (formData.fieldOfStudy === 'Other' && !formData.fieldOther) newErrors.fieldOther = 'Required';
         if (!formData.school) newErrors.school = 'Required';
+        if (formData.school === 'Other' && !formData.schoolOther) newErrors.schoolOther = 'Required';
         if (formData.school === 'Florida International University' && !formData.pantherID) newErrors.pantherID = 'Required';
-        if (formData.school === 'Florida International University' && formData.pantherID && !validatePantherID(formData.pantherID)) newErrors.pantherID = 'Invalid Panther ID';
+        if (formData.school === 'Florida International University' && formData.pantherID && !validatePantherID(formData.pantherID)) {
+            newErrors.pantherID = 'Invalid Panther ID';
+        }
+
+        //Resume and Agreements
         if (!resumeFile) newErrors.resume = 'Required';
         if (!formData.shirtSize) newErrors.shirtSize = 'Required';
+
         if (!formData.codeOfConduct) newErrors.codeOfConduct = 'Required';
         if (!formData.photographyConsent) newErrors.photographyConsent = 'Required';
 
         setErrors(newErrors);
+        console.log("Validation errors:", newErrors);
         return Object.keys(newErrors).length === 0;
     };
 
     const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
         event.preventDefault();
+        console.log("Submit triggered");
         setErrors({});
 
         if (!validateForm()) return;
@@ -335,7 +370,7 @@ return (
                         {errors.confirmEmail && <div className="text-red-600 text-sm">{errors.confirmEmail}</div>}
                     </div>
 
-                    <div>
+                    {/* <div>
                         <label htmlFor="password" className="block font-medium">Password *</label>
                         <input
                             id="password"
@@ -346,7 +381,7 @@ return (
                             required
                         />
                         {errors.password && <div className="text-red-600 text-sm">{errors.password}</div>}
-                    </div>
+                    </div> */}
 
                     <div>
                         <label htmlFor="dateOfBirth" className="block font-medium">Date of Birth *</label>
@@ -403,33 +438,33 @@ return (
                         </div>
                     )}
 
-{/* { <div>
-    <label htmlFor="genderIdentity" className="block font-medium">Gender Identity *</label>
-    <select
-        id="genderIdentity"
-        value={formData.genderIdentity[0] || ''} // store single selection in array
-        onChange={(e) => handleInputChange('genderIdentity', [e.target.value])}
-        className="w-full border rounded px-3 py-2"
-        required
-    >
-        <option value="">Select gender identity</option>
-        {genderOptions.map(option => (
-            <option key={option} value={option}>{option}</option>
-        ))}
-    </select>
-
-    {formData.genderIdentity.includes('Other') && (
-        <input
-            type="text"
-            placeholder="Please specify"
-            value={formData.genderOther}
-            onChange={(e) => handleInputChange('genderOther', e.target.value)}
-            className="w-full border rounded px-3 py-2 mt-2"
-        />
-    )}
-
-    {errors.genderIdentity && <div className="text-red-600 text-sm">{errors.genderIdentity}</div>}
-</div>} */}
+                {/* Gender */}
+                <div>
+                    <label htmlFor="gender" className="block font-medium">Gender *</label>
+                    <select
+                        id="gender"
+                        value={formData.gender}
+                        onChange={(e) => handleInputChange('gender', e.target.value)}
+                        className="w-full border rounded px-3 py-2"
+                        required
+                    >
+                        <option value="">Select gender</option>
+                        {genderOptions.map((g) => (
+                            <option key={g} value={g}>{g}</option>
+                        ))}
+                    </select>
+                {       formData.gender === 'Other' && (
+                    <input
+                        type="text"
+                        placeholder="Please specify"
+                        value={formData.genderOther}
+                        onChange={(e) => handleInputChange('genderOther', e.target.value)}
+                        className="w-full border rounded px-3 py-2 mt-2"
+                        required
+                    />
+                        )}
+                        {errors.gender && <div className="text-red-600 text-sm">{errors.gender}</div>}
+                    </div>
 
 
                     <div>
@@ -463,6 +498,7 @@ return (
                 <div className="bg-white border rounded p-4 space-y-4">
                     <h3 className="font-semibold">Academic Information</h3>
                     
+                    {/* Level of Study */}
                     <div>
                         <label htmlFor="levelOfStudy" className="block font-medium">Current Level of Study *</label>
                         <select
@@ -480,24 +516,26 @@ return (
                         {errors.levelOfStudy && <div className="text-red-600 text-sm">{errors.levelOfStudy}</div>}
                     </div>
 
-                    {/*formData.levelOfStudy === 'Undergraduate' && (
-                        <div>
-                            <label htmlFor="yearLevel" className="block font-medium">Year Level *</label>
-                            <select
-                                id="yearLevel"
-                                value={formData.yearLevel}
-                                onChange={(e) => handleInputChange('yearLevel', e.target.value)}
-                                className="w-full border rounded px-3 py-2"
-                                required
-                            >
-                                <option value="">Select year</option>
-                                {yearLevels.map(year => (
+                    {/* Year Level (only if Undergraduate) */}
+                    {formData.levelOfStudy === 'Undergraduate' && (
+                    <div>
+                        <label htmlFor="yearLevel" className="block font-medium">Year Level *</label>
+                        <select
+                            id="yearLevel"
+                            value={formData.yearLevel}
+                            onChange={(e) => handleInputChange('yearLevel', e.target.value)}
+                            className="w-full border rounded px-3 py-2"
+                            required
+                    >
+                            <option value="">Select year</option>
+                             {yearLevels.map(year => (
                                     <option key={year} value={year}>{year}</option>
-                                ))}
-                            </select>
-                            {errors.yearLevel && <div className="text-red-600 text-sm">{errors.yearLevel}</div>}
-                        </div>
-                    )*/}
+                            ))}
+                        </select>
+                        {errors.yearLevel && <div className="text-red-600 text-sm">{errors.yearLevel}</div>}
+                    </div>
+                    )}
+
 
                     {formData.levelOfStudy === 'Other' && (
                         <input
@@ -650,25 +688,6 @@ return (
                         {errors.resume && <div className="text-red-600 text-sm">{errors.resume}</div>}
                     </div>
 
-{/* <div>
-    <label htmlFor="foodAllergies" className="block font-medium">Food Allergies/Restrictions (Optional)</label>
-    <select
-        id="foodAllergies"
-        multiple
-        value={formData.foodAllergies}
-        onChange={(e) => {
-            const options = Array.from(e.target.selectedOptions, option => option.value);
-            handleInputChange('foodAllergies', options);
-        }}
-        className="w-full border rounded px-3 py-2"
-    >
-        {allergyOptions.map(allergy => (
-            <option key={allergy} value={allergy}>{allergy}</option>
-        ))}
-    </select>
-</div> */}
-
-
                     <div>
                         <label htmlFor="shirtSize" className="block font-medium">Shirt Size *</label>
                         <select
@@ -685,6 +704,24 @@ return (
                         </select>
                         {errors.shirtSize && <div className="text-red-600 text-sm">{errors.shirtSize}</div>}
                     </div>
+                </div>
+
+                <div>
+                        <label htmlFor="foodAllergies" className="block font-medium">Food Allergies</label>
+                        <select
+                            id="foodAllergies"
+                            multiple
+                            value={formData.foodAllergies}
+                            onChange={(e) => {
+                            const selected = Array.from(e.target.selectedOptions, option => option.value);
+                            handleInputChange('foodAllergies', selected);
+                            }}
+                            className="w-full border rounded px-3 py-2"
+                        >
+                        {allergyOptions.map(allergy => (
+                            <option key={allergy} value={allergy}>{allergy}</option>
+                        ))}
+                    </select>
                 </div>
 
                 {/* Agreements */}
@@ -733,4 +770,3 @@ return (
         </section>
     );
 }
-

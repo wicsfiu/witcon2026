@@ -1,0 +1,58 @@
+section {
+  background-color: #ffffff;
+  padding: 2rem;
+}
+
+form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+/* Card-style blocks */
+.bg-white {
+  background-color: #FADD9C; 
+  border: 2px solid #F5A2D0; 
+  border-radius: 12px;
+  padding: 1.5rem;
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Section headers */
+h3 {
+  background-color: #88CECF; 
+  color: #fff;
+  padding: 0.5rem 1rem;
+  border-radius: 6px;
+  font-size: 1.1rem;
+}
+
+/* Buttons */
+button[type="submit"] {
+  background-color: #F5A2D0;
+  color: white;
+  font-weight: 600;
+  padding: 0.75rem;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+  transition: all 0.2s ease-in-out;
+}
+
+button[type="submit"]:hover {
+  background-color: #88CECF;
+}
+
+/* Inputs and selects */
+input, select {
+  border: 1.5px solid #F5A2D0;
+  border-radius: 6px;
+  padding: 0.5rem;
+  width: 100%;
+}
+
+input:focus, select:focus {
+  outline: none;
+  border-color: #88CECF;
+  box-shadow: 0 0 4px #88CECF;
+}
