@@ -221,7 +221,9 @@ export default function Register() {
 
         if (!validateForm()) return;
 
-        const url = "https://witcon.duckdns.org/backend-api/attendees/";
+        // const url = "https://witcon.duckdns.org/backend-api/attendees/create";
+        const url = `${import.meta.env.VITE_API_URL}/attendees/create/`;
+
         const fd = new FormData();
 
         Object.entries(formData).forEach(([k, v]) => {
