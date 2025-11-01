@@ -374,7 +374,7 @@ return (
                         {errors.confirmEmail && <div className="text-red-600 text-sm">{errors.confirmEmail}</div>}
                     </div>
 
-                    {/* <div>
+                    /<div>
                         <label htmlFor="password" className="block font-medium">Password *</label>
                         <input
                             id="password"
@@ -385,7 +385,7 @@ return (
                             required
                         />
                         {errors.password && <div className="text-red-600 text-sm">{errors.password}</div>}
-                    </div> */}
+                    </div>
 
                     <div>
                         <label htmlFor="dateOfBirth" className="block font-medium">Date of Birth *</label>

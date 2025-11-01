@@ -16,12 +16,7 @@ class AttendeeSerializer(serializers.ModelSerializer):
     country = serializers.CharField(required=False, allow_blank=True)
     state = serializers.CharField(required=False, allow_blank=True)
 
-    # lists -> JSONField in model
-    genderIdentity = serializers.ListField(
-        source='gender_identity',
-        child=serializers.CharField(),
-        required=False
-    )
+    genderIdentity = serializers.CharField(required=False, allow_blank=True)
     genderOther = serializers.CharField(source='gender_other', required=False, allow_blank=True)
 
     raceEthnicity = serializers.CharField(source='race_ethnicity', required=False, allow_blank=True)
@@ -48,6 +43,7 @@ class AttendeeSerializer(serializers.ModelSerializer):
 
     resume = serializers.FileField(required=False, allow_null=True)
 
+    # lists -> JSONField in model
     foodAllergies = serializers.ListField(
         source='food_allergies',
         child=serializers.CharField(),
@@ -87,7 +83,6 @@ class AttendeeSerializer(serializers.ModelSerializer):
     def to_internal_value(self, data):
         # data may be a QueryDict or dict-like; copy to mutate safely
         data = data.copy()
-        return super().to_internal_value(data)
 
         # if frontend sends arrays as JSON strings (common when FormData is used),
         # try to decode them into real lists
