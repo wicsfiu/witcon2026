@@ -301,11 +301,16 @@ export default function Register() {
 
 return (
         <section className="space-y-4">
-            <div className="text-center space-y-2">
-                <h2 className="text-2xl font-bold">Registration</h2>
+            <div className="text-center space-y-2 mb-6">
+                <h2 className="text-3xl font-bold text-[color:var(--color-primary-pink)]"
+                style={{ fontFamily: 'Bukhari, sans-serif' }}>Welcome to WiTCON! Please register here!</h2>
                 <div className="text-sm space-x-4">
-                    <span>Already registered? <a href="#" className="text-blue-600 underline">Log in</a></span>
-                    <span><a href="#" className="text-blue-600 underline">Reset password</a></span>
+                    <span>
+                        Already registered? <a href="#" className="text-blue-600 underline hover:text-blue-800">Log in</a>
+                    </span>
+                    <span>
+                        <a href="#" className="text-blue-600 underline hover:text-blue-800">Reset password</a>
+                    </span>
                 </div>
             </div>
 
