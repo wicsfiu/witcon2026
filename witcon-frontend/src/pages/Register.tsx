@@ -1,3 +1,4 @@
+// witcon-frontend/src/pages/Register.tsx
 import { useState } from 'react';
 import type { ChangeEvent, FormEvent } from 'react';
 
@@ -263,7 +264,7 @@ export default function Register() {
         Object.entries(formData).forEach(([k, v]) => {
             if (v === undefined || v === null) return;
             if (Array.isArray(v)) {
-                fd.append(k, JSON.stringify(v));
+                v.forEach(item => fd.append(k, String(item)));
             } else if (typeof v === "boolean") {
                 fd.append(k, String(v));
             } else {
