@@ -261,17 +261,15 @@ export default function Register() {
 
         console.log("foodAllergies before stringify:", formData.foodAllergies); // Debug log
         Object.entries(formData).forEach(([k, v]) => {
-            if (v === undefined || v === null) return;
-            if (Array.isArray(v)) {
-                fd.set(k, JSON.stringify(v));
-            } else {
-                fd.set(k, String(v));
-            }
-        });
+        if (v === undefined || v === null) return;
 
-        Object.entries(formData).forEach(([k, v]) => {
-            if (v === undefined || v === null) return;
+        if (Array.isArray(v)) {
+            fd.append(k, JSON.stringify(v)); 
+        } else if (typeof v === "boolean") {
+            fd.append(k, String(v)); 
+        } else {
             fd.append(k, String(v));
+        }
         });
 
         if (resumeFile) fd.append('resume', resumeFile);
