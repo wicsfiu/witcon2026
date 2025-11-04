@@ -263,15 +263,12 @@ export default function Register() {
         Object.entries(formData).forEach(([k, v]) => {
             if (v === undefined || v === null) return;
             if (Array.isArray(v)) {
-                fd.set(k, JSON.stringify(v));
+                fd.append(k, JSON.stringify(v));
+            } else if (typeof v === "boolean") {
+                fd.append(k, String(v));
             } else {
-                fd.set(k, String(v));
+                fd.append(k, String(v));
             }
-        });
-
-        Object.entries(formData).forEach(([k, v]) => {
-            if (v === undefined || v === null) return;
-            fd.append(k, String(v));
         });
 
         if (resumeFile) fd.append('resume', resumeFile);
