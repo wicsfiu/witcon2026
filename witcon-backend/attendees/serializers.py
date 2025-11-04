@@ -195,3 +195,12 @@ class AttendeeSerializer(serializers.ModelSerializer):
         if value and value.size > 600 * 1024:
             raise serializers.ValidationError("Resume size must be <= 600 KB")
         return value
+    
+    def to_representation(self, instance):
+        data = super().to_representation(instance)
+        if instance.resume:
+            from .utils import generate_presigned_resume_url
+            data['resume_url'] = generate_presigned_resume_url(instance.resume.name)
+        else:
+            data['resume_url'] = None
+        return data

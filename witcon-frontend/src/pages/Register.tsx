@@ -272,6 +272,11 @@ export default function Register() {
             }
         });
 
+        if (resumeFile && resumeFile.size > 600 * 1024) {
+            alert("Resume file size must be 600 KB or smaller");
+            return;
+        }
+        
         if (resumeFile) fd.append('resume', resumeFile);
 
         // Debug: Log FormData contents
