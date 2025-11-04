@@ -16,13 +16,6 @@ class AttendeeSerializer(serializers.ModelSerializer):
     country = serializers.CharField(required=False, allow_blank=True)
     state = serializers.CharField(required=False, allow_blank=True)
 
-    # lists -> JSONField in model
-    # genderIdentity = serializers.ListField(
-    #     source='gender_identity',
-    #     child=serializers.CharField(),
-    #     required=False
-    # )
-    # genderOther = serializers.CharField(source='gender_other', required=False, allow_blank=True)
     gender = serializers.CharField(source='gender_identity',required=False, allow_blank=True)
     genderOther = serializers.CharField(source='gender_other', required=False, allow_blank=True)
 
@@ -50,19 +43,7 @@ class AttendeeSerializer(serializers.ModelSerializer):
 
     resume = serializers.FileField(required=False, allow_null=True)
 
-    foodAllergies = serializers.ListField(
-        child=serializers.CharField(),
-        source='food_allergies',
-        required=False
-    )
-    # def validate_food_allergies(self, value):
-    #     if isinstance(value, str):
-    #         try:
-    #             return json.loads(value)
-    #         except json.JSONDecodeError:
-    #             raise serializers.ValidationError("Invalid format for food allergies.")
-    #     return value
-    customAllergy = serializers.CharField(source='custom_allergy', required=False, allow_blank=True)
+    foodAllergies = serializers.JSONField(source='food_allergies', required=False)
 
     shirtSize = serializers.CharField(source='shirt_size', required=False, allow_blank=True)
 
@@ -93,35 +74,66 @@ class AttendeeSerializer(serializers.ModelSerializer):
         )
         read_only_fields = ('id', 'created_at', 'updated_at', 'checked_in')
 
-    # handle list fields that may arrive as JSON strings when multipart/form-data used
     def to_internal_value(self, data):
-        # data may be a QueryDict or dict-like; copy to mutate safely
         data = data.copy()
+        # Normalize foodAllergies into a Python list of strings
+        val = data.get('foodAllergies')
+        if val is not None:
+            if isinstance(val, (list, tuple)):
+                parsed = None
+                for item in val:
+                    if isinstance(item, str):
+                        try:
+                            maybe = json.loads(item)
+                            if isinstance(maybe, list):
+                                parsed = maybe
+                                break
+                            if isinstance(maybe, dict):
+                                parsed = list(maybe.values())
+                                break
+                        except Exception:
+                            continue
+                if parsed is None:
+                    data['foodAllergies'] = [str(x) for x in val]
+                else:
+                    data['foodAllergies'] = parsed
 
-        # if frontend sends arrays as JSON strings (common when FormData is used),
-        # try to decode them into real lists
-        for list_key in ( 'foodAllergies',):
-            val = data.get(list_key)
-            if val is None:
-                continue
-             
-            # Handle case where DRF QueryDict wraps the value in a list
-            if isinstance(val, list):
-                val = val[0]
-
-            
-            # If value is a string, try to parse JSON or comma-separated
-            if isinstance(val, str):
-                 # try parse JSON
+            elif isinstance(val, str):
+                # val is a JSON string like '["A","B"]' OR comma-separated 'A,B'
                 try:
                     parsed = json.loads(val)
+                    if isinstance(parsed, dict):
+                        parsed = list(parsed.values())
                     if not isinstance(parsed, list):
                         parsed = [parsed]
-                    data[list_key] = parsed
+                    data['foodAllergies'] = parsed
                 except Exception:
-                    # fallback: comma separated values
-                    data[list_key] = [x.strip() for x in val.split(',') if x.strip()]
+                    data['foodAllergies'] = [x.strip() for x in val.split(',') if x.strip()]
+
+            elif isinstance(val, dict):
+                # e.g. { "0": "A", "1": "B" }
+                data['foodAllergies'] = list(val.values())
+
         return super().to_internal_value(data)
+    
+    def validate_food_allergies(self, value):
+        if value in (None, ''):
+            return []
+        if isinstance(value, str):
+            try:
+                value = json.loads(value)
+            except Exception:
+                raise ValidationError("Invalid format for foodAllergies.")
+        if isinstance(value, dict):
+            value = list(value.values())
+        if not isinstance(value, list):
+            raise ValidationError("foodAllergies must be a list.")
+        for i, item in enumerate(value):
+            if not isinstance(item, str):
+                raise ValidationError({i: "Not a valid string."})
+        return [item.strip() for item in value]
+    
+    customAllergy = serializers.CharField(source='custom_allergy', required=False, allow_blank=True)
 
     # validate URLs if present (allow empty)
     def validate_linkedin(self, value):
