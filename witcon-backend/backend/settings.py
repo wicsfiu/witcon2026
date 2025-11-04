@@ -39,7 +39,9 @@ ALLOWED_HOSTS = [
     "3.16.147.188",
     "witcon2026.vercel.app",
     "witcon.duckdns.org",
-    "0.0.0.0"
+    "0.0.0.0",
+    "witcon2026-git-test-register-wicsfius-projects.vercel.app",
+    "witcon2026-git-m-test-branch-wicsfius-projects.vercel.app",
 ]
 
 
@@ -78,6 +80,8 @@ CORS_ALLOWED_ORIGINS = [
     "http://127.0.0.1:5173",
     "https://witcon2026.vercel.app",
     "https://witcon.duckdns.org",
+    "https://witcon2026-git-test-register-wicsfius-projects.vercel.app/",
+    "https://witcon2026-git-m-test-branch-wicsfius-projects.vercel.app/",
 ]
 
 # Media (uploads) config
