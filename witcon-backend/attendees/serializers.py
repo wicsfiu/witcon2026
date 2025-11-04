@@ -43,7 +43,12 @@ class AttendeeSerializer(serializers.ModelSerializer):
 
     resume = serializers.FileField(required=False, allow_null=True)
 
-    foodAllergies = serializers.JSONField(source='food_allergies', required=False)
+    foodAllergies = serializers.ListField(
+        child=serializers.CharField(),
+        required=False,
+        source='food_allergies',
+        allow_empty=True,
+    )
 
     shirtSize = serializers.CharField(source='shirt_size', required=False, allow_blank=True)
 
@@ -76,56 +81,25 @@ class AttendeeSerializer(serializers.ModelSerializer):
 
     def to_internal_value(self, data):
         data = data.copy()
-        # Normalize foodAllergies into a Python list of strings
+
         val = data.get('foodAllergies')
         if val is not None:
-            if isinstance(val, (list, tuple)):
-                parsed = None
-                for item in val:
-                    if isinstance(item, str):
-                        try:
-                            maybe = json.loads(item)
-                            if isinstance(maybe, list):
-                                parsed = maybe
-                                break
-                            if isinstance(maybe, dict):
-                                parsed = list(maybe.values())
-                                break
-                        except Exception:
-                            continue
-                if parsed is None:
-                    data['foodAllergies'] = [str(x) for x in val]
-                else:
-                    data['foodAllergies'] = parsed
-
-            elif isinstance(val, str):
-                # val is a JSON string like '["A","B"]' OR comma-separated 'A,B'
+            if isinstance(val, str):
                 try:
                     parsed = json.loads(val)
-                    if isinstance(parsed, dict):
-                        parsed = list(parsed.values())
-                    if not isinstance(parsed, list):
-                        parsed = [parsed]
-                    data['foodAllergies'] = parsed
+                    if isinstance(parsed, list):
+                        data['foodAllergies'] = parsed
+                    elif isinstance(parsed, dict):
+                        data['foodAllergies'] = list(parsed.values())
+                    else:
+                        data['foodAllergies'] = [str(parsed)]
                 except Exception:
                     data['foodAllergies'] = [x.strip() for x in val.split(',') if x.strip()]
-
             elif isinstance(val, dict):
-                # e.g. { "0": "A", "1": "B" }
                 data['foodAllergies'] = list(val.values())
-
         return super().to_internal_value(data)
     
     def validate_food_allergies(self, value):
-        if value in (None, ''):
-            return []
-        if isinstance(value, str):
-            try:
-                value = json.loads(value)
-            except Exception:
-                raise ValidationError("Invalid format for foodAllergies.")
-        if isinstance(value, dict):
-            value = list(value.values())
         if not isinstance(value, list):
             raise ValidationError("foodAllergies must be a list.")
         for i, item in enumerate(value):
