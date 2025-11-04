@@ -24,7 +24,7 @@ const teams: Team[] = [
     {
         name: "Victoria Hernandez",
         position: "Industry Relations Lead"
-    }
+    },
 
 
 ]
