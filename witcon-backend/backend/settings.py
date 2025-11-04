@@ -33,6 +33,7 @@ if not SECRET_KEY:
 # DEBUG = True
 DEBUG = True
 
+
 ALLOWED_HOSTS = [
     '127.0.0.1', 
     'localhost',
@@ -40,7 +41,7 @@ ALLOWED_HOSTS = [
     "witcon2026.vercel.app",
     "witcon.duckdns.org",
     "0.0.0.0",
-    "witcon2026-git-test-register-wicsfius-projects.vercel.app",
+    "witcon2026-git-test-register-wicsfius-projects.vercel.app", # test branches
     "witcon2026-git-m-test-branch-wicsfius-projects.vercel.app",
 ]
 
