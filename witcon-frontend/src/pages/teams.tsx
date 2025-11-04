@@ -1,4 +1,4 @@
-import React from "react";
+
 import Title from '../components/text/Title';
 import Text from '../components/text/Text';
 import Header from "../components/text/Header";
@@ -33,7 +33,7 @@ export default function Teams(){
         <section className = 'w-full pt-6 pb-10'>
         <Header className='py-6'>Teams</Header>
         <Title className="text-3xl font-semibold text-center mb-4">Industry Relations</Title>
-        <div className="w-full rounded-2xl bg-[color:var(--color-secondary-mint)]/100 p-6 md:p-8 shadow-md ">
+        <div className="w-full rounded-2xl bg-[color:var(--color-secondary-mint)]/100 p-66 md:p-8 shadow-md ">
         
         <div className="grid grid-cols-2 md:grid-cols-4 gap-y-6 gap-x-6 place-items-center">
 
