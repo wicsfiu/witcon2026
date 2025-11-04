@@ -55,13 +55,13 @@ class AttendeeSerializer(serializers.ModelSerializer):
         source='food_allergies',
         required=False
     )
-    def validate_food_allergies(self, value):
-        if isinstance(value, str):
-            try:
-                return json.loads(value)
-            except json.JSONDecodeError:
-                raise serializers.ValidationError("Invalid format for food allergies.")
-        return value
+    # def validate_food_allergies(self, value):
+    #     if isinstance(value, str):
+    #         try:
+    #             return json.loads(value)
+    #         except json.JSONDecodeError:
+    #             raise serializers.ValidationError("Invalid format for food allergies.")
+    #     return value
     customAllergy = serializers.CharField(source='custom_allergy', required=False, allow_blank=True)
 
     shirtSize = serializers.CharField(source='shirt_size', required=False, allow_blank=True)
