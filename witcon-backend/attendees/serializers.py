@@ -80,32 +80,77 @@ class AttendeeSerializer(serializers.ModelSerializer):
         read_only_fields = ('id', 'created_at', 'updated_at', 'checked_in')
 
     def to_internal_value(self, data):
+        """
+        Normalize incoming foodAllergies into a flat list of strings no matter its shape.
+        Accepts:
+          - JSON string: '["A","B"]'
+          - comma-separated: 'A,B'
+          - dict like {"0":"A","1":"B"}
+          - multiple form entries -> list like ['A','B'] or ['["A","B"]']
+          - nested lists
+        """
         data = data.copy()
+        raw = data.get('foodAllergies')
 
-        val = data.get('foodAllergies')
-        if val is not None:
-            if isinstance(val, str):
-                try:
-                    parsed = json.loads(val)
-                    if isinstance(parsed, list):
-                        data['foodAllergies'] = parsed
-                    elif isinstance(parsed, dict):
-                        data['foodAllergies'] = list(parsed.values())
-                    else:
-                        data['foodAllergies'] = [str(parsed)]
-                except Exception:
-                    data['foodAllergies'] = [x.strip() for x in val.split(',') if x.strip()]
-            elif isinstance(val, dict):
-                data['foodAllergies'] = list(val.values())
+        if raw is not None:
+            normalized = []
+
+            def push(x):
+                # flatten recursively
+                # strings: try JSON decode first (to catch '["A","B"]')
+                if isinstance(x, str):
+                    s = x.strip()
+                    # try JSON-decode strings that look like JSON arrays/values
+                    if (s.startswith('[') or s.startswith('{')):  # cheap check
+                        try:
+                            parsed = json.loads(s)
+                            push(parsed)
+                            return
+                        except Exception:
+                            # not valid JSON; fall through to treat as literal string
+                            pass
+                    # normal string element -> append
+                    if s != '':
+                        normalized.append(s)
+                    return
+
+                if isinstance(x, (list, tuple)):
+                    for item in x:
+                        push(item)
+                    return
+
+                if isinstance(x, dict):
+                    # dict like {"0": "A", ...} or other mapping -> iterate values
+                    for item in x.values():
+                        push(item)
+                    return
+
+                # other primitive types -> coerce to str
+                normalized.append(str(x))
+
+            push(raw)
+
+            # final cleanup: remove empty strings, strip whitespace
+            normalized = [str(i).strip() for i in normalized if str(i).strip()]
+
+            data['foodAllergies'] = normalized
+
         return super().to_internal_value(data)
     
     def validate_food_allergies(self, value):
+        # At this point we should have a list (possibly empty)
+        if value in (None, ''):
+            return []
         if not isinstance(value, list):
             raise ValidationError("foodAllergies must be a list.")
+        # Ensure each element is a string
+        cleaned = []
         for i, item in enumerate(value):
             if not isinstance(item, str):
+                # return DRF-style per-index error
                 raise ValidationError({i: "Not a valid string."})
-        return [item.strip() for item in value]
+            cleaned.append(item.strip())
+        return cleaned
     
     customAllergy = serializers.CharField(source='custom_allergy', required=False, allow_blank=True)
 
