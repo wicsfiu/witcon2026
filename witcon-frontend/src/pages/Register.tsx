@@ -259,7 +259,7 @@ export default function Register() {
 
         const fd = new FormData();
 
-        console.log("foodAllergies before stringify:", formData.foodAllergies); // Debug log
+        console.log("foodAllergies before stringify:", formData.foodAllergies); // Debug log 
         Object.entries(formData).forEach(([k, v]) => {
             if (v === undefined || v === null) return;
             if (Array.isArray(v)) {
