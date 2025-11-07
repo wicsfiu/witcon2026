@@ -1,6 +1,7 @@
 // witcon-frontend/src/pages/Register.tsx
 import { useState } from 'react';
 import type { ChangeEvent, FormEvent } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 interface FormData {
     firstName: string;
@@ -94,7 +95,7 @@ export default function Register() {
         'Other'
       ];
 
-    const usStates = [        'Prefer not to answer',
+    const usStates = ['Prefer not to answer',
         'Alabama', 'Alaska', 'Arizona', 'Arkansas', 'California', 'Colorado', 'Connecticut',
         'Delaware', 'Florida', 'Georgia', 'Hawaii', 'Idaho', 'Illinois', 'Indiana', 'Iowa',
         'Kansas', 'Kentucky', 'Louisiana', 'Maine', 'Maryland', 'Massachusetts', 'Michigan',
@@ -168,9 +169,9 @@ export default function Register() {
         'Other'];
 
     const shirtSizes = ['S', 'M', 'L', 'XL'];
-
     const allergyOptions = ['Peanuts', 'Tree Nuts', 'Dairy', 'Gluten', 'Shellfish', 'Soy', 'Eggs'];
     const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+    const navigate = useNavigate();
 
     // Handle input change
     const handleInputChange = (field: keyof FormData, value: string | boolean | string[]) => {
@@ -251,6 +252,7 @@ export default function Register() {
 
     const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
         event.preventDefault();
+        console.log("Submit triggered");
         setErrors({});
 
         if (!validateForm()) return;
@@ -260,15 +262,18 @@ export default function Register() {
 
         const fd = new FormData();
 
-        console.log("foodAllergies before stringify:", formData.foodAllergies); // Debug log 
-        Object.entries(formData).forEach(([k, v]) => {
-            if (v === undefined || v === null) return;
-            if (Array.isArray(v)) {
-                v.forEach(item => fd.append(k, String(item)));
-            } else if (typeof v === "boolean") {
-                fd.append(k, String(v));
+        console.log("foodAllergies before stringify:", formData.foodAllergies); // Debug log
+        Object.entries(formData).forEach(([key, value]) => {
+            if (value === undefined || value === null) return;
+            
+            if (key === "foodAllergies") { 
+                (value as string[]).forEach(item => {
+                    fd.append("food_allergies[]", item);
+                });
+            } else if (Array.isArray(value)) {
+                value.forEach(item => fd.append(`${key}[]`, item));
             } else {
-                fd.append(k, String(v));
+                fd.append(key, String(value));
             }
         });
 
@@ -294,6 +299,7 @@ export default function Register() {
             } else {
                 const data = await res.json();
                 console.log("Registration success:", data);
+                navigate("/profile");
                 setIsSubmitted(true);
             }
         } catch (error) {
@@ -320,12 +326,6 @@ return (
                 <h2 className="text-3xl font-bold text-[color:var(--color-primary-pink)]"
                 style={{ fontFamily: 'Bukhari, sans-serif' }}>Welcome to WiTCON! Please register here!</h2>
                 <div className="text-sm space-x-4">
-                    <span>
-                        Already registered? <a href="#" className="text-blue-600 underline hover:text-blue-800">Log in</a>
-                    </span>
-                    <span>
-                        <a href="#" className="text-blue-600 underline hover:text-blue-800">Reset password</a>
-                    </span>
                 </div>
             </div>
 
@@ -355,6 +355,7 @@ return (
                 </div>
       
                     <div className="grid grid-cols-1 gap-4">
+                    <h3 className="text-xl font-bold text-[color:var(--color-primary-pink)]" style={{ fontFamily: 'Actor, sans-serif' }}>Basic Information</h3>
                         <div>
                             <label htmlFor="firstName" className="block text-sm font-medium text-[color:var(--color-primary-brown)]">First Name *</label>
                             <input
