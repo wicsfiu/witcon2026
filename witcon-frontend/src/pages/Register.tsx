@@ -8,7 +8,6 @@ interface FormData {
     lastName: string;
     email: string;
     confirmEmail: string;
-    password: string;
     dateOfBirth: string;
     country: string;
     state: string;
@@ -29,8 +28,8 @@ interface FormData {
     website: string;
     discord: string;
     shirtSize: string;
-    foodAllergies: string[];
-    customAllergy: string;
+    // foodAllergies: string[];
+    // customAllergy: string;
     codeOfConduct: boolean;
     photographyConsent: boolean;
 }
@@ -45,7 +44,6 @@ export default function Register() {
         lastName: '',
         email: '',
         confirmEmail: '',
-        password: '',
         dateOfBirth: '',
         country: '',
         state: '',
@@ -66,8 +64,8 @@ export default function Register() {
         website: '',
         discord: '',
         shirtSize: '',
-        foodAllergies: [],
-        customAllergy: '',
+        // foodAllergies: [],
+        // customAllergy: '',
         codeOfConduct: false,
         photographyConsent: false
 });
@@ -214,7 +212,6 @@ export default function Register() {
         if (!formData.email) newErrors.email = 'Required';
         if (!formData.confirmEmail) newErrors.confirmEmail = 'Required';
         if (formData.email !== formData.confirmEmail) newErrors.confirmEmail = 'Emails do not match';
-        if (!formData.password) newErrors.password = 'Required';
         if (!formData.dateOfBirth) newErrors.dateOfBirth = 'Required';
         else if (!validateAge(formData.dateOfBirth)) newErrors.dateOfBirth = 'Must be 18 or older by March 27, 2026';
         
@@ -262,20 +259,20 @@ export default function Register() {
 
         const fd = new FormData();
 
-        console.log("foodAllergies before stringify:", formData.foodAllergies); // Debug log
-        Object.entries(formData).forEach(([key, value]) => {
-            if (value === undefined || value === null) return;
+        // console.log("foodAllergies before stringify:", formData.foodAllergies); // Debug log
+        // Object.entries(formData).forEach(([key, value]) => {
+        //     if (value === undefined || value === null) return;
             
-            if (key === "foodAllergies") { 
-                (value as string[]).forEach(item => {
-                    fd.append("food_allergies[]", item);
-                });
-            } else if (Array.isArray(value)) {
-                value.forEach(item => fd.append(`${key}[]`, item));
-            } else {
-                fd.append(key, String(value));
-            }
-        });
+        //     if (key === "foodAllergies") { 
+        //         (value as string[]).forEach(item => {
+        //             fd.append("food_allergies[]", item);
+        //         });
+        //     } else if (Array.isArray(value)) {
+        //         value.forEach(item => fd.append(`${key}[]`, item));
+        //     } else {
+        //         fd.append(key, String(value));
+        //     }
+        // });
 
         if (resumeFile && resumeFile.size > 600 * 1024) {
             alert("Resume file size must be 600 KB or smaller");
@@ -363,7 +360,7 @@ return (
                                 type="text"
                                 value={formData.firstName}
                                 onChange={(e) => handleInputChange('firstName', e.target.value)}
-                                className="mt-1 block w-full px-4 py-2 rounded-full bg-white border border-gray-300 focus:ring-pink-500 focus:border-pink-500"
+                                className="mt-1 block w-full px-4 py-2 rounded-full bg-white focus:outline-none focus:ring-2 focus:ring-[color:var(--color-primary-pink)] transition duration-150 ease-in-out text-[color:var(--color-primary-brown)]"
                                 required
                             />
                             {errors.firstName && <div className="text-red-600 text-sm mt-1">{errors.firstName}</div>}
@@ -376,7 +373,7 @@ return (
                                 type="text"
                                 value={formData.lastName}
                                 onChange={(e) => handleInputChange('lastName', e.target.value)}
-                                className="mt-1 block w-full px-4 py-2 rounded-full bg-white border border-gray-300 focus:ring-pink-500 focus:border-pink-500"
+                                className="mt-1 block w-full px-4 py-2 rounded-full bg-white focus:outline-none focus:ring-2 focus:ring-[color:var(--color-primary-pink)] transition duration-150 ease-in-out text-[color:var(--color-primary-brown)]"
                                 required
                             />
                             {errors.lastName && <div className="text-red-600 text-sm mt-1">{errors.lastName}</div>}
@@ -390,7 +387,7 @@ return (
                             type="email"
                             value={formData.email}
                             onChange={(e) => handleInputChange('email', e.target.value)}
-                            className="mt-1 block w-full px-4 py-2 rounded-full bg-white border border-gray-300 focus:ring-pink-500 focus:border-pink-500"
+                            className="mt-1 block w-full px-4 py-2 rounded-full bg-white focus:outline-none focus:ring-2 focus:ring-[color:var(--color-primary-pink)] transition duration-150 ease-in-out text-[color:var(--color-primary-brown)]"
                             required
                         />
                         {errors.email && <div className="text-red-600 text-sm  mt-1">{errors.email}</div>}
@@ -403,23 +400,10 @@ return (
                             type="email"
                             value={formData.confirmEmail}
                             onChange={(e) => handleInputChange('confirmEmail', e.target.value)}
-                            className="mt-1 block w-full px-4 py-2 rounded-full bg-white border border-gray-300 focus:ring-pink-500 focus:border-pink-500"
+                            className="mt-1 block w-full px-4 py-2 rounded-full bg-white focus:outline-none focus:ring-2 focus:ring-[color:var(--color-primary-pink)] transition duration-150 ease-in-out text-[color:var(--color-primary-brown)]"
                             required
                         />
                         {errors.confirmEmail && <div className="text-red-600 text-sm mt-1">{errors.confirmEmail}</div>}
-                    </div>
-
-                    <div>
-                        <label htmlFor="password" className="block text-sm font-medium text-[color:var(--color-primary-brown)]">Password *</label>
-                        <input
-                            id="password"
-                            type="password"
-                            value={formData.password}
-                            onChange={(e) => handleInputChange('password', e.target.value)}
-                            className="mt-1 block w-full px-4 py-2 rounded-full bg-white border border-gray-300 focus:ring-pink-500 focus:border-pink-500"
-                            required
-                        />
-                        {errors.password && <div className="text-red-600 text-sm mt-1">{errors.password}</div>}
                     </div>
 
                     <div>
@@ -429,7 +413,7 @@ return (
                             type="date"
                             value={formData.dateOfBirth}
                             onChange={(e) => handleInputChange('dateOfBirth', e.target.value)}
-                            className="mt-1 block w-full px-4 py-2 rounded-full bg-white border border-gray-300 focus:ring-pink-500 focus:border-pink-500"
+                            className="mt-1 block w-full px-4 py-2 rounded-full bg-white focus:outline-none focus:ring-2 focus:ring-[color:var(--color-primary-pink)] transition duration-150 ease-in-out text-[color:var(--color-primary-brown)]"
                             required
                         />
                         <div className="block text-sm font-medium text-[color:var(--color-primary-brown)]">Must be 18 or older by March 27, 2026</div>
@@ -448,7 +432,7 @@ return (
                             type="url"
                             value={formData.linkedin}
                             onChange={(e) => handleInputChange('linkedin', e.target.value)}
-                            className="mt-1 block w-full px-4 py-2 rounded-full bg-white border border-gray-300 focus:ring-pink-500 focus:border-pink-500"
+                            className="mt-1 block w-full px-4 py-2 rounded-full bg-white focus:outline-none focus:ring-2 focus:ring-[color:var(--color-primary-pink)] transition duration-150 ease-in-out text-[color:var(--color-primary-brown)]"
                             placeholder="https://linkedin.com/in/yourprofile"
                         />
                     </div>
@@ -460,7 +444,7 @@ return (
                             type="url"
                             value={formData.github}
                             onChange={(e) => handleInputChange('github', e.target.value)}
-                            className="mt-1 block w-full px-4 py-2 rounded-full bg-white border border-gray-300 focus:ring-pink-500 focus:border-pink-500"
+                            className="mt-1 block w-full px-4 py-2 rounded-full bg-white focus:outline-none focus:ring-2 focus:ring-[color:var(--color-primary-pink)] transition duration-150 ease-in-out text-[color:var(--color-primary-brown)]"
                             placeholder="https://github.com/yourusername"
                         />
                     </div>
@@ -472,7 +456,7 @@ return (
                             type="url"
                             value={formData.website}
                             onChange={(e) => handleInputChange('website', e.target.value)}
-                            className="mt-1 block w-full px-4 py-2 rounded-full bg-white border border-gray-300 focus:ring-pink-500 focus:border-pink-500"
+                            className="mt-1 block w-full px-4 py-2 rounded-full bg-white focus:outline-none focus:ring-2 focus:ring-[color:var(--color-primary-pink)] transition duration-150 ease-in-out text-[color:var(--color-primary-brown)]"
                             placeholder="https://yourwebsite.com"
                         />
                     </div>
@@ -484,7 +468,7 @@ return (
                             type="text"
                             value={formData.discord}
                             onChange={(e) => handleInputChange('discord', e.target.value)}
-                            className="mt-1 block w-full px-4 py-2 rounded-full bg-white border border-gray-300 focus:ring-pink-500 focus:border-pink-500"
+                            className="mt-1 block w-full px-4 py-2 rounded-full bg-white focus:outline-none focus:ring-2 focus:ring-[color:var(--color-primary-pink)] transition duration-150 ease-in-out text-[color:var(--color-primary-brown)]"
                             placeholder="username#1234"
                         />
                     </div>
@@ -505,7 +489,7 @@ return (
                         </div>
                     </div>
                 </div>
-                
+
                 {/* Demographics */}
                 <div className="bg-[color:var(--color-tertiary-yellow)] rounded-xl p-6 shadow-sm space-y-6">
                     <h3 className="text-xl font-bold text-[color:var(--color-primary-pink)]" style={{ fontFamily: 'Actor, sans-serif' }}>
@@ -516,7 +500,7 @@ return (
                             id="country"
                             value={formData.country}
                             onChange={(e) => handleInputChange('country', e.target.value)}
-                            className="mt-1 block w-full px-4 py-2 rounded-full bg-white border border-gray-300 focus:ring-pink-500 focus:border-pink-500"
+                            className="mt-1 block w-full px-4 py-2 rounded-full bg-white focus:outline-none focus:ring-2 focus:ring-[color:var(--color-primary-pink)] transition duration-150 ease-in-out text-[color:var(--color-primary-brown)]"
                             required
                         >
                             <option value="">Select a country</option>
@@ -534,7 +518,7 @@ return (
                                 id="state"
                                 value={formData.state}
                                 onChange={(e) => handleInputChange('state', e.target.value)}
-                                className="mt-1 block w-full px-4 py-2 rounded-full bg-white border border-gray-300 focus:ring-pink-500 focus:border-pink-500"
+                                className="mt-1 block w-full px-4 py-2 rounded-full bg-white focus:outline-none focus:ring-2 focus:ring-[color:var(--color-primary-pink)] transition duration-150 ease-in-out text-[color:var(--color-primary-brown)]"
                                 required
                             >
                                 <option value="">Select a state</option>
@@ -553,7 +537,7 @@ return (
                         id="gender"
                         value={formData.gender}
                         onChange={(e) => handleInputChange('gender', e.target.value)}
-                        className="mt-1 block w-full px-4 py-2 rounded-full bg-white border border-gray-300 focus:ring-pink-500 focus:border-pink-500"
+                        className="mt-1 block w-full px-4 py-2 rounded-full bg-white focus:outline-none focus:ring-2 focus:ring-[color:var(--color-primary-pink)] transition duration-150 ease-in-out text-[color:var(--color-primary-brown)]"
                         required
                     >
                         <option value="">Select gender</option>
@@ -567,7 +551,7 @@ return (
                         placeholder="Please specify"
                         value={formData.genderOther}
                         onChange={(e) => handleInputChange('genderOther', e.target.value)}
-                        className="mt-1 block w-full px-4 py-2 rounded-full bg-white border border-gray-300 focus:ring-pink-500 focus:border-pink-500"
+                        className="mt-1 block w-full px-4 py-2 rounded-full bg-white focus:outline-none focus:ring-2 focus:ring-[color:var(--color-primary-pink)] transition duration-150 ease-in-out text-[color:var(--color-primary-brown)]"
 
                         required
                     />
@@ -582,7 +566,7 @@ return (
                             id="raceEthnicity"
                             value={formData.raceEthnicity}
                             onChange={(e) => handleInputChange('raceEthnicity', e.target.value)}
-                            className="mt-1 block w-full px-4 py-2 rounded-full bg-white border border-gray-300 focus:ring-pink-500 focus:border-pink-500"
+                            className="mt-1 block w-full px-4 py-2 rounded-full bg-white focus:outline-none focus:ring-2 focus:ring-[color:var(--color-primary-pink)] transition duration-150 ease-in-out text-[color:var(--color-primary-brown)]"
                             required
                         >
                             <option value="">Select an option</option>
@@ -596,7 +580,7 @@ return (
                                 placeholder="Please specify"
                                 value={formData.raceOther}
                                 onChange={(e) => handleInputChange('raceOther', e.target.value)}
-                                className="mt-1 block w-full px-4 py-2 rounded-full bg-white border border-gray-300 focus:ring-pink-500 focus:border-pink-500"
+                                className="mt-1 block w-full px-4 py-2 rounded-full bg-white focus:outline-none focus:ring-2 focus:ring-[color:var(--color-primary-pink)] transition duration-150 ease-in-out text-[color:var(--color-primary-brown)]"
                             />
                         )}
                         {errors.raceEthnicity && <div className="text-red-600 text-sm mt-1">{errors.raceEthnicity}</div>}
@@ -614,7 +598,7 @@ return (
                             id="levelOfStudy"
                             value={formData.levelOfStudy}
                             onChange={(e) => handleInputChange('levelOfStudy', e.target.value)}
-                            className="mt-1 block w-full px-4 py-2 rounded-full bg-white border border-gray-300 focus:ring-pink-500 focus:border-pink-500"
+                            className="mt-1 block w-full px-4 py-2 rounded-full bg-white focus:outline-none focus:ring-2 focus:ring-[color:var(--color-primary-pink)] transition duration-150 ease-in-out text-[color:var(--color-primary-brown)]"
                             required
                         >
                             <option value="">Select level</option>
@@ -633,7 +617,7 @@ return (
                             id="yearLevel"
                             value={formData.yearLevel}
                             onChange={(e) => handleInputChange('yearLevel', e.target.value)}
-                            className="mt-1 block w-full px-4 py-2 rounded-full bg-white border border-gray-300 focus:ring-pink-500 focus:border-pink-500"
+                            className="mt-1 block w-full px-4 py-2 rounded-full bg-white focus:outline-none focus:ring-2 focus:ring-[color:var(--color-primary-pink)] transition duration-150 ease-in-out text-[color:var(--color-primary-brown)]"
                             required
                     >
                             <option value="">Select year</option>
@@ -652,7 +636,7 @@ return (
                             placeholder="Please specify level of study"
                             value={formData.studyOther}
                             onChange={(e) => handleInputChange('studyOther', e.target.value)}
-                            className="mt-1 block w-full px-4 py-2 rounded-full bg-white border border-gray-300 focus:ring-pink-500 focus:border-pink-500"
+                            className="mt-1 block w-full px-4 py-2 rounded-full bg-white focus:outline-none focus:ring-2 focus:ring-[color:var(--color-primary-pink)] transition duration-150 ease-in-out text-[color:var(--color-primary-brown)]"
                         />
                     )}
 
@@ -662,7 +646,7 @@ return (
                             id="fieldOfStudy"
                             value={formData.fieldOfStudy}
                             onChange={(e) => handleInputChange('fieldOfStudy', e.target.value)}
-                            className="mt-1 block w-full px-4 py-2 rounded-full bg-white border border-gray-300 focus:ring-pink-500 focus:border-pink-500"
+                            className="mt-1 block w-full px-4 py-2 rounded-full bg-white focus:outline-none focus:ring-2 focus:ring-[color:var(--color-primary-pink)] transition duration-150 ease-in-out text-[color:var(--color-primary-brown)]"
                             required
                         >
                             <option value="">Select field</option>
@@ -676,7 +660,7 @@ return (
                                 placeholder="Please specify field of study"
                                 value={formData.fieldOther}
                                 onChange={(e) => handleInputChange('fieldOther', e.target.value)}
-                                className="mt-1 block w-full px-4 py-2 rounded-full bg-white border border-gray-300 focus:ring-pink-500 focus:border-pink-500"
+                                className="mt-1 block w-full px-4 py-2 rounded-full bg-white focus:outline-none focus:ring-2 focus:ring-[color:var(--color-primary-pink)] transition duration-150 ease-in-out text-[color:var(--color-primary-brown)]"
                             />
                         )}
                         {errors.fieldOfStudy && <div className="text-red-600 text-sm mt-1">{errors.fieldOfStudy}</div>}
@@ -688,7 +672,7 @@ return (
                             id="school"
                             value={formData.school}
                             onChange={(e) => handleInputChange('school', e.target.value)}
-                            className="mt-1 block w-full px-4 py-2 rounded-full bg-white border border-gray-300 focus:ring-pink-500 focus:border-pink-500"
+                            className="mt-1 block w-full px-4 py-2 rounded-full bg-white focus:outline-none focus:ring-2 focus:ring-[color:var(--color-primary-pink)] transition duration-150 ease-in-out text-[color:var(--color-primary-brown)]"
                             required
                         >
                             <option value="">Select school</option>
@@ -702,7 +686,7 @@ return (
                                 placeholder="Please specify school"
                                 value={formData.schoolOther}
                                 onChange={(e) => handleInputChange('schoolOther', e.target.value)}
-                                className="mt-1 block w-full px-4 py-2 rounded-full bg-white border border-gray-300 focus:ring-pink-500 focus:border-pink-500"
+                                className="mt-1 block w-full px-4 py-2 rounded-full bg-white focus:outline-none focus:ring-2 focus:ring-[color:var(--color-primary-pink)] transition duration-150 ease-in-out text-[color:var(--color-primary-brown)]"
                             />
                         )}
                         {errors.school && <div className="text-red-600 text-sm mt-1">{errors.school}</div>}
@@ -716,7 +700,7 @@ return (
                                 type="text"
                                 value={formData.pantherID}
                                 onChange={(e) => handleInputChange('pantherID', e.target.value)}
-                                className="mt-1 block w-full px-4 py-2 rounded-full bg-white border border-gray-300 focus:ring-pink-500 focus:border-pink-500"
+                                className="mt-1 block w-full px-4 py-2 rounded-full bg-white focus:outline-none focus:ring-2 focus:ring-[color:var(--color-primary-pink)] transition duration-150 ease-in-out text-[color:var(--color-primary-brown)]"
                                 placeholder="7 digits"
                                 maxLength={7}
                                 required
@@ -739,7 +723,7 @@ return (
                             id="shirtSize"
                             value={formData.shirtSize}
                             onChange={(e) => handleInputChange('shirtSize', e.target.value)}
-                            className="mt-1 block w-full px-4 py-2 rounded-full bg-white border border-gray-300 focus:ring-pink-500 focus:border-pink-500"
+                            className="mt-1 block w-full px-4 py-2 rounded-full bg-white focus:outline-none focus:ring-2 focus:ring-[color:var(--color-primary-pink)] transition duration-150 ease-in-out text-[color:var(--color-primary-brown)]"
                             required
                         >
                             <option value="">Select size</option>
@@ -749,78 +733,8 @@ return (
                         </select>
                         {errors.shirtSize && <div className="text-red-600 text-sm mt-1">{errors.shirtSize}</div>}
                     </div>
-
-                {/* Food Allergies dropdown */}
-                <div className="relative">
-                    <label htmlFor="foodAllergies" className="block text-m font-medium text-[color:var(--color-primary-brown)]">Food Allergies</label>
-                    {/* Dropdown container */}
-                    <button
-                        type="button"
-                        onClick={() => setIsDropdownOpen(!isDropdownOpen)}
-                        className="mt-1 block w-full px-4 py-2 rounded-full bg-white border border-gray-300 focus:ring-pink-500 focus:border-pink-500"
-                    >
-                        {formData.foodAllergies.length > 0
-                            ? formData.foodAllergies.join(", ")
-                            : "Select allergies"}
-                        <span className="ml-2">
-                            {isDropdownOpen ? "▲" : "▼"}
-                        </span>
-                    </button>
-
-                    {/* Dropdown menu */}
-                    {isDropdownOpen && (
-                        <div className="mt-2 space-y-2">
-                            {allergyOptions.map((allergy) => (
-                                <div key={allergy} className="flex items-center gap-2">
-                                    <input
-                                        type="checkbox"
-                                        value={allergy}
-                                        checked={formData.foodAllergies.includes(allergy)}
-                                        onChange={() => {
-                                            const selected = formData.foodAllergies.includes(allergy)
-                                                ? formData.foodAllergies.filter((a) => a !== allergy)
-                                                : [...formData.foodAllergies, allergy];
-                                            handleInputChange("foodAllergies", selected);
-                                        }}
-                                        className="accent-[color:var(--color-primary-pink)] w-4 h-4"
-                                    />
-                                    <span className="text-m text-[color:var(--color-primary-brown)]">{allergy}</span>
-                                </div>
-                            ))}
-                    
-                    {/* "Other" option */}
-                    <div className="flex items-center gap-2 mt-2">
-                        <input
-                            type="checkbox"
-                            value="Other"
-                            checked={formData.foodAllergies.includes("Other")}
-                            onChange={() => {
-                                const selected = formData.foodAllergies.includes("Other")
-                                    ? formData.foodAllergies.filter((a) => a !== "Other")
-                                    : [...formData.foodAllergies, "Other"];
-                                handleInputChange("foodAllergies", selected);
-                        }}
-                        className="accent-[color:var(--color-primary-pink)] w-4 h-4"
-                    />
-                    <span className="text-m text-[color:var(--color-primary-brown)]">Other</span>
-                    </div>
-
-                    {/* Custom input when "Other" selected */}
-                    {formData.foodAllergies.includes("Other") && (
-                        <input
-                            type="text"
-                            placeholder="Please specify"
-                            value={formData.customAllergy || ""}
-                            onChange={(e) =>
-                                handleInputChange("customAllergy", e.target.value)
-                            }
-                            className="w-full border-2 border-primary rounded-md px-3 py-2 mt-2 text-textBrown focus:outline-none focus:border-secondary focus:ring-2 focus:ring-secondary/30"
-                        />
-                    )}
-                </div>
-            )}
-        </div>
-        {/* Agreements */}
+            
+            {/* Agreements */}
                 <div className="block text-m font-medium text-[color:var(--color-primary-brown)]">
                     <h3 className="font-semibold">Agreements</h3>
                     

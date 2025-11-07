@@ -6,7 +6,6 @@ class Attendee(models.Model):
     first_name  = models.CharField(max_length=100)
     last_name   = models.CharField(max_length=100)
     email       = models.EmailField(unique=True)
-    password    = models.CharField(max_length=128, blank=True)
 
     # Demographics
     date_of_birth = models.DateField(blank=True, null=True)
@@ -93,7 +92,6 @@ class Attendee(models.Model):
         ('Prefer not to answer', 'Prefer not to answer')
     ]
     year_level = models.CharField(max_length=50, choices=YEAR_LEVELS, blank=True)
-
     study_other = models.CharField(max_length=100, blank=True)
 
     FIELDS_OF_STUDY = [
@@ -148,13 +146,13 @@ class Attendee(models.Model):
     discord = models.CharField(max_length=100, blank=True)
 
     # Additional info
-    ALLERGIES = [
-        ('Milk', 'Milk'), ('Eggs', 'Eggs'), ('Fish', 'Fish'), ('Crustacean shellfish', 'Crustacean shellfish'),
-        ('Peanuts', 'Peanuts'), ('Tree nuts', 'Tree nuts'), ('Wheat', 'Wheat'), ('Soybeans', 'Soybeans'), 
-        ('Sesame', 'Sesame')
-    ]
-    food_allergies = models.JSONField(default=list, blank=True)
-    custom_allergy = models.CharField(max_length=100, blank=True)
+    # ALLERGIES = [
+    #     ('Milk', 'Milk'), ('Eggs', 'Eggs'), ('Fish', 'Fish'), ('Crustacean shellfish', 'Crustacean shellfish'),
+    #     ('Peanuts', 'Peanuts'), ('Tree nuts', 'Tree nuts'), ('Wheat', 'Wheat'), ('Soybeans', 'Soybeans'), 
+    #     ('Sesame', 'Sesame')
+    # ]
+    # food_allergies = models.JSONField(default=list, blank=True)
+    # custom_allergy = models.CharField(max_length=100, blank=True)
 
     SHIRT_SIZES = [
         ('S','S'), ('M','M'), ('L','L'), ('XL','XL')
