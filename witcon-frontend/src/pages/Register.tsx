@@ -337,7 +337,7 @@ return (
 
             <form onSubmit={handleSubmit} className="space-y-4">
                 {/* Basic Information */}
-
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div className="bg-[color:var(--color-tertiary-yellow)] rounded-xl p-6 shadow-sm space-y-6">
                 <div className="flex justify-between items-start">
                     <h3 className="text-2xl font-bold text-[color:var(--color-primary-pink)]"
@@ -437,7 +437,75 @@ return (
                     </div>
                 </div>
                 
+                {/* Social Profiles */}
+                <div className="bg-[color:var(--color-secondary-pink)] rounded-xl p-6 shadow-sm space-y-6">
+                    <h3 className="text-xl font-bold text-[color:var(--color-primary-pink)]" style={{ fontFamily: 'Actor, sans-serif' }}>Social Profiles (Optional)</h3>
+                    
+                    <div>
+                        <label htmlFor="linkedin" className="block text-sm font-medium text-[color:var(--color-primary-brown)]">LinkedIn</label>
+                        <input
+                            id="linkedin"
+                            type="url"
+                            value={formData.linkedin}
+                            onChange={(e) => handleInputChange('linkedin', e.target.value)}
+                            className="mt-1 block w-full px-4 py-2 rounded-full bg-white border border-gray-300 focus:ring-pink-500 focus:border-pink-500"
+                            placeholder="https://linkedin.com/in/yourprofile"
+                        />
+                    </div>
 
+                    <div>
+                        <label htmlFor="github" className="block text-sm font-medium text-[color:var(--color-primary-brown)]">GitHub Profile</label>
+                        <input
+                            id="github"
+                            type="url"
+                            value={formData.github}
+                            onChange={(e) => handleInputChange('github', e.target.value)}
+                            className="mt-1 block w-full px-4 py-2 rounded-full bg-white border border-gray-300 focus:ring-pink-500 focus:border-pink-500"
+                            placeholder="https://github.com/yourusername"
+                        />
+                    </div>
+
+                    <div>
+                        <label htmlFor="website" className="block text-m font-medium text-[color:var(--color-primary-brown)]">Personal Website</label>
+                        <input
+                            id="website"
+                            type="url"
+                            value={formData.website}
+                            onChange={(e) => handleInputChange('website', e.target.value)}
+                            className="mt-1 block w-full px-4 py-2 rounded-full bg-white border border-gray-300 focus:ring-pink-500 focus:border-pink-500"
+                            placeholder="https://yourwebsite.com"
+                        />
+                    </div>
+
+                    <div>
+                        <label htmlFor="discord" className="block text-m font-medium text-[color:var(--color-primary-brown)]">Discord Username</label>
+                        <input
+                            id="discord"
+                            type="text"
+                            value={formData.discord}
+                            onChange={(e) => handleInputChange('discord', e.target.value)}
+                            className="mt-1 block w-full px-4 py-2 rounded-full bg-white border border-gray-300 focus:ring-pink-500 focus:border-pink-500"
+                            placeholder="username#1234"
+                        />
+                    </div>
+                    
+                    {/* Resume */}
+                    <div>
+                        <label htmlFor="resume" className="text-xl font-bold text-[color:var(--color-primary-pink)]" style={{ fontFamily: 'Actor, sans-serif' }}>Resume Upload*</label>
+                        <div className="border-2 border-dashed border-[color:var(--color-primary-pink)] rounded-xl p-4 bg-white text-center hover:border-pink-500 transition">
+                        <input
+                            id="resume"
+                            type="file"
+                            onChange={handleFileChange}
+                            className="w-full text-sm text-gray-700 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-[color:var(--color-primary-pink)] file:text-white hover:file:bg-pink-600"
+                            accept=".pdf"
+                            required
+                        />
+                        {errors.resume && <div className="text-red-600 text-sm mt-2">{errors.resume}</div>}
+                        </div>
+                    </div>
+                </div>
+                
                 {/* Demographics */}
                 <div className="bg-[color:var(--color-tertiary-yellow)] rounded-xl p-6 shadow-sm space-y-6">
                     <h3 className="text-xl font-bold text-[color:var(--color-primary-pink)]" style={{ fontFamily: 'Actor, sans-serif' }}>
@@ -658,74 +726,6 @@ return (
                         </div>
                     )}
                 </div>
-
-                {/* Social Profiles */}
-                <div className="bg-[color:var(--color-secondary-pink)] rounded-xl p-6 shadow-sm space-y-6">
-                    <h3 className="text-xl font-bold text-[color:var(--color-primary-pink)]" style={{ fontFamily: 'Actor, sans-serif' }}>Social Profiles (Optional)</h3>
-                    
-                    <div>
-                        <label htmlFor="linkedin" className="block text-sm font-medium text-[color:var(--color-primary-brown)]">LinkedIn</label>
-                        <input
-                            id="linkedin"
-                            type="url"
-                            value={formData.linkedin}
-                            onChange={(e) => handleInputChange('linkedin', e.target.value)}
-                            className="mt-1 block w-full px-4 py-2 rounded-full bg-white border border-gray-300 focus:ring-pink-500 focus:border-pink-500"
-                            placeholder="https://linkedin.com/in/yourprofile"
-                        />
-                    </div>
-
-                    <div>
-                        <label htmlFor="github" className="block text-sm font-medium text-[color:var(--color-primary-brown)]">GitHub Profile</label>
-                        <input
-                            id="github"
-                            type="url"
-                            value={formData.github}
-                            onChange={(e) => handleInputChange('github', e.target.value)}
-                            className="mt-1 block w-full px-4 py-2 rounded-full bg-white border border-gray-300 focus:ring-pink-500 focus:border-pink-500"
-                            placeholder="https://github.com/yourusername"
-                        />
-                    </div>
-
-                    <div>
-                        <label htmlFor="website" className="block text-m font-medium text-[color:var(--color-primary-brown)]">Personal Website</label>
-                        <input
-                            id="website"
-                            type="url"
-                            value={formData.website}
-                            onChange={(e) => handleInputChange('website', e.target.value)}
-                            className="mt-1 block w-full px-4 py-2 rounded-full bg-white border border-gray-300 focus:ring-pink-500 focus:border-pink-500"
-                            placeholder="https://yourwebsite.com"
-                        />
-                    </div>
-
-                    <div>
-                        <label htmlFor="discord" className="block text-m font-medium text-[color:var(--color-primary-brown)]">Discord Username</label>
-                        <input
-                            id="discord"
-                            type="text"
-                            value={formData.discord}
-                            onChange={(e) => handleInputChange('discord', e.target.value)}
-                            className="mt-1 block w-full px-4 py-2 rounded-full bg-white border border-gray-300 focus:ring-pink-500 focus:border-pink-500"
-                            placeholder="username#1234"
-                        />
-                    </div>
-                    
-                    {/* Resume */}
-                    <div>
-                        <label htmlFor="resume" className="text-xl font-bold text-[color:var(--color-primary-pink)]" style={{ fontFamily: 'Actor, sans-serif' }}>Resume Upload*</label>
-                        <div className="border-2 border-dashed border-[color:var(--color-primary-pink)] rounded-xl p-4 bg-white text-center hover:border-pink-500 transition">
-                        <input
-                            id="resume"
-                            type="file"
-                            onChange={handleFileChange}
-                            className="w-full text-sm text-gray-700 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-[color:var(--color-primary-pink)] file:text-white hover:file:bg-pink-600"
-                            accept=".pdf"
-                            required
-                        />
-                        {errors.resume && <div className="text-red-600 text-sm mt-2">{errors.resume}</div>}
-                        </div>
-                    </div>
                 </div>
 
                 {/* Additional Information */}
@@ -820,9 +820,7 @@ return (
                 </div>
             )}
         </div>
-        </div>
-
-                {/* Agreements */}
+        {/* Agreements */}
                 <div className="block text-m font-medium text-[color:var(--color-primary-brown)]">
                     <h3 className="font-semibold">Agreements</h3>
                     
@@ -864,7 +862,8 @@ return (
                         Register
                     </button>
                 </div>
-            </form>
-        </section>
-    );
+            </div>
+        </form>
+    </section>
+);
 }
