@@ -1,12 +1,9 @@
 import React, { useState } from 'react';
 import {useEffect} from 'react';
 import type { ChangeEvent } from 'react';
-import { useLocation } from 'react-router-dom';
-import { Camera, Edit, X, FileText, ExternalLink } from 'lucide-react';
+//import { useLocation } from 'react-router-dom';
+//import { Camera, Edit, X, FileText, ExternalLink } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
-import Title from '../components/text/Title';
-import Text from '../components/text/Text';
-import Header from '../components/text/Header';
 
 interface AttendeeData {
   id?: number;
@@ -28,9 +25,9 @@ interface AttendeeData {
 
 export default function Profile() {
   const { userId, logout } = useAuth();               // get logged-in user ID
-  const [isEditing, setIsEditing] = useState<boolean>(false);
-  const [showQRScanner, setShowQRScanner] = useState<boolean>(false);
-  const [showResumeViewer, setShowResumeViewer] = useState<boolean>(false);
+  const [_isEditing, setIsEditing] = useState<boolean>(false);
+  const [_showQRScanner, setShowQRScanner] = useState<boolean>(false);
+  const [_showResumeViewer, _setShowResumeViewer] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string>('');
 
@@ -127,12 +124,8 @@ export default function Profile() {
     const file = event.target.files?.[0];
     if (!file) return;
 
-
     const formData = new FormData();
     formData.append('resume', file);
-
-
-
 
     try {
       const res = await fetch(`${API_URL}/attendees/${userId}/`, {
@@ -172,9 +165,13 @@ export default function Profile() {
   //   );
   // }
 
+  // if (loading) {
+  //   return <p>Loading profile...</p>;
+  // }
 
-  // if (loading) return <p>Loading profile...</p>;
-  // if (error) return <p className="text-red-600">Error: {error}</p>;
+  if (error) {
+    return <p className="text-red-600">Error: {error}</p>;
+  }
 
 type InfoSectionProps = {
   children: React.ReactNode;
@@ -190,7 +187,6 @@ function InfoSection({ children }: InfoSectionProps) {
 
 const AcademicInfoBox = () => (
   <InfoSection>
-    {/* Field of Study / Major */}
     <div className="flex items-center gap-4">
       <label className="text-[color:var(--color-primary-brown)] font-medium min-w-[100px]">Major:</label>
       <input
@@ -201,8 +197,6 @@ const AcademicInfoBox = () => (
       />
     </div>
 
-
-    {/* School */}
     <div className="flex items-center gap-4">
       <label className="text-[color:var(--color-primary-brown)] font-medium min-w-[100px]">School:</label>
       <input
@@ -213,8 +207,6 @@ const AcademicInfoBox = () => (
       />
     </div>
 
-
-    {/* Level of Study */}
     <div className="flex items-center gap-4">
       <label className="text-[color:var(--color-primary-brown)] font-medium min-w-[100px]">Level of Study:</label>
       <input
@@ -230,7 +222,6 @@ const AcademicInfoBox = () => (
 
 const ResumeSocialBox = () => (
   <InfoSection>
-    {/* Resume Upload Section */}
     <div className="flex items-center gap-4">
       <img src="/images/pdfIcon.png" alt="PDF Icon" className="w-20 h-20" />
       <p className="text-sm text-[color:var(--color-primary-brown)] font-[Actor] text-center w-full">
@@ -238,8 +229,6 @@ const ResumeSocialBox = () => (
       </p>
     </div>
 
-
-    {/* LinkedIn */}
     <div className="flex items-center gap-4">
       <label className="text-[color:var(--color-primary-brown)] font-medium min-w-[100px]">LinkedIn:</label>
       <input
@@ -250,8 +239,6 @@ const ResumeSocialBox = () => (
       />
     </div>
 
-
-    {/* GitHub */}
     <div className="flex items-center gap-4">
       <label className="text-[color:var(--color-primary-brown)] font-medium min-w-[100px]">GitHub:</label>
       <input
@@ -262,8 +249,6 @@ const ResumeSocialBox = () => (
       />
     </div>
 
-
-    {/* Discord */}
     <div className="flex items-center gap-4">
       <label className="text-[color:var(--color-primary-brown)] font-medium min-w-[100px]">Discord Username:</label>
       <input
@@ -281,7 +266,6 @@ const ResumeSocialBox = () => (
   const WiCSResourcesBox = () => (
   <InfoSection>
     <h3 className="font-semibold text-lg text-[color:var(--color-primary-brown)]">Make the best of WiTCON</h3>
-    {/* WiTCON ‘26 Attendee Guide */}
     <div className="flex items-center gap-3">
       <img src="/images/notionIcon.png" alt="Notion Icon" className="w-8 h-8" />
       <a
@@ -293,8 +277,6 @@ const ResumeSocialBox = () => (
       </a>
     </div>
 
-
-    {/* Discord */}
     <div className="flex items-center gap-3">
       <img src="/images/discordIcon.png" alt="Discord Icon" className="w-8 h-8" />
       <a
@@ -306,8 +288,6 @@ const ResumeSocialBox = () => (
       </a>
     </div>
 
-
-    {/* LinkedIn */}
     <div className="flex items-center gap-3">
       <img src="/images/linkedInIcon.png" alt="LinkedIn Icon" className="w-8 h-8" />
       <a
@@ -319,8 +299,6 @@ const ResumeSocialBox = () => (
       </a>
     </div>
 
-
-    {/* Instagram */}
     <div className="flex items-center gap-3">
       <img src="/images/instagramIcon.png" alt="Instagram Icon" className="w-8 h-8" />
       <a
@@ -338,7 +316,7 @@ const ResumeSocialBox = () => (
 const ReportIncidentBox = () => (
   <InfoSection>
     <h3 className="font-semibold text-2xl text-[color:var(--color-primary-brown)]">REPORT AN INCIDENT</h3>
-    <p className="text-s text-[color:var(--color-primary-brown)]">
+    <p className="text-sm text-[color:var(--color-primary-brown)]">
       Please, if you feel uncomfortable or witness inappropriate behavior at WiTCON. Please report it using the link below.
     </p>
     <a
@@ -369,8 +347,8 @@ return (
         </div>
        
         <div className="flex flex-col items-start justify-center">
-          <Title className="font-bold"> {attendeeData.firstName} {attendeeData.lastName}
-          </Title>
+          <h2 className="font-bold"> {attendeeData.firstName} {attendeeData.lastName}
+          </h2>
           <div className="flex gap-3 mt-3">
           <div className="relative">
             <button
@@ -433,4 +411,4 @@ return (
   </section>
   </main>
 );
-}
+}    
