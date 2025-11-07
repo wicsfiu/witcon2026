@@ -10,7 +10,6 @@ class AttendeeSerializer(serializers.ModelSerializer):
     lastName = serializers.CharField(source='last_name', required=True)
     email = serializers.EmailField(required=True)
     confirmEmail = serializers.EmailField(write_only=True, required=False)
-    password = serializers.CharField(write_only=True, required=False, allow_blank=True)
 
     dateOfBirth = serializers.DateField(source='date_of_birth', required=False, allow_null=True)
     country = serializers.CharField(required=False, allow_blank=True)
@@ -43,12 +42,12 @@ class AttendeeSerializer(serializers.ModelSerializer):
 
     resume = serializers.FileField(required=False, allow_null=True)
 
-    foodAllergies = serializers.ListField(
-        child=serializers.CharField(),
-        required=False,
-        source='food_allergies',
-        allow_empty=True,
-    )
+    # foodAllergies = serializers.ListField(
+    #     child=serializers.CharField(),
+    #     required=False,
+    #     source='food_allergies',
+    #     allow_empty=True,
+    # )
 
     shirtSize = serializers.CharField(source='shirt_size', required=False, allow_blank=True)
 
@@ -63,7 +62,7 @@ class AttendeeSerializer(serializers.ModelSerializer):
             'id',
             'firstName', 
             'lastName', 
-            'email', 'confirmEmail', 'password',
+            'email', 'confirmEmail',
             'dateOfBirth', 'country', 'state',
             'gender', 'genderOther',
             'raceEthnicity', 'raceOther',
@@ -71,76 +70,75 @@ class AttendeeSerializer(serializers.ModelSerializer):
             'fieldOfStudy', 'fieldOther',
             'school', 'schoolOther', 'pantherID',
             'linkedin', 'github', 'website', 'discord',
-            'foodAllergies', 'customAllergy',
             'shirtSize',
             'codeOfConduct', 'photographyConsent',
             'resume',
             'checked_in', 'created_at', 'updated_at',
+            # 'foodAllergies', 'customAllergy',
         )
         read_only_fields = ('id', 'created_at', 'updated_at', 'checked_in')
 
-    def to_internal_value(self, data):
-        data = data.copy()
-        raw = None
-        if hasattr(data, 'getlist'):
-            raw_list = data.getlist('foodAllergies')
-            if raw_list:
-                if len(raw_list) == 1:
-                    raw = raw_list[0]
-                else:
-                    raw = raw_list
-        if raw is None:
-            raw = data.get('foodAllergies')
+    # def to_internal_value(self, data):
+    #     data = data.copy()
+    #     raw = None
+    #     if hasattr(data, 'getlist'):
+    #         raw_list = data.getlist('foodAllergies')
+    #         if raw_list:
+    #             if len(raw_list) == 1:
+    #                 raw = raw_list[0]
+    #             else:
+    #                 raw = raw_list
+    #     if raw is None:
+    #         raw = data.get('foodAllergies')
 
-        if raw is not None:
-            normalized = []
+    #     if raw is not None:
+    #         normalized = []
 
-            def push(x):
-                if isinstance(x, str):
-                    s = x.strip()
-                    if (s.startswith('[') or s.startswith('{')):
-                        try:
-                            parsed = json.loads(s)
-                            push(parsed)
-                            return
-                        except Exception:
-                            pass
-                    if s != '':
-                        normalized.append(s)
-                    return
+    #         def push(x):
+    #             if isinstance(x, str):
+    #                 s = x.strip()
+    #                 if (s.startswith('[') or s.startswith('{')):
+    #                     try:
+    #                         parsed = json.loads(s)
+    #                         push(parsed)
+    #                         return
+    #                     except Exception:
+    #                         pass
+    #                 if s != '':
+    #                     normalized.append(s)
+    #                 return
 
-                if isinstance(x, (list, tuple)):
-                    for item in x:
-                        push(item)
-                    return
+    #             if isinstance(x, (list, tuple)):
+    #                 for item in x:
+    #                     push(item)
+    #                 return
 
-                if isinstance(x, dict):
-                    for item in x.values():
-                        push(item)
-                    return
+    #             if isinstance(x, dict):
+    #                 for item in x.values():
+    #                     push(item)
+    #                 return
 
-                normalized.append(str(x))
+    #             normalized.append(str(x))
 
-            push(raw)
+    #         push(raw)
 
-            normalized = [str(i).strip() for i in normalized if str(i).strip()]
-            data['foodAllergies'] = normalized
+    #         normalized = [str(i).strip() for i in normalized if str(i).strip()]
+    #         data['foodAllergies'] = normalized
 
-        return super().to_internal_value(data)
+    #     return super().to_internal_value(data)
     
-    def validate_foodAllergies(self, value):
-        # At this point value should be a list
-        if value in (None, ''):
-            return []
-        if not isinstance(value, list):
-            raise serializers.ValidationError("foodAllergies must be a list.")
-        cleaned = []
-        for i, item in enumerate(value):
-            if not isinstance(item, str):
-                # per-index error style
-                raise serializers.ValidationError({i: "Not a valid string."})
-            cleaned.append(item.strip())
-        return cleaned
+    # def validate_foodAllergies(self, value):
+    #     if value in (None, ''):
+    #         return []
+    #     if not isinstance(value, list):
+    #         raise serializers.ValidationError("foodAllergies must be a list.")
+    #     cleaned = []
+    #     for i, item in enumerate(value):
+    #         if not isinstance(item, str):
+    #             # per-index error style
+    #             raise serializers.ValidationError({i: "Not a valid string."})
+    #         cleaned.append(item.strip())
+    #     return cleaned
     
     customAllergy = serializers.CharField(source='custom_allergy', required=False, allow_blank=True)
 
@@ -170,25 +168,20 @@ class AttendeeSerializer(serializers.ModelSerializer):
         return attrs
 
 
-    # hash password and create Attendee
+    # Create Attendee
     def create(self, validated_data):
         validated_data.pop('confirmEmail', None)
-
-        fa = validated_data.get("food_allergies")
-        if isinstance(fa, str):
-            try:
-                validated_data["food_allergies"] = json.loads(fa)
-            except Exception:
-                validated_data["food_allergies"] = []
-
-        pwd = validated_data.pop('password', None)
         attendee = Attendee(**validated_data)
-        if pwd:
-            import hashlib
-            attendee.password = hashlib.sha256(pwd.encode()).hexdigest()
         attendee.save()
-        print("✅ Allergies saved:", attendee.food_allergies)
         return attendee
+
+        # fa = validated_data.get("food_allergies")
+        # if isinstance(fa, str):
+        #     try:
+        #         validated_data["food_allergies"] = json.loads(fa)
+        #     except Exception:
+        #         validated_data["food_allergies"] = []
+        # print("✅ Allergies saved:", attendee.food_allergies)
 
     # small resume size validation
     def validate_resume(self, value):

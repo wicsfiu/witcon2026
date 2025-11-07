@@ -8,7 +8,6 @@ interface FormData {
     lastName: string;
     email: string;
     confirmEmail: string;
-    password: string;
     dateOfBirth: string;
     country: string;
     state: string;
@@ -29,8 +28,8 @@ interface FormData {
     website: string;
     discord: string;
     shirtSize: string;
-    foodAllergies: string[];
-    customAllergy: string;
+    // foodAllergies: string[];
+    // customAllergy: string;
     codeOfConduct: boolean;
     photographyConsent: boolean;
 }
@@ -45,7 +44,6 @@ export default function Register() {
         lastName: '',
         email: '',
         confirmEmail: '',
-        password: '',
         dateOfBirth: '',
         country: '',
         state: '',
@@ -66,8 +64,8 @@ export default function Register() {
         website: '',
         discord: '',
         shirtSize: '',
-        foodAllergies: [],
-        customAllergy: '',
+        // foodAllergies: [],
+        // customAllergy: '',
         codeOfConduct: false,
         photographyConsent: false
 });
@@ -214,7 +212,6 @@ export default function Register() {
         if (!formData.email) newErrors.email = 'Required';
         if (!formData.confirmEmail) newErrors.confirmEmail = 'Required';
         if (formData.email !== formData.confirmEmail) newErrors.confirmEmail = 'Emails do not match';
-        if (!formData.password) newErrors.password = 'Required';
         if (!formData.dateOfBirth) newErrors.dateOfBirth = 'Required';
         else if (!validateAge(formData.dateOfBirth)) newErrors.dateOfBirth = 'Must be 18 or older by March 27, 2026';
         
@@ -262,20 +259,20 @@ export default function Register() {
 
         const fd = new FormData();
 
-        console.log("foodAllergies before stringify:", formData.foodAllergies); // Debug log
-        Object.entries(formData).forEach(([key, value]) => {
-            if (value === undefined || value === null) return;
+        // console.log("foodAllergies before stringify:", formData.foodAllergies); // Debug log
+        // Object.entries(formData).forEach(([key, value]) => {
+        //     if (value === undefined || value === null) return;
             
-            if (key === "foodAllergies") { 
-                (value as string[]).forEach(item => {
-                    fd.append("food_allergies[]", item);
-                });
-            } else if (Array.isArray(value)) {
-                value.forEach(item => fd.append(`${key}[]`, item));
-            } else {
-                fd.append(key, String(value));
-            }
-        });
+        //     if (key === "foodAllergies") { 
+        //         (value as string[]).forEach(item => {
+        //             fd.append("food_allergies[]", item);
+        //         });
+        //     } else if (Array.isArray(value)) {
+        //         value.forEach(item => fd.append(`${key}[]`, item));
+        //     } else {
+        //         fd.append(key, String(value));
+        //     }
+        // });
 
         if (resumeFile && resumeFile.size > 600 * 1024) {
             alert("Resume file size must be 600 KB or smaller");
@@ -410,19 +407,6 @@ return (
                     </div>
 
                     <div>
-                        <label htmlFor="password" className="block text-sm font-medium text-[color:var(--color-primary-brown)]">Password *</label>
-                        <input
-                            id="password"
-                            type="password"
-                            value={formData.password}
-                            onChange={(e) => handleInputChange('password', e.target.value)}
-                            className="mt-1 block w-full px-4 py-2 rounded-full bg-white border border-gray-300 focus:ring-pink-500 focus:border-pink-500"
-                            required
-                        />
-                        {errors.password && <div className="text-red-600 text-sm mt-1">{errors.password}</div>}
-                    </div>
-
-                    <div>
                         <label htmlFor="dateOfBirth" className="block text-sm font-medium text-[color:var(--color-primary-brown)]">Date of Birth *</label>
                         <input
                             id="dateOfBirth"
@@ -505,7 +489,7 @@ return (
                         </div>
                     </div>
                 </div>
-                
+
                 {/* Demographics */}
                 <div className="bg-[color:var(--color-tertiary-yellow)] rounded-xl p-6 shadow-sm space-y-6">
                     <h3 className="text-xl font-bold text-[color:var(--color-primary-pink)]" style={{ fontFamily: 'Actor, sans-serif' }}>
@@ -749,78 +733,8 @@ return (
                         </select>
                         {errors.shirtSize && <div className="text-red-600 text-sm mt-1">{errors.shirtSize}</div>}
                     </div>
-
-                {/* Food Allergies dropdown */}
-                <div className="relative">
-                    <label htmlFor="foodAllergies" className="block text-m font-medium text-[color:var(--color-primary-brown)]">Food Allergies</label>
-                    {/* Dropdown container */}
-                    <button
-                        type="button"
-                        onClick={() => setIsDropdownOpen(!isDropdownOpen)}
-                        className="mt-1 block w-full px-4 py-2 rounded-full bg-white border border-gray-300 focus:ring-pink-500 focus:border-pink-500"
-                    >
-                        {formData.foodAllergies.length > 0
-                            ? formData.foodAllergies.join(", ")
-                            : "Select allergies"}
-                        <span className="ml-2">
-                            {isDropdownOpen ? "▲" : "▼"}
-                        </span>
-                    </button>
-
-                    {/* Dropdown menu */}
-                    {isDropdownOpen && (
-                        <div className="mt-2 space-y-2">
-                            {allergyOptions.map((allergy) => (
-                                <div key={allergy} className="flex items-center gap-2">
-                                    <input
-                                        type="checkbox"
-                                        value={allergy}
-                                        checked={formData.foodAllergies.includes(allergy)}
-                                        onChange={() => {
-                                            const selected = formData.foodAllergies.includes(allergy)
-                                                ? formData.foodAllergies.filter((a) => a !== allergy)
-                                                : [...formData.foodAllergies, allergy];
-                                            handleInputChange("foodAllergies", selected);
-                                        }}
-                                        className="accent-[color:var(--color-primary-pink)] w-4 h-4"
-                                    />
-                                    <span className="text-m text-[color:var(--color-primary-brown)]">{allergy}</span>
-                                </div>
-                            ))}
-                    
-                    {/* "Other" option */}
-                    <div className="flex items-center gap-2 mt-2">
-                        <input
-                            type="checkbox"
-                            value="Other"
-                            checked={formData.foodAllergies.includes("Other")}
-                            onChange={() => {
-                                const selected = formData.foodAllergies.includes("Other")
-                                    ? formData.foodAllergies.filter((a) => a !== "Other")
-                                    : [...formData.foodAllergies, "Other"];
-                                handleInputChange("foodAllergies", selected);
-                        }}
-                        className="accent-[color:var(--color-primary-pink)] w-4 h-4"
-                    />
-                    <span className="text-m text-[color:var(--color-primary-brown)]">Other</span>
-                    </div>
-
-                    {/* Custom input when "Other" selected */}
-                    {formData.foodAllergies.includes("Other") && (
-                        <input
-                            type="text"
-                            placeholder="Please specify"
-                            value={formData.customAllergy || ""}
-                            onChange={(e) =>
-                                handleInputChange("customAllergy", e.target.value)
-                            }
-                            className="w-full border-2 border-primary rounded-md px-3 py-2 mt-2 text-textBrown focus:outline-none focus:border-secondary focus:ring-2 focus:ring-secondary/30"
-                        />
-                    )}
-                </div>
-            )}
-        </div>
-        {/* Agreements */}
+            
+            {/* Agreements */}
                 <div className="block text-m font-medium text-[color:var(--color-primary-brown)]">
                     <h3 className="font-semibold">Agreements</h3>
                     
