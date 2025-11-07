@@ -1,14 +1,12 @@
-import { useState, useEffect } from 'react';
+import React, { useState } from 'react';
+import {useEffect} from 'react';
 import type { ChangeEvent } from 'react';
 import { useLocation } from 'react-router-dom';
 import { Camera, Edit, X, FileText, ExternalLink } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import Title from '../components/text/Title';
 import Text from '../components/text/Text';
-import Header from "../components/text/Header";
-
-
-
+import Header from '../components/text/Header';
 
 interface AttendeeData {
   id?: number;
@@ -18,7 +16,7 @@ interface AttendeeData {
   school: string;
   schoolOther?: string;
   fieldOfStudy: string;
-  levelOfStudy: 'Undergraduate' | 'Graduate' | 'Post-Doctorate';
+  levelOfStudy: string;
   yearLevel?: string;
   resume?: string;
   linkedin?: string;
@@ -27,7 +25,6 @@ interface AttendeeData {
   profileImage?: string;
   shirtSize?: string;
 }
-
 
 export default function Profile() {
   const { userId, logout } = useAuth();               // get logged-in user ID
@@ -62,14 +59,9 @@ export default function Profile() {
     "profilePic6.png",
   ];
 
-
-
-
   const [editData, setEditData] = useState<AttendeeData>({ ...attendeeData });
 
-
   const API_URL = import.meta.env.VITE_API_URL || 'https://witcon.duckdns.org/backend-api';
-
 
   // Fetch attendee profile when userId changes
   useEffect(() => {
@@ -184,10 +176,11 @@ export default function Profile() {
   // if (loading) return <p>Loading profile...</p>;
   // if (error) return <p className="text-red-600">Error: {error}</p>;
 
+type InfoSectionProps = {
+  children: React.ReactNode;
+};
 
-
-
-function InfoSection({ children }: { children: React.ReactNode }) {
+function InfoSection({ children }: InfoSectionProps) {
   return (
     <div className="break-inside-avoid mb-6 bg-[color:var(--color-tertiary-yellow)] p-6 rounded-xl space-y-4">
       {children}
@@ -195,15 +188,13 @@ function InfoSection({ children }: { children: React.ReactNode }) {
   );
 }
 
-
-{/* Academic Info Box Component */}
-const AcademicInfoBox = (
+const AcademicInfoBox = () => (
   <InfoSection>
     {/* Field of Study / Major */}
     <div className="flex items-center gap-4">
       <label className="text-[color:var(--color-primary-brown)] font-medium min-w-[100px]">Major:</label>
       <input
-        type="Text"
+        type="text"
         value={attendeeData.fieldOfStudy || ""}
         readOnly
         className="flex-1 px-4 py-2 rounded-full bg-[#FFF6F6] text-[color:var(--color-primary-brown)] font-[Actor] w-fit min-w-[150px]"
@@ -215,7 +206,7 @@ const AcademicInfoBox = (
     <div className="flex items-center gap-4">
       <label className="text-[color:var(--color-primary-brown)] font-medium min-w-[100px]">School:</label>
       <input
-        type="Text"
+        type="text"
         value={attendeeData.school || attendeeData.schoolOther || ""}
         readOnly
         className="flex-1 px-4 py-2 rounded-full bg-[#FFF6F6] text-[color:var(--color-primary-brown)] font-[Actor] w-fit min-w-[150px]"
@@ -237,12 +228,11 @@ const AcademicInfoBox = (
 );
 
 
-{/* User Resume and Socials */}
-const ResumeSocialBox = (
+const ResumeSocialBox = () => (
   <InfoSection>
     {/* Resume Upload Section */}
     <div className="flex items-center gap-4">
-      <img src="public/images/pdfIcon.png" alt="PDF Icon" className="w-20 h-20" />
+      <img src="/images/pdfIcon.png" alt="PDF Icon" className="w-20 h-20" />
       <p className="text-sm text-[color:var(--color-primary-brown)] font-[Actor] text-center w-full">
         You only have a limit of 2 more resume uploads.
       </p>
@@ -287,8 +277,8 @@ const ResumeSocialBox = (
 );
 
 
-  {/*WiCS Resources*/}
-  const WiCSResourcesBox = (
+
+  const WiCSResourcesBox = () => (
   <InfoSection>
     <h3 className="font-semibold text-lg text-[color:var(--color-primary-brown)]">Make the best of WiTCON</h3>
     {/* WiTCON ‘26 Attendee Guide */}
@@ -345,8 +335,7 @@ const ResumeSocialBox = (
 );
 
 
-{/* Report an Incident Box */}
-const ReportIncidentBox = (
+const ReportIncidentBox = () => (
   <InfoSection>
     <h3 className="font-semibold text-2xl text-[color:var(--color-primary-brown)]">REPORT AN INCIDENT</h3>
     <p className="text-s text-[color:var(--color-primary-brown)]">
@@ -436,10 +425,10 @@ return (
 
     <section>
     <div className="columns-1 md:columns-2 gap-6 mt-2">
-      {AcademicInfoBox}
-      {WiCSResourcesBox}
-      {ResumeSocialBox}
-      {ReportIncidentBox}
+          <AcademicInfoBox />
+          <WiCSResourcesBox />
+          <ResumeSocialBox />
+          <ReportIncidentBox />
     </div>
   </section>
   </main>
