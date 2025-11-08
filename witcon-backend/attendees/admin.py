@@ -31,7 +31,7 @@ class AttendeeAdmin(admin.ModelAdmin):
             "fields": ("panther_id", "linkedin", "github", "website", "discord")
         }),
         ("Additional Information", {
-            "fields": ("shirt_size")
+            "fields": ("shirt_size",)
         }),
         ("Agreements", {
             "fields": ("code_of_conduct", "photography_consent")
