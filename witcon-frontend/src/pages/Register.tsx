@@ -259,20 +259,25 @@ export default function Register() {
 
         const fd = new FormData();
 
-        // console.log("foodAllergies before stringify:", formData.foodAllergies); // Debug log
-        // Object.entries(formData).forEach(([key, value]) => {
-        //     if (value === undefined || value === null) return;
-            
-        //     if (key === "foodAllergies") { 
-        //         (value as string[]).forEach(item => {
-        //             fd.append("food_allergies[]", item);
-        //         });
-        //     } else if (Array.isArray(value)) {
-        //         value.forEach(item => fd.append(`${key}[]`, item));
-        //     } else {
-        //         fd.append(key, String(value));
-        //     }
-        // });
+    Object.entries(formData).forEach(([key, value]) => {
+        if (value === null || value === undefined) return;
+
+        // Convert booleans to strings ("true"/"false")
+        if (typeof value === "boolean") {
+        fd.append(key, value ? "true" : "false");
+        return;
+        }
+
+        // Convert arrays to JSON (if any in future)
+        if (Array.isArray(value)) {
+        fd.append(key, JSON.stringify(value));
+        return;
+        }
+
+        // Everything else as string
+        fd.append(key, String(value));
+    });
+
 
         if (resumeFile && resumeFile.size > 600 * 1024) {
             alert("Resume file size must be 600 KB or smaller");
