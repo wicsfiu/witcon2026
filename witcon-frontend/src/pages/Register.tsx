@@ -258,9 +258,19 @@ export default function Register() {
         // const url = `${import.meta.env.VITE_API_URL}/attendees/create/`;
 
         const fd = new FormData();
+        if (resumeFile) {
+        if (resumeFile.size > 600 * 1024) {
+                alert("Resume file size must be 600 KB or smaller");
+                return;
+        }
+        fd.append("resume", resumeFile);
+        }
+
+
 
     Object.entries(formData).forEach(([key, value]) => {
         if (value === null || value === undefined) return;
+        
 
         // Convert booleans to "true"/"false"
         if (typeof value === "boolean") {
@@ -268,24 +278,14 @@ export default function Register() {
         return;
         }
 
-        
         if (Array.isArray(value)) {
-                value.forEach(item => fd.append(`${key}[]`, item));
-        } else {
-                fd.append(key, String(value));
-        }
-    });
-
-
-        if (resumeFile && resumeFile.size > 600 * 1024) {
-            alert("Resume file size must be 600 KB or smaller");
+            fd.append(key, JSON.stringify(value)); // ✅ send as JSON string
             return;
         }
-        if (resumeFile) fd.append('resume', resumeFile);
+        
+        fd.append(key, String(value));
 
-        // Debug: Log FormData contents
-        console.log("FormData being sent:");
-        for (let [k, v] of fd.entries()) console.log(k, v);
+    });
 
         // Debug: Log FormData contents
         console.log("FormData being sent:");
@@ -299,6 +299,10 @@ export default function Register() {
                 const data = await res.json().catch(() => ({}));
                 console.error("Backend error response:", data);
                 setErrors(data);
+                console.log("Form Error:");
+                for (let pair of fd.entries()) {
+                    console.log(pair[0], pair[1]);
+                }
             } else {
                 const data = await res.json();
                 console.log("Registration success:", data);
@@ -338,7 +342,7 @@ return (
                 </div>
             )}
 
-            <form onSubmit={handleSubmit} className="space-y-4">
+            <form onSubmit={handleSubmit} encType="multipart/form-data" className="space-y-4">
                 {/* Basic Information */}
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div className="bg-[color:var(--color-tertiary-yellow)] rounded-xl p-6 shadow-sm space-y-6">
