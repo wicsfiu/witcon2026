@@ -274,11 +274,9 @@ export default function Register() {
         return;
         }
 
-    // Validate resume size
-    if (resumeFile && resumeFile.size > 600 * 1024) {
-        alert("Resume file size must be 600 KB or smaller");
-        return;
-    }
+        // Everything else as string
+        fd.append(key, String(value));
+    });
 
 
         if (resumeFile && resumeFile.size > 600 * 1024) {
@@ -310,7 +308,7 @@ export default function Register() {
             console.error("Error sending data:", error);
             setErrors({ submit: "Registration failed. Please try again." });
         }
-    });
+    };
 
     if (isSubmitted) {
         return (
