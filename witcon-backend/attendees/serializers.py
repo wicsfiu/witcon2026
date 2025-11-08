@@ -58,47 +58,35 @@ class AttendeeSerializer(serializers.ModelSerializer):
     def to_internal_value(self, data):
         data = data.copy()
 
-        def normalize_value(value):
-            normalized = []
+        def normalize(value):
+            # If the value is a string that looks like JSON, try to parse it
+            if isinstance(value, str):
+                s = value.strip()
+                if s.startswith('[') or s.startswith('{'):
+                    try:
+                        parsed = json.loads(s)
+                        return normalize(parsed)
+                    except Exception:
+                        pass
+                return s
 
-            def push(x):
-                if isinstance(x, str):
-                    s = x.strip()
-                    if s.startswith('[') or s.startswith('{'):
-                        try:
-                            parsed = json.loads(s)
-                            push(parsed)
-                            return
-                        except Exception:
-                            pass
-                    if s != '':
-                        normalized.append(s)
-                    return
-                if isinstance(x, (list, tuple)):
-                    for item in x:
-                        push(item)
-                    return
-                if isinstance(x, dict):
-                    for item in x.values():
-                        push(item)
-                    return
-                normalized.append(str(x))
+            # If it's a list or tuple, normalize each element and join them as comma-separated strings
+            if isinstance(value, (list, tuple)):
+                return ", ".join([normalize(v) for v in value if str(v).strip()])
 
-            push(value)
-            return [i for i in normalized if i.strip()]
+            # If it's a dict, normalize its values and join as comma-separated strings
+            if isinstance(value, dict):
+                return ", ".join([normalize(v) for v in value.values() if str(v).strip()])
 
-        for field_name, field in self.fields.items():
-            # skip sensitive fields
-            if field_name in ['email', 'confirmEmail', 'resume', 'linkedin', 'github', 'website']:
-                continue
-            raw = data.get(field_name)
-            if raw is None:
-                continue
-            if isinstance(raw, (list, str, dict)):
-                normalized = normalize_value(raw)
-                data[field_name] = normalized if len(normalized) > 1 else (
-                    normalized[0] if normalized else None
-                )
+            # Fallback: convert anything else to string
+            return str(value).strip()
+
+        # Normalize all string fields in the serializer
+        for field in self.fields:
+            if field in data:
+                raw = data.get(field)
+                if raw is not None and raw != "":
+                    data[field] = normalize(raw)
 
         return super().to_internal_value(data)
 
