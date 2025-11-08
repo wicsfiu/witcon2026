@@ -140,7 +140,7 @@ class AttendeeSerializer(serializers.ModelSerializer):
     #         cleaned.append(item.strip())
     #     return cleaned
     
-    customAllergy = serializers.CharField(source='custom_allergy', required=False, allow_blank=True)
+    # customAllergy = serializers.CharField(source='custom_allergy', required=False, allow_blank=True)
 
     # validate URLs if present (allow empty)
     def validate_linkedin(self, value):
