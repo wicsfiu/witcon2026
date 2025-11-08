@@ -2,6 +2,7 @@
 from rest_framework import serializers
 from .models import Attendee
 from django.core.validators import URLValidator
+from django.core.files.uploadedfile import UploadedFile
 import json
 
 
@@ -59,7 +60,6 @@ class AttendeeSerializer(serializers.ModelSerializer):
         data = data.copy()
 
         def normalize(value):
-            # If the value is a string that looks like JSON, try to parse it
             if isinstance(value, str):
                 s = value.strip()
                 if s.startswith('[') or s.startswith('{'):
@@ -85,10 +85,18 @@ class AttendeeSerializer(serializers.ModelSerializer):
         for field in self.fields:
             if field in data:
                 raw = data.get(field)
-                if raw is not None and raw != "":
+                if isinstance(raw, UploadedFile):
+                    continue
+                if raw is None or raw == "":
+                    continue
+                if isinstance(raw, (str, list, tuple, dict)):
                     data[field] = normalize(raw)
+                else:
+                    data[field] = raw
 
         return super().to_internal_value(data)
+    
+    
 
     def validate(self, attrs):
         """
