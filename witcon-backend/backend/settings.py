@@ -78,8 +78,8 @@ MIDDLEWARE = [
 
 # CORS config for dev (talk to local Vite frontend)
 CORS_ALLOWED_ORIGINS = [
-    "http://localhost:5173",
-    "http://127.0.0.1:5173",
+    "http://localhost:5174",
+    "http://127.0.0.1:5174",
     "https://witcon2026.vercel.app",
     "https://witcon.duckdns.org",
 ]
