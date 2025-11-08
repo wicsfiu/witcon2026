@@ -17,7 +17,7 @@ class AttendeeAdmin(admin.ModelAdmin):
 
     fieldsets = (
         ("Basic Information", {
-            "fields": ("first_name", "last_name", "email", "password", "date_of_birth")
+            "fields": ("first_name", "last_name", "email", "date_of_birth")
         }),
         ("Demographics", {
             "fields": ("country", "state", "gender_identity", "gender_other",
@@ -31,7 +31,7 @@ class AttendeeAdmin(admin.ModelAdmin):
             "fields": ("panther_id", "linkedin", "github", "website", "discord")
         }),
         ("Additional Information", {
-            "fields": ("food_allergies", "shirt_size")
+            "fields": ("shirt_size")
         }),
         ("Agreements", {
             "fields": ("code_of_conduct", "photography_consent")
