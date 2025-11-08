@@ -141,11 +141,15 @@ class AttendeeSerializer(serializers.ModelSerializer):
         attendee.save()
         return attendee
 
-    def to_representation(self, instance):
-        data = super().to_representation(instance)
-        if instance.resume:
+def to_representation(self, instance):
+    data = super().to_representation(instance)
+    if instance.resume and instance.resume.name:
+        try:
             from .utils import generate_presigned_resume_url
             data['resume_url'] = generate_presigned_resume_url(instance.resume.name)
-        else:
+        except Exception as e:
+            print("Error generating resume URL:", e)
             data['resume_url'] = None
-        return data
+    else:
+        data['resume_url'] = None
+    return data
