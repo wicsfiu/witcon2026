@@ -260,63 +260,56 @@ export default function Register() {
         const fd = new FormData();
 
     Object.entries(formData).forEach(([key, value]) => {
-    // Skip resume if ever part of formData
-    if (key === "resume") return;
-    if (value === null || value === undefined) return;
+        if (value === null || value === undefined) return;
 
-    // Convert booleans to "true"/"false"
-    if (typeof value === "boolean") {
-      fd.append(key, value ? "true" : "false");
-      return;
-    }
+        // Convert booleans to "true"/"false"
+        if (typeof value === "boolean") {
+            fd.append(key, value ? "true" : "false");
+        return;
+        }
 
-    // Convert arrays 
-    if (Array.isArray(value)) {
-      fd.append(key, JSON.stringify(value));
-      return;
-    }
-
-    fd.append(key, String(value));
-  });
+        
+        if (Array.isArray(value)) {
+                value.forEach(item => fd.append(`${key}[]`, item));
+        } else {
+                fd.append(key, String(value));
+        }
+    });
 
 
-  if (resumeFile && resumeFile.size > 600 * 1024) {
-    alert("Resume file size must be 600 KB or smaller");
-    return;
-  }
-
-  if (resumeFile) {
-    console.log("Attaching resume:", resumeFile.name, resumeFile.type, resumeFile.size);
-    fd.append("resume", resumeFile, resumeFile.name);
-  } else {
-    console.warn("No resume file selected");
-  }
+        if (resumeFile && resumeFile.size > 600 * 1024) {
+            alert("Resume file size must be 600 KB or smaller");
+            return;
+        }
+        if (resumeFile) fd.append('resume', resumeFile);
 
         // Debug: Log FormData contents
         console.log("FormData being sent:");
-  for (let [k, v] of fd.entries()) console.log(k, v);
+        for (let [k, v] of fd.entries()) console.log(k, v);
 
-  try {
-    const res = await fetch(url, {
-      method: "POST",
-      body: fd,
-    });
+        // Debug: Log FormData contents
+        console.log("FormData being sent:");
+        for (let pair of fd.entries()) {
+            console.log(pair[0], pair[1]);
+        }
 
-    const data = await res.json().catch(() => ({}));
-
-    if (!res.ok) {
-      console.error("Backend error response:", data);
-      setErrors(data);
-    } else {
-      console.log("Registration success:", data);
-      setIsSubmitted(true);
-      navigate("/profile");
-    }
-  } catch (error) {
-    console.error("Error sending data:", error);
-    setErrors({ submit: "Registration failed. Please try again." });
-  }
-};
+        try {
+            const res = await fetch(url, { method: "POST", body: fd });
+            if (!res.ok) {
+                const data = await res.json().catch(() => ({}));
+                console.error("Backend error response:", data);
+                setErrors(data);
+            } else {
+                const data = await res.json();
+                console.log("Registration success:", data);
+                navigate("/profile");
+                setIsSubmitted(true);
+            }
+        } catch (error) {
+            console.error("Error sending data:", error);
+            setErrors({ submit: "Registration failed. Please try again." });
+        }
+    };
 
     if (isSubmitted) {
         return (
