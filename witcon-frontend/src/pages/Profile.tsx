@@ -3,11 +3,9 @@ import {useEffect} from 'react';
 import type { ChangeEvent } from 'react';
 //import { useLocation } from 'react-router-dom';
 //import { Camera, Edit, X, FileText, ExternalLink } from 'lucide-react';
+import Title from '../components/text/Title';
 import { useAuth } from '../context/AuthContext';
 
-// ----------------------
-// Types
-// ----------------------
 interface AttendeeData {
   id?: number;
   firstName: string;
@@ -26,31 +24,14 @@ interface AttendeeData {
   shirtSize?: string;
 }
 
-// ----------------------
-// Helper Component
-// ----------------------
-type InfoSectionProps = {
-  children: React.ReactNode;
-};
-
-function InfoSection({ children }: InfoSectionProps) {
-  return (
-    <div className={"break-inside-avoid mb-6 bg-[color:var(--color-tertiary-yellow)] p-6 rounded-xl space-y-4"}>
-      {children}
-    </div>
-  );
-}
-
-// ----------------------
-// Main Component
-// ----------------------
 export default function Profile() {
-  const { userId, logout } = useAuth();
+  const { userId, logout } = useAuth();               // get logged-in user ID
+  const [_isEditing, setIsEditing] = useState<boolean>(false);
+  const [_showQRScanner, setShowQRScanner] = useState<boolean>(false);
+  const [_showResumeViewer, _setShowResumeViewer] = useState<boolean>(false);
+  const [loading, setLoading] = useState<boolean>(true);
+  const [error, setError] = useState<string>('');
 
-  const [isEditing, setIsEditing] = useState(false);
-  const [showIconPicker, setShowIconPicker] = useState(false);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState('');
 
   const [attendeeData, setAttendeeData] = useState<AttendeeData>({
     firstName: 'Ariana',
@@ -64,11 +45,9 @@ export default function Profile() {
     github: 'github.com/ariana-casas',
   });
 
-  const [editData, setEditData] = useState<AttendeeData>({ ...attendeeData });
+
+  const [showIconPicker, setShowIconPicker] = useState(false);
   const [selectedImage, setSelectedImage] = useState(attendeeData.profileImage || "profilePic1.png");
-
-  const API_URL = import.meta.env.VITE_API_URL || 'https://witcon.duckdns.org/backend-api';
-
   const iconOptions = [
     "profilePic1.png",
     "profilePic2.png",
@@ -78,11 +57,14 @@ export default function Profile() {
     "profilePic6.png",
   ];
 
-  // ----------------------
-  // Effects
-  // ----------------------
+  const [editData, setEditData] = useState<AttendeeData>({ ...attendeeData });
+
+  const API_URL = import.meta.env.VITE_API_URL || 'https://witcon.duckdns.org/backend-api';
+
+  // Fetch attendee profile when userId changes
   useEffect(() => {
-    if (!userId) return;
+    if (!userId) return; // safety: don't fetch if no user logged in
+
 
     setLoading(true);
     fetch(`${API_URL}/attendees/${userId}/`)
@@ -101,14 +83,12 @@ export default function Profile() {
       });
   }, [userId]);
 
-  // ----------------------
-  // Handlers
-  // ----------------------
-  const handleEdit = () => setIsEditing(true);
-  const handleCancel = () => {
-    setIsEditing(false);
+
+  const handleEdit = () => {
+    setIsEditing(true);
     setEditData({ ...attendeeData });
   };
+
 
   const handleSave = async () => {
     if (!userId) return;
@@ -122,14 +102,23 @@ export default function Profile() {
       const updated: AttendeeData = await res.json();
       setAttendeeData(updated);
       setIsEditing(false);
+      console.log('Profile updated:', updated);
     } catch (err: any) {
       alert(err.message);
     }
   };
 
-  const handleInputChange = <K extends keyof AttendeeData>(field: K, value: string) => {
-    setEditData(prev => ({ ...prev, [field]: value }));
+
+  const handleCancel = () => {
+    setIsEditing(false);
+    setEditData({ ...attendeeData });
   };
+
+
+  const handleInputChange = <K extends keyof AttendeeData>(field: K, value: string) => {
+    setEditData(prev => ({ ...prev, [field]: value } as AttendeeData));
+  };
+
 
   const handleResumeUpdate = async (event: ChangeEvent<HTMLInputElement>) => {
     if (!userId) return;
@@ -147,198 +136,280 @@ export default function Profile() {
       if (!res.ok) throw new Error('Failed to upload resume');
       const updated: AttendeeData = await res.json();
       setAttendeeData(updated);
+      console.log('Resume updated:', file.name);
     } catch (err: any) {
       alert(err.message);
     }
   };
 
-  const handleCheckIn = () => alert('Check-in successful! Welcome to WiTCON 2025!');
-  const handleLogout = () => logout();
 
-  if (error) return <p className="text-red-600">Error: {error}</p>;
-  if (loading) return <p>Loading profile...</p>;
+  const handleCheckIn = () => setShowQRScanner(true);
+  const handleQRScan = () => {
+    setShowQRScanner(false);
+    alert('Check-in successful! Welcome to WiTCON 2025!');
+  };
 
-  // ----------------------
-  // Inner Subcomponents (pure JSX)
-  // ----------------------
-  const AcademicInfoBox = (
-    <InfoSection>
-      <div className="flex items-center gap-4">
-        <label className="text-[color:var(--color-primary-brown)] font-medium min-w-[100px]">Major:</label>
-        <input
-          type="text"
-          value={attendeeData.fieldOfStudy || ""}
-          readOnly
-          className="flex-1 px-4 py-2 rounded-full bg-[#FFF6F6] text-[color:var(--color-primary-brown)] font-[Actor] w-fit min-w-[150px]"
-        />
-      </div>
 
-      <div className="flex items-center gap-4">
-        <label className="text-[color:var(--color-primary-brown)] font-medium min-w-[100px]">School:</label>
-        <input
-          type="text"
-          value={attendeeData.school || attendeeData.schoolOther || ""}
-          readOnly
-          className="flex-1 px-4 py-2 rounded-full bg-[#FFF6F6] text-[color:var(--color-primary-brown)] font-[Actor] w-fit min-w-[150px]"
-        />
-      </div>
+  const handleLogout = () => {
+    logout(); // clears the userId in context
+  };
 
-      <div className="flex items-center gap-4">
-        <label className="text-[color:var(--color-primary-brown)] font-medium min-w-[100px]">Level of Study:</label>
-        <input
-          type="text"
-          value={attendeeData.levelOfStudy || ""}
-          readOnly
-          className="flex-1 px-4 py-2 rounded-full bg-[#FFF6F6] text-[color:var(--color-primary-brown)] font-[Actor] w-fit min-w-[150px]"
-        />
-      </div>
-    </InfoSection>
+
+  // if (!userId) {
+  //   return (
+  //     <section className="space-y-4">
+  //       <h2 className="text-2xl font-bold">Login</h2>
+  //       <div className="bg-white border rounded p-6 text-center space-y-4">
+  //         <p>Please log in to view your attendee profile.</p>
+  //       </div>
+  //     </section>
+  //   );
+  // }
+
+  // if (loading) {
+  //   return <p>Loading profile...</p>;
+  // }
+
+  if (error) {
+    return <p className="text-red-600">Error: {error}</p>;
+  }
+
+type InfoSectionProps = {
+  children: React.ReactNode;
+};
+
+function InfoSection({ children }: InfoSectionProps) {
+  return (
+    <div className="break-inside-avoid mb-6 bg-[color:var(--color-tertiary-yellow)] p-6 rounded-xl space-y-4">
+      {children}
+    </div>
   );
+}
 
-  const ResumeSocialBox = (
-    <InfoSection>
-      <div className="flex items-center gap-4">
-        <img src="/images/pdfIcon.png" alt="PDF Icon" className="w-20 h-20" />
-        <p className="text-sm text-[color:var(--color-primary-brown)] font-[Actor] text-center w-full">
-          You only have a limit of 2 more resume uploads.
-        </p>
-      </div>
+const AcademicInfoBox = () => (
+  <InfoSection>
+    <div className="flex items-center gap-4">
+      <label className="text-[color:var(--color-primary-brown)] font-medium min-w-[100px]">Major:</label>
+      <input
+        type="text"
+        value={attendeeData.fieldOfStudy || ""}
+        readOnly
+        className="flex-1 px-4 py-2 rounded-full bg-[#FFF6F6] text-[color:var(--color-primary-brown)] font-[Actor] w-fit min-w-[150px]"
+      />
+    </div>
 
-      <div className="flex items-center gap-4">
-        <label className="text-[color:var(--color-primary-brown)] font-medium min-w-[100px]">LinkedIn:</label>
-        <input
-          type="text"
-          value={attendeeData.linkedin || ""}
-          readOnly
-          className="flex-1 px-4 py-2 rounded-full bg-[#FFF6F6] text-[color:var(--color-primary-brown)] font-[Actor]"
-        />
-      </div>
+    <div className="flex items-center gap-4">
+      <label className="text-[color:var(--color-primary-brown)] font-medium min-w-[100px]">School:</label>
+      <input
+        type="text"
+        value={attendeeData.school || attendeeData.schoolOther || ""}
+        readOnly
+        className="flex-1 px-4 py-2 rounded-full bg-[#FFF6F6] text-[color:var(--color-primary-brown)] font-[Actor] w-fit min-w-[150px]"
+      />
+    </div>
 
-      <div className="flex items-center gap-4">
-        <label className="text-[color:var(--color-primary-brown)] font-medium min-w-[100px]">GitHub:</label>
-        <input
-          type="text"
-          value={attendeeData.github || ""}
-          readOnly
-          className="flex-1 px-4 py-2 rounded-full bg-[#FFF6F6] text-[color:var(--color-primary-brown)] font-[Actor]"
-        />
-      </div>
+    <div className="flex items-center gap-4">
+      <label className="text-[color:var(--color-primary-brown)] font-medium min-w-[100px]">Level of Study:</label>
+      <input
+        type="text"
+        value={attendeeData.levelOfStudy || ""}
+        readOnly
+        className="flex-1 px-4 py-2 rounded-full bg-[#FFF6F6] text-[color:var(--color-primary-brown)] font-[Actor] w-fit min-w-[150px]"
+      />
+    </div>
+  </InfoSection>
+);
 
-      <div className="flex items-center gap-4">
-        <label className="text-[color:var(--color-primary-brown)] font-medium min-w-[100px]">Discord:</label>
-        <input
-          type="text"
-          value={attendeeData.discord || ""}
-          readOnly
-          className="flex-1 px-4 py-2 rounded-full bg-[#FFF6F6] text-[color:var(--color-primary-brown)] font-[Actor]"
-        />
-      </div>
-    </InfoSection>
-  );
 
-  const WiCSResourcesBox = (
-    <InfoSection>
-      <h3 className="font-semibold text-lg text-[color:var(--color-primary-brown)]">Make the best of WiTCON</h3>
-      <div className="flex items-center gap-3">
-        <img src="/images/notionIcon.png" alt="Notion Icon" className="w-8 h-8" />
-        <a
-          href="https://www.notion.so/WiTCON-2026-Attendee-Guide"
-          target="_blank"
-          className="w-full px-4 py-2 rounded-4xl bg-[#FFF6F6] text-[color:var(--color-primary-brown)] font-[Actor]"
-        >
-          WiTCON ‘26 Attendee Guide
-        </a>
-      </div>
-      <div className="flex items-center gap-3">
-        <img src="/images/discordIcon.png" alt="Discord Icon" className="w-8 h-8" />
-        <a href="https://discord.gg/wicsfiu" target="_blank" className="w-full px-4 py-2 rounded-4xl bg-[#FFF6F6]">
-          WiCS Discord
-        </a>
-      </div>
-    </InfoSection>
-  );
-
-  const ReportIncidentBox = (
-    <InfoSection>
-      <h3 className="font-semibold text-2xl text-[color:var(--color-primary-brown)]">REPORT AN INCIDENT</h3>
-      <p className="text-sm text-[color:var(--color-primary-brown)]">
-        Please, if you feel uncomfortable or witness inappropriate behavior at WiTCON, report it using the link below.
+const ResumeSocialBox = () => (
+  <InfoSection>
+    <div className="flex items-center gap-4">
+      <img src="/images/pdfIcon.png" alt="PDF Icon" className="w-20 h-20" />
+      <p className="text-sm text-[color:var(--color-primary-brown)] font-[Actor] text-center w-full">
+        You only have a limit of 2 more resume uploads.
       </p>
+    </div>
+
+    <div className="flex items-center gap-4">
+      <label className="text-[color:var(--color-primary-brown)] font-medium min-w-[100px]">LinkedIn:</label>
+      <input
+        type="text"
+        value={attendeeData.linkedin || ""}
+        readOnly
+        className="flex-1 px-4 py-2 rounded-full bg-[#FFF6F6] text-[color:var(--color-primary-brown)] font-[Actor] w-fit min-w-[150px]"
+      />
+    </div>
+
+    <div className="flex items-center gap-4">
+      <label className="text-[color:var(--color-primary-brown)] font-medium min-w-[100px]">GitHub:</label>
+      <input
+        type="text"
+        value={attendeeData.github || ""}
+        readOnly
+        className="flex-1 px-4 py-2 rounded-full bg-[#FFF6F6] text-[color:var(--color-primary-brown)] font-[Actor] w-fit min-w-[150px]"
+      />
+    </div>
+
+    <div className="flex items-center gap-4">
+      <label className="text-[color:var(--color-primary-brown)] font-medium min-w-[100px]">Discord Username:</label>
+      <input
+        type="text"
+        value={attendeeData.discord || ""}
+        readOnly
+        className="flex-1 px-4 py-2 rounded-full bg-[#FFF6F6] text-[color:var(--color-primary-brown)] font-[Actor] w-fit min-w-[150px]"
+      />
+    </div>
+  </InfoSection>
+);
+
+
+
+  const WiCSResourcesBox = () => (
+  <InfoSection>
+    <h3 className="font-semibold text-lg text-[color:var(--color-primary-brown)]">Make the best of WiTCON</h3>
+    <div className="flex items-center gap-3">
+      <img src="/images/notionIcon.png" alt="Notion Icon" className="w-8 h-8" />
+      <a
+        href="https://www.notion.so/WiTCON-2026-Attendee-Guide"
+        target="_blank"
+        className="w-full px-4 py-2 rounded-4xl bg-[#FFF6F6] text-[color:var(--color-primary-brown)] font-[Actor]"
+      >
+        WiTCON ‘26 Attendee Guide
+      </a>
+    </div>
+
+    <div className="flex items-center gap-3">
+      <img src="/images/discordIcon.png" alt="Discord Icon" className="w-8 h-8" />
       <a
         href="https://discord.gg/wicsfiu"
         target="_blank"
-        className="inline-block bg-[color:var(--color-primary-pink)] text-[color:var(--color-tertiary-yellow)] px-4 py-2 rounded-full hover:bg-pink-700 transition"
+        className="w-full px-4 py-2 rounded-4xl bg-[#FFF6F6] text-[color:var(--color-primary-brown)] font-[Actor]"
       >
-        REPORT
+        WiCS Discord
       </a>
-    </InfoSection>
-  );
+    </div>
 
-  return (
-    <main className="w-full max-w-screen-xl mx-auto px-6">
-      <section className="mb-2">
-        <div className="flex flex-col md:flex-row justify-between items-center bg-white p-6 rounded-xl">
-          <div className="flex items-center gap-4">
-            <div className="w-32 h-32 rounded-full border-6 border-[color:var(--color-primary-pink)] overflow-hidden">
-              <img
-                src={`/images/${selectedImage}`}
-                alt="Profile Icon"
-                className="w-full h-full object-cover"
-              />
-            </div>
-            <div className="flex flex-col items-start justify-center">
-              <h2 className="font-bold">
-                {attendeeData.firstName} {attendeeData.lastName}
-              </h2>
-              <div className="flex gap-3 mt-3">
-                <div className="relative">
-                  <button
-                    onClick={() => setShowIconPicker(true)}
-                    className="bg-[color:var(--color-secondary-yellow)] text-[color:var(--color-primary-pink)] px-3 py-1 rounded-full hover:bg-[color:var(--color-primary-yellow)] transition"
-                  >
-                    Change Icon
-                  </button>
+    <div className="flex items-center gap-3">
+      <img src="/images/linkedInIcon.png" alt="LinkedIn Icon" className="w-8 h-8" />
+      <a
+        href="https://www.linkedin.com/company/wicsatfiu/"
+        target="_blank"
+        className="w-full px-4 py-2 rounded-4xl bg-[#FFF6F6] text-[color:var(--color-primary-brown)] font-[Actor]"
+      >
+        WiCS LinkedIn
+      </a>
+    </div>
 
-                  {showIconPicker && (
-                    <div className="absolute top-full left-0 mt-2 z-50 w-72 sm:w-80 bg-white border border-[color:var(--color-primary-pink)] rounded-xl shadow-lg p-4 grid grid-cols-3 gap-4">
-                      {iconOptions.map((img, i) => (
-                        <img
-                          key={i}
-                          src={`/images/${img}`}
-                          alt={`Icon ${i + 1}`}
-                          className="w-20 h-20 rounded-full object-cover border-2 border-transparent hover:border-4 hover:border-[color:var(--color-primary-pink)]"
-                          onClick={() => {
-                            setSelectedImage(img);
-                            setShowIconPicker(false);
-                          }}
-                        />
-                      ))}
-                    </div>
-                  )}
-                </div>
-                <button
-                  onClick={handleCheckIn}
-                  className="bg-[color:var(--color-secondary-yellow)] text-[color:var(--color-primary-pink)] px-3 py-1 rounded-full hover:bg-[color:var(--color-primary-yellow)] transition"
-                >
-                  Check In
-                </button>
-              </div>
+    <div className="flex items-center gap-3">
+      <img src="/images/instagramIcon.png" alt="Instagram Icon" className="w-8 h-8" />
+      <a
+        href="https://instagram.com/wicsfiu"
+        target="_blank"
+        className="w-full px-4 py-2 rounded-4xl bg-[#FFF6F6] text-[color:var(--color-primary-brown)] font-[Actor]"
+      >
+        WiCS Instagram
+      </a>
+    </div>
+  </InfoSection>
+);
+
+
+const ReportIncidentBox = () => (
+  <InfoSection>
+    <h3 className="font-semibold text-2xl text-[color:var(--color-primary-brown)]">REPORT AN INCIDENT</h3>
+    <p className="text-sm text-[color:var(--color-primary-brown)]">
+      Please, if you feel uncomfortable or witness inappropriate behavior at WiTCON. Please report it using the link below.
+    </p>
+    <a
+      href="https://discord.gg/wicsfiu"
+      target="_blank"
+      className="inline-block bg-[color:var(--color-primary-pink)] text-[color:var(--color-tertiary-yellow)] px-4 py-2 rounded-full hover:bg-pink-700 transition"
+    >
+      REPORT
+    </a>
+  </InfoSection>
+);
+
+
+
+
+return (
+  <main className="w-full max-w-screen-xl mx-auto px-6">
+  <section className="mb-2">
+    {/* Profile Header */}
+    <div className="flex flex-col md:flex-row justify-between items-center bg-white p-6 rounded-xl">
+      <div className="flex items-center gap-4">
+        <div className="w-32 h-32 rounded-full border-6 border-[color:var(--color-primary-pink)] overflow-hidden">
+          <img
+            src={`/images/${selectedImage}`}
+            alt="Profile Icon"
+            className="w-full h-full object-cover"
+          />
+        </div>
+       
+        <div className="flex flex-col items-start justify-center">
+          <Title className="font-bold"> {attendeeData.firstName} {attendeeData.lastName}
+          </Title>
+          <div className="flex gap-3 mt-3">
+          <div className="relative">
+            <button
+              onClick={() => setShowIconPicker(true)}
+              className="bg-[color:var(--color-secondary-yellow)] text-[color:var(--color-primary-pink)] px-3 py-1 rounded-full hover:bg-[color:var(--color-primary-yellow)] transition"
+            >
+              Change Icon
+            </button>
+
+
+            {showIconPicker && (
+            <div className="absolute top-full left-0 mt-2 z-50 w-72 sm:w-80 bg-white border border-[color:var(--color-primary-pink)] rounded-xl shadow-lg p-4 grid grid-cols-3 gap-4">
+              {iconOptions.map((img, i) => (
+                <img
+                  key={i}
+                  src={`/images/${img}`}
+                  alt={`Icon ${i + 1}`}
+                  className="w-20 h-20 rounded-full object-cover border-2 border-transparent hover:border-4 hover:border-[color:var(--color-primary-pink)]"
+                  onClick={() => {
+                      setSelectedImage(img);
+                      setShowIconPicker(false);
+                  }}
+                />
+              ))}
             </div>
+            )}
           </div>
-          <button onClick={handleEdit} className="mt-4 md:mt-0">
-            <img src="/images/editIcon.png" alt="Edit" className="w-12 h-12 hover:scale-105 transition-transform" />
-          </button>
-        </div>
-      </section>
 
-      <section>
-        <div className="columns-1 md:columns-2 gap-6 mt-2">
-          {AcademicInfoBox}
-          {WiCSResourcesBox}
-          {ResumeSocialBox}
-          {ReportIncidentBox}
+
+            <button
+              onClick={handleCheckIn}
+              className="bg-[color:var(--color-secondary-yellow)] text-[color:var(--color-primary-pink)] px-3 py-1 rounded-full hover:bg-[color:var(--color-primary-yellow)] transition"
+            >
+              Check In
+            </button>
+          </div>
         </div>
-      </section>
-    </main>
-  );
-}
+      </div>
+
+
+      {/* Right: Edit Button */}
+      <button onClick={handleEdit} className="mt-4 md:mt-0">
+        <img
+          src="/images/editIcon.png"
+          alt="Edit"
+          className="w-12 h-12 hover:scale-105 transition-transform"
+        />
+      </button>
+    </div>
+    </section>
+
+
+    <section>
+    <div className="columns-1 md:columns-2 gap-6 mt-2">
+          <AcademicInfoBox />
+          <WiCSResourcesBox />
+          <ResumeSocialBox />
+          <ReportIncidentBox />
+    </div>
+  </section>
+  </main>
+);
+}    
