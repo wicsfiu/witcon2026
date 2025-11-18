@@ -15,10 +15,11 @@ import json
 from pathlib import Path
 from dotenv import load_dotenv
 
-load_dotenv()
-
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
+
+env_path = BASE_DIR / '.env'
+load_dotenv(dotenv_path=env_path)
 
 
 # Quick-start development settings - unsuitable for production
@@ -78,11 +79,16 @@ MIDDLEWARE = [
 
 # CORS config for dev (talk to local Vite frontend)
 CORS_ALLOWED_ORIGINS = [
-    "http://localhost:5174",
+    "http://localhost:5173",  # Vite default port
+    "http://localhost:5174",  # Alternative port
+    "http://127.0.0.1:5173",
     "http://127.0.0.1:5174",
     "https://witcon2026.vercel.app",
     "https://witcon.duckdns.org",
 ]
+
+# Allow credentials for OAuth sessions
+CORS_ALLOW_CREDENTIALS = True
 
 # Media (uploads) config
 # MEDIA_URL = "/media/"
@@ -124,17 +130,28 @@ WSGI_APPLICATION = 'backend.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': os.getenv('RDS_DB_NAME', 'postgres'),
-        'USER': os.getenv('RDS_USERNAME', 'witcon_admin'),
-        'PASSWORD': os.getenv('RDS_PASSWORD', ''),
-        'HOST': os.getenv('RDS_HOSTNAME', 'witcon-postgres.c78mk6uyejq1.us-east-2.rds.amazonaws.com'),
-        'PORT': os.getenv('RDS_PORT', '5432'),
-        # 'OPTIONS': {'sslmode': 'require'}, 
+USE_LOCAL_DB = os.getenv('USE_LOCAL_DB', 'True').lower() == 'true'
+
+if USE_LOCAL_DB:
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': BASE_DIR / 'db.sqlite3',
+        }
     }
-}
+else:
+    # Remote PostgreSQL database (for production)
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.postgresql_psycopg2',
+            'NAME': os.getenv('RDS_DB_NAME', 'postgres'),
+            'USER': os.getenv('RDS_USERNAME', 'witcon_admin'),
+            'PASSWORD': os.getenv('RDS_PASSWORD', ''),
+            'HOST': os.getenv('RDS_HOSTNAME', 'witcon-postgres.c78mk6uyejq1.us-east-2.rds.amazonaws.com'),
+            'PORT': os.getenv('RDS_PORT', '5432'),
+            # 'OPTIONS': {'sslmode': 'require'}, 
+        }
+    }
 
 # AWS S3 storage config (for storing resumes)
 
@@ -194,4 +211,10 @@ STATIC_ROOT = BASE_DIR / 'staticfiles'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 APPEND_SLASH = False
+
+# Session configuration for OAuth
+SESSION_ENGINE = 'django.contrib.sessions.backends.db'
+SESSION_COOKIE_SECURE = not DEBUG  # Use secure cookies in production
+SESSION_COOKIE_HTTPONLY = True
+SESSION_COOKIE_SAMESITE = 'Lax'  # Allow cross-site requests for OAuth redirects
 

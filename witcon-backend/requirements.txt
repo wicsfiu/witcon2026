@@ -1,0 +1,15 @@
+# Django and core dependencies
+Django>=5.2.6
+djangorestframework>=3.14.0
+django-cors-headers>=4.0.0
+python-dotenv>=1.0.0
+
+# AWS S3 storage
+django-storages>=1.13.0
+boto3>=1.28.0
+
+# Database
+psycopg2-binary>=2.9.0
+
+# OAuth dependencies
+requests>=2.31.0

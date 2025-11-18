@@ -1,7 +1,7 @@
 // witcon-frontend/src/pages/Register.tsx
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import type { ChangeEvent, FormEvent } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 
 interface FormData {
     firstName: string;
@@ -39,11 +39,22 @@ interface FormErrors {
 }
 
 export default function Register() {
+    const [searchParams] = useSearchParams();
+    const navigate = useNavigate();
+    
+    // Get email from URL params (set by OAuth callback)
+    const emailFromOAuth = searchParams.get('email') || '';
+
+    const API_URL = import.meta.env.VITE_API_URL ||
+        ((window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1')
+            ? 'http://localhost:8000/backend-api'
+            : 'https://witcon.duckdns.org/backend-api');
+    
     const [formData, setFormData] = useState<FormData>({
         firstName: '',
         lastName: '',
-        email: '',
-        confirmEmail: '',
+        email: emailFromOAuth,
+        confirmEmail: emailFromOAuth,
         dateOfBirth: '',
         country: '',
         state: '',
@@ -73,6 +84,22 @@ export default function Register() {
     const [resumeFile, setResumeFile] = useState<File | null>(null);
     const [errors, setErrors] = useState<FormErrors>({});
     const [isSubmitted, setIsSubmitted] = useState(false);
+
+    // Update email when OAuth email is received
+    useEffect(() => {
+        if (emailFromOAuth) {
+            setFormData(prev => ({
+                ...prev,
+                email: emailFromOAuth,
+                confirmEmail: emailFromOAuth
+            }));
+            // Clean up URL by removing email parameter
+            const newSearchParams = new URLSearchParams(searchParams);
+            newSearchParams.delete('email');
+            const newUrl = window.location.pathname + (newSearchParams.toString() ? `?${newSearchParams.toString()}` : '');
+            window.history.replaceState({}, '', newUrl);
+        }
+    }, [emailFromOAuth, searchParams]);
 
     // Options
     const countries = [
@@ -169,7 +196,6 @@ export default function Register() {
     const shirtSizes = ['S', 'M', 'L', 'XL'];
     // const allergyOptions = ['Peanuts', 'Tree Nuts', 'Dairy', 'Gluten', 'Shellfish', 'Soy', 'Eggs'];
     const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-    const navigate = useNavigate();
 
     // Handle input change
     const handleInputChange = (field: keyof FormData, value: string | boolean | string[]) => {
@@ -254,8 +280,7 @@ export default function Register() {
 
         if (!validateForm()) return;
 
-        const url = "https://witcon.duckdns.org/backend-api/attendees/create/";
-        // const url = `${import.meta.env.VITE_API_URL}/attendees/create/`;
+        const url = `${API_URL}/attendees/create/`;
 
         const fd = new FormData();
         if (resumeFile) {
