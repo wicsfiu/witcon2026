@@ -166,6 +166,25 @@ def google_oauth_callback(request):
     return HttpResponseRedirect(redirect_url)
 
 
+@api_view(['GET'])
+@permission_classes([AllowAny])
+def get_attendee_by_email(request):
+    """
+    Public endpoint to get attendee profile by email.
+    Used for profile page after OAuth registration.
+    """
+    email = request.GET.get('email')
+    if not email:
+        return Response({'error': 'Email parameter required'}, status=400)
+    
+    try:
+        attendee = Attendee.objects.get(email=email)
+        serializer = AttendeeSerializer(attendee)
+        return Response(serializer.data)
+    except Attendee.DoesNotExist:
+        return Response({'error': 'Attendee not found'}, status=404)
+
+
 # Router for protected endpoints
 router = DefaultRouter(trailing_slash=True)
 router.register(r'attendees', AttendeeViewSet, basename='attendee')

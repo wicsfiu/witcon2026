@@ -1,6 +1,10 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { useAuth } from "../context/AuthContext";
 
 export default function Navbar() {
+  const { userId, logout } = useAuth();
+  const navigate = useNavigate();
+  
   // Use local backend for development, production API for deployed frontend
   const API_URL = import.meta.env.VITE_API_URL || 
     (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
@@ -16,13 +20,30 @@ export default function Navbar() {
     window.location.href = oauthUrl;
   };
 
+  const handleLogout = () => {
+    logout();
+    navigate("/");
+  };
+
   return (
     <nav className="bg-gray-900 text-white px-6 py-3 flex justify-between items-center">
       <h1 className="text-lg font-bold">WiTCON</h1>
       <div className="space-x-6">
         <Link to="/" className="hover:text-gray-300">Home</Link>
-        <a href="#" onClick={handleRegisterClick} className="hover:text-gray-300">Register</a>
-        <Link to="/profile" className="hover:text-gray-300">Profile</Link>
+        {!userId && (
+          <a href="#" onClick={handleRegisterClick} className="hover:text-gray-300">Register</a>
+        )}
+        {userId && (
+          <>
+            <Link to="/profile" className="hover:text-gray-300">Profile</Link>
+            <button 
+              onClick={handleLogout} 
+              className="hover:text-gray-300 bg-transparent border-none cursor-pointer"
+            >
+              Logout
+            </button>
+          </>
+        )}
       </div>
     </nav>
   );

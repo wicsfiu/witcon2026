@@ -25,7 +25,7 @@ interface AttendeeData {
 }
 
 export default function Profile() {
-  const { userId, logout } = useAuth();               // get logged-in user ID
+  const { userId, userEmail, logout } = useAuth();
   const [_isEditing, setIsEditing] = useState<boolean>(false);
   const [_showQRScanner, setShowQRScanner] = useState<boolean>(false);
   const [_showResumeViewer, _setShowResumeViewer] = useState<boolean>(false);
@@ -59,15 +59,24 @@ export default function Profile() {
 
   const [editData, setEditData] = useState<AttendeeData>({ ...attendeeData });
 
-  const API_URL = import.meta.env.VITE_API_URL || 'https://witcon.duckdns.org/backend-api';
+  const API_URL = import.meta.env.VITE_API_URL ||
+    ((window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1')
+      ? 'http://localhost:8000/backend-api'
+      : 'https://witcon.duckdns.org/backend-api');
 
-  // Fetch attendee profile when userId changes
+  // Fetch attendee profile when userId or userEmail changes
   useEffect(() => {
-    if (!userId) return; // safety: don't fetch if no user logged in
-
+    if (!userId && !userEmail) return; // don't fetch if no user logged in
 
     setLoading(true);
-    fetch(`${API_URL}/attendees/${userId}/`)
+    
+    // Use email-based endpoint if email is available
+    // Else fall back to userId endpoint
+    const fetchUrl = userEmail 
+      ? `${API_URL}/attendees/by-email/?email=${encodeURIComponent(userEmail)}`
+      : `${API_URL}/attendees/${userId}/`;
+    
+    fetch(fetchUrl)
       .then(res => {
         if (!res.ok) throw new Error('Failed to fetch profile data');
         return res.json();
@@ -81,7 +90,7 @@ export default function Profile() {
         setError(err.message);
         setLoading(false);
       });
-  }, [userId]);
+  }, [userId, userEmail, API_URL]);
 
 
   const handleEdit = () => {
@@ -155,23 +164,40 @@ export default function Profile() {
   };
 
 
-  // if (!userId) {
-  //   return (
-  //     <section className="space-y-4">
-  //       <h2 className="text-2xl font-bold">Login</h2>
-  //       <div className="bg-white border rounded p-6 text-center space-y-4">
-  //         <p>Please log in to view your attendee profile.</p>
-  //       </div>
-  //     </section>
-  //   );
-  // }
+  if (!userId && !userEmail) {
+    return (
+      <main className="w-full max-w-screen-xl mx-auto px-6">
+        <section className="space-y-4">
+          <h2 className="text-2xl font-bold">Profile</h2>
+          <div className="bg-white border rounded p-6 text-center space-y-4">
+            <p>Please register to view your attendee profile.</p>
+            <a href="/register" className="text-blue-600 hover:underline">
+              Go to Registration
+            </a>
+          </div>
+        </section>
+      </main>
+    );
+  }
 
-  // if (loading) {
-  //   return <p>Loading profile...</p>;
-  // }
+  if (loading) {
+    return (
+      <main className="w-full max-w-screen-xl mx-auto px-6">
+        <section className="space-y-4">
+          <p className="text-center py-8">Loading profile...</p>
+        </section>
+      </main>
+    );
+  }
 
   if (error) {
-    return <p className="text-red-600">Error: {error}</p>;
+    return (
+      <main className="w-full max-w-screen-xl mx-auto px-6">
+        <section className="space-y-4">
+          <p className="text-red-600 text-center py-8">Error: {error}</p>
+        </section>
+      </main>
+    );
   }
 
 type InfoSectionProps = {

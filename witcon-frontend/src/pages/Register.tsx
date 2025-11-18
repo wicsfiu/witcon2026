@@ -2,6 +2,7 @@
 import { useState, useEffect } from 'react';
 import type { ChangeEvent, FormEvent } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
+import { useAuth } from '../context/AuthContext';
 
 interface FormData {
     firstName: string;
@@ -41,6 +42,7 @@ interface FormErrors {
 export default function Register() {
     const [searchParams] = useSearchParams();
     const navigate = useNavigate();
+    const { login } = useAuth();
     
     // Get email from URL params (set by OAuth callback)
     const emailFromOAuth = searchParams.get('email') || '';
@@ -331,6 +333,10 @@ export default function Register() {
             } else {
                 const data = await res.json();
                 console.log("Registration success:", data);
+                // Store user ID and email in AuthContext so Profile page can fetch their data
+                if (data.id) {
+                    login(data.id, data.email || formData.email);
+                }
                 navigate("/profile");
                 setIsSubmitted(true);
             }
