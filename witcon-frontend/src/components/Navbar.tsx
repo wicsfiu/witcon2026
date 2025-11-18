@@ -13,22 +13,32 @@ export default function Navbar() {
 
   const handleRegisterClick = (e: React.MouseEvent) => {
     e.preventDefault();
+    e.stopPropagation();
     // Redirect to backend OAuth endpoint with redirect URI
     const currentUrl = window.location.origin;
     const redirectUri = `${currentUrl}/register`;
-    const oauthUrl = `${API_URL}/auth/google/?redirect_uri=${encodeURIComponent(redirectUri)}`;
-    // Use window.location.replace to ensure full page navigation (bypasses React Router)
-    window.location.replace(oauthUrl);
+    let oauthUrl = `${API_URL}/auth/google/?redirect_uri=${encodeURIComponent(redirectUri)}`;
+    // Ensure URL is absolute (starts with http:// or https://)
+    if (!oauthUrl.startsWith('http://') && !oauthUrl.startsWith('https://')) {
+      oauthUrl = `https://${oauthUrl}`;
+    }
+    // Direct navigation - this bypasses React Router completely
+    window.location.href = oauthUrl;
   };
 
   const handleLoginClick = (e: React.MouseEvent) => {
     e.preventDefault();
+    e.stopPropagation();
     // Redirect to backend OAuth endpoint with redirect URI for login
     const currentUrl = window.location.origin;
     const redirectUri = `${currentUrl}/login`;
-    const oauthUrl = `${API_URL}/auth/google/?redirect_uri=${encodeURIComponent(redirectUri)}`;
-    // Use window.location.replace to ensure full page navigation (bypasses React Router)
-    window.location.replace(oauthUrl);
+    let oauthUrl = `${API_URL}/auth/google/?redirect_uri=${encodeURIComponent(redirectUri)}`;
+    // Ensure URL is absolute (starts with http:// or https://)
+    if (!oauthUrl.startsWith('http://') && !oauthUrl.startsWith('https://')) {
+      oauthUrl = `https://${oauthUrl}`;
+    }
+    // Direct navigation - this bypasses React Router completely
+    window.location.href = oauthUrl;
   };
 
   const handleLogout = () => {
