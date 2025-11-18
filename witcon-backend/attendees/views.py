@@ -29,6 +29,34 @@ class AttendeeCreateView(generics.CreateAPIView):
     serializer_class = AttendeeSerializer
     permission_classes = [AllowAny]  # anyone can register
     parser_classes = (MultiPartParser, FormParser, JSONParser)
+    
+    def create(self, request, *args, **kwargs):
+        try:
+            # Log incoming request data for debugging
+            print(f"Registration request received")
+            print(f"Files: {list(request.FILES.keys())}")
+            print(f"Data keys: {list(request.data.keys())}")
+            
+            response = super().create(request, *args, **kwargs)
+            print(f"Registration successful: {response.data.get('id', 'unknown')}")
+            return response
+        except Exception as e:
+            # Log the full error for debugging
+            import traceback
+            error_msg = str(e)
+            error_trace = traceback.format_exc()
+            print("=" * 60)
+            print("REGISTRATION ERROR:")
+            print("=" * 60)
+            print(f"Error: {error_msg}")
+            print(f"Traceback:\n{error_trace}")
+            print("=" * 60)
+            from rest_framework.response import Response
+            from rest_framework import status
+            return Response(
+                {'error': error_msg, 'detail': 'Registration failed. Check server logs for details.'},
+                status=status.HTTP_500_INTERNAL_SERVER_ERROR
+            )
 
 # Google OAuth views
 @api_view(['GET'])

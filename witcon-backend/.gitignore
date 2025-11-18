@@ -8,6 +8,10 @@ __pycache__/
 # Django
 db.sqlite3
 media/
+resumes/
+
+# Resume files
+*.pdf
 
 # Editor
 .vscode/

@@ -152,8 +152,19 @@ class AttendeeSerializer(serializers.ModelSerializer):
     def to_representation(self, instance):
         data = super().to_representation(instance)
         if instance.resume:
-            from .utils import generate_presigned_resume_url
-            data['resume_url'] = generate_presigned_resume_url(instance.resume.name)
+            try:
+                # Try to get the resume URL - use S3 if configured, otherwise use local file URL
+                from django.conf import settings
+                # Check if S3 is configured
+                if hasattr(settings, 'DEFAULT_FILE_STORAGE') and 's3' in str(settings.DEFAULT_FILE_STORAGE).lower():
+                    from .utils import generate_presigned_resume_url
+                    data['resume_url'] = generate_presigned_resume_url(instance.resume.name)
+                else:
+                    # Local storage - use the file's URL property
+                    data['resume_url'] = instance.resume.url if hasattr(instance.resume, 'url') else f"/media/{instance.resume.name}"
+            except Exception as e:
+                # Fallback - use the file name/path
+                data['resume_url'] = f"/media/{instance.resume.name}" if instance.resume.name else None
         else:
             data['resume_url'] = None
         return data

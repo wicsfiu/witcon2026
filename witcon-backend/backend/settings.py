@@ -44,6 +44,11 @@ ALLOWED_HOSTS = [
     "0.0.0.0"
 ]
 
+# Base URL for generating absolute file URLs (for local file storage)
+# Set this to your production domain, e.g., "https://witcon.duckdns.org"
+# Leave empty for development (will use relative URLs)
+BASE_URL = os.getenv('BASE_URL', '')
+
 
 # Application definition
 
@@ -153,23 +158,35 @@ else:
         }
     }
 
-# AWS S3 storage config (for storing resumes)
-
+# AWS S3 Configuration
 AWS_ACCESS_KEY_ID = os.getenv("AWS_ACCESS_KEY_ID")
 AWS_SECRET_ACCESS_KEY = os.getenv("AWS_SECRET_ACCESS_KEY")
 AWS_STORAGE_BUCKET_NAME = os.getenv("AWS_STORAGE_BUCKET_NAME")
-AWS_S3_REGION_NAME = os.getenv("AWS_S3_REGION_NAME", "us-east-2")
-AWS_S3_SIGNATURE_VERSION = os.getenv("AWS_S3_SIGNATURE_VERSION", "s3v4")
 
-AWS_S3_OBJECT_PARAMETERS = json.loads(os.getenv("AWS_S3_OBJECT_PARAMETERS", '{"CacheControl":"max-age=86400"}'))
+USE_S3 = bool(AWS_ACCESS_KEY_ID and AWS_SECRET_ACCESS_KEY and AWS_STORAGE_BUCKET_NAME)
 
-DEFAULT_FILE_STORAGE = "storages.backends.s3boto3.S3Boto3Storage"
-
-AWS_DEFAULT_ACL = None  # keep files private by default
-
-AWS_QUERYSTRING_AUTH = False  
-
-MEDIA_URL = f"https://{AWS_STORAGE_BUCKET_NAME}.s3.{AWS_S3_REGION_NAME}.amazonaws.com/"
+if USE_S3:
+    # S3 Storage Configuration
+    AWS_S3_REGION_NAME = os.getenv("AWS_S3_REGION_NAME", "us-east-2")
+    AWS_S3_SIGNATURE_VERSION = os.getenv("AWS_S3_SIGNATURE_VERSION", "s3v4")
+    AWS_S3_OBJECT_PARAMETERS = json.loads(os.getenv("AWS_S3_OBJECT_PARAMETERS", '{"CacheControl":"max-age=86400"}'))
+    
+    # Use S3 as the default file storage backend
+    DEFAULT_FILE_STORAGE = "storages.backends.s3boto3.S3Boto3Storage"
+    
+    # S3 bucket settings
+    AWS_DEFAULT_ACL = None  # Keep files private by default
+    AWS_QUERYSTRING_AUTH = False  # Don't require query string authentication
+    
+    # Media URL for accessing files
+    MEDIA_URL = f"https://{AWS_STORAGE_BUCKET_NAME}.s3.{AWS_S3_REGION_NAME}.amazonaws.com/"
+    
+    print(f"S3 storage configured: Resumes will be stored in S3 bucket '{AWS_STORAGE_BUCKET_NAME}'")
+else:
+    # Local file storage (fallback if S3 not configured)
+    MEDIA_URL = "/media/"
+    MEDIA_ROOT = BASE_DIR / "media"
+    print(f"S3 not configured: Resumes will be stored locally in '{MEDIA_ROOT}/resumes/'")
 
 # Password validation
 # https://docs.djangoproject.com/en/5.2/ref/settings/#auth-password-validators
