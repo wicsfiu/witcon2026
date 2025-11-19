@@ -6,10 +6,20 @@ export default function Navbar() {
   const navigate = useNavigate();
   
   // Use local backend for development, production API for deployed frontend
-  const API_URL = import.meta.env.VITE_API_URL || 
-    (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
-      ? 'http://localhost:8000/backend-api'
-      : 'https://witcon.duckdns.org/backend-api');
+  // Ensure VITE_API_URL is not an empty string
+  const getApiUrl = () => {
+    const envUrl = import.meta.env.VITE_API_URL;
+    if (envUrl && envUrl.trim() !== '') {
+      return envUrl;
+    }
+    // Fallback based on hostname
+    if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
+      return 'http://localhost:8000/backend-api';
+    }
+    return 'https://witcon.duckdns.org/backend-api';
+  };
+
+  const API_URL = getApiUrl();
 
   const handleRegisterClick = (e: React.MouseEvent) => {
     e.preventDefault();
@@ -17,11 +27,12 @@ export default function Navbar() {
     // Redirect to backend OAuth endpoint with redirect URI
     const currentUrl = window.location.origin;
     const redirectUri = `${currentUrl}/register`;
-    let oauthUrl = `${API_URL}/auth/google/?redirect_uri=${encodeURIComponent(redirectUri)}`;
-    // Ensure URL is absolute (starts with http:// or https://)
-    if (!oauthUrl.startsWith('http://') && !oauthUrl.startsWith('https://')) {
-      oauthUrl = `https://${oauthUrl}`;
-    }
+    // Construct OAuth URL - ensure API_URL doesn't have trailing slash
+    const baseUrl = API_URL.endsWith('/') ? API_URL.slice(0, -1) : API_URL;
+    const oauthUrl = `${baseUrl}/auth/google/?redirect_uri=${encodeURIComponent(redirectUri)}`;
+    
+    console.log('OAuth URL:', oauthUrl);
+    
     // Direct navigation - this bypasses React Router completely
     window.location.href = oauthUrl;
   };
@@ -32,11 +43,13 @@ export default function Navbar() {
     // Redirect to backend OAuth endpoint with redirect URI for login
     const currentUrl = window.location.origin;
     const redirectUri = `${currentUrl}/login`;
-    let oauthUrl = `${API_URL}/auth/google/?redirect_uri=${encodeURIComponent(redirectUri)}`;
-    // Ensure URL is absolute (starts with http:// or https://)
-    if (!oauthUrl.startsWith('http://') && !oauthUrl.startsWith('https://')) {
-      oauthUrl = `https://${oauthUrl}`;
-    }
+    // Construct OAuth URL - ensure API_URL doesn't have trailing slash
+    const baseUrl = API_URL.endsWith('/') ? API_URL.slice(0, -1) : API_URL;
+    const oauthUrl = `${baseUrl}/auth/google/?redirect_uri=${encodeURIComponent(redirectUri)}`;
+    
+    // Debug log (remove in production if needed)
+    console.log('OAuth URL:', oauthUrl);
+    
     // Direct navigation - this bypasses React Router completely
     window.location.href = oauthUrl;
   };
