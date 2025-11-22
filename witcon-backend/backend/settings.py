@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/5.2/ref/settings/
 
 import os
 import json
+import re
 from pathlib import Path
 from dotenv import load_dotenv
 
@@ -90,6 +91,11 @@ CORS_ALLOWED_ORIGINS = [
     "http://127.0.0.1:5174",
     "https://witcon2026.vercel.app",
     "https://witcon.duckdns.org",
+]
+
+# Allow all Vercel preview deployment URLs (e.g., https://witcon2026-*-wicsfius-projects.vercel.app)
+CORS_ALLOWED_ORIGIN_REGEXES = [
+    re.compile(r"^https://.*\.vercel\.app$"),
 ]
 
 # Allow credentials for OAuth sessions
