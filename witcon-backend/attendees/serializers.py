@@ -145,8 +145,50 @@ class AttendeeSerializer(serializers.ModelSerializer):
 
     def create(self, validated_data):
         validated_data.pop('confirmEmail', None)
+        
+        # Extract file separately to ensure proper handling with S3
+        resume_file = validated_data.pop('resume', None)
+        
+        # Log resume file before creating attendee
+        if resume_file:
+            print(f"Serializer create: Resume file present - name={resume_file.name if hasattr(resume_file, 'name') else 'N/A'}, size={resume_file.size if hasattr(resume_file, 'size') else 'N/A'}")
+        else:
+            print("Serializer create: WARNING - Resume file NOT in validated_data")
+        
+        # Create attendee without file first
         attendee = Attendee(**validated_data)
-        attendee.save()
+        
+        # Explicitly assign and save the file if present
+        if resume_file:
+            attendee.resume = resume_file
+            print(f"Assigning resume file to attendee: name={resume_file.name if hasattr(resume_file, 'name') else 'N/A'}, size={resume_file.size if hasattr(resume_file, 'size') else 'N/A'}")
+        
+        # Save the instance (this will trigger S3 upload if file is present)
+        try:
+            attendee.save()
+        except Exception as e:
+            print(f"ERROR saving attendee: {e}")
+            import traceback
+            print(f"Traceback: {traceback.format_exc()}")
+            raise
+        
+        # Log after save
+        if attendee.resume:
+            print(f"After save: Resume saved successfully - name={attendee.resume.name}")
+            try:
+                # Try to get URL to verify S3 upload worked
+                from django.conf import settings
+                if hasattr(settings, 'DEFAULT_FILE_STORAGE') and 's3' in str(settings.DEFAULT_FILE_STORAGE).lower():
+                    from .utils import generate_presigned_resume_url
+                    url = generate_presigned_resume_url(attendee.resume.name)
+                    print(f"S3 URL generated: {url}")
+            except Exception as e:
+                print(f"Error generating S3 URL: {e}")
+                import traceback
+                print(f"Traceback: {traceback.format_exc()}")
+        else:
+            print("After save: WARNING - attendee.resume is None or empty")
+        
         return attendee
 
     def to_representation(self, instance):

@@ -53,6 +53,15 @@ class AttendeeCreateView(generics.CreateAPIView):
                         status=status.HTTP_400_BAD_REQUEST
                     )
             
+            # Logging for resume file (after email validation, since we might return early above)
+            if 'resume' in request.FILES:
+                resume_file = request.FILES['resume']
+                print(f"Resume file found: name={resume_file.name}, size={resume_file.size}, content_type={resume_file.content_type}")
+            elif 'resume' in request.data:
+                print(f"Resume found in request.data: {type(request.data['resume'])}")
+            else:
+                print("WARNING: Resume file NOT found in request.FILES or request.data")
+            
             response = super().create(request, *args, **kwargs)
             print(f"Registration successful: {response.data.get('id', 'unknown')}")
             return response
