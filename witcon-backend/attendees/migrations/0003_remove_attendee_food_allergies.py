@@ -1,6 +1,5 @@
 # Generated manually to remove food_allergies and custom_allergy fields
 # This migration safely removes fields only if they exist in the database
-# Renamed to 0004 to run after any existing 0003 migration on the server
 
 from django.db import migrations, connection
 
@@ -41,7 +40,6 @@ def reverse_operation(apps, schema_editor):
 class Migration(migrations.Migration):
 
     dependencies = [
-        # This will depend on whatever 0003 exists, or 0002 if 0003 doesn't exist
         ('attendees', '0002_attendee_code_of_conduct_attendee_country_and_more'),
     ]
 
