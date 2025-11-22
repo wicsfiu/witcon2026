@@ -144,16 +144,39 @@ class AttendeeSerializer(serializers.ModelSerializer):
         return value
 
     def create(self, validated_data):
+        # Check S3 configuration
+        from django.conf import settings
+        print(f"S3 Configuration check:")
+        print(f"  USE_S3: {hasattr(settings, 'USE_S3') and settings.USE_S3}")
+        print(f"  DEFAULT_FILE_STORAGE: {getattr(settings, 'DEFAULT_FILE_STORAGE', 'Not set')}")
+        print(f"  AWS_STORAGE_BUCKET_NAME: {getattr(settings, 'AWS_STORAGE_BUCKET_NAME', 'Not set')}")
+        print(f"  AWS_ACCESS_KEY_ID present: {bool(getattr(settings, 'AWS_ACCESS_KEY_ID', None))}")
+        
         validated_data.pop('confirmEmail', None)
         
         # Extract file separately to ensure proper handling with S3
-        resume_file = validated_data.pop('resume', None)
+        # First try to get from validated_data
+        resume_file = validated_data.get('resume')
+        
+        # Fallback: try to get from request context if not in validated_data
+        if not resume_file and hasattr(self, 'context') and 'request' in self.context:
+            request = self.context['request']
+            if 'resume' in request.FILES:
+                resume_file = request.FILES['resume']
+                print(f"Serializer create: Resume file found in request.FILES (fallback)")
+        
+        # Remove from validated_data if present
+        if 'resume' in validated_data:
+            del validated_data['resume']
         
         # Log resume file before creating attendee
         if resume_file:
-            print(f"Serializer create: Resume file present - name={resume_file.name if hasattr(resume_file, 'name') else 'N/A'}, size={resume_file.size if hasattr(resume_file, 'size') else 'N/A'}")
+            print(f"Serializer create: Resume file present - name={resume_file.name if hasattr(resume_file, 'name') else 'N/A'}, size={resume_file.size if hasattr(resume_file, 'size') else 'N/A'}, type={type(resume_file)}")
         else:
-            print("Serializer create: WARNING - Resume file NOT in validated_data")
+            print("Serializer create: WARNING - Resume file NOT in validated_data or request.FILES")
+            print(f"  validated_data keys: {list(validated_data.keys())}")
+            if hasattr(self, 'context') and 'request' in self.context:
+                print(f"  request.FILES keys: {list(self.context['request'].FILES.keys())}")
         
         # Create attendee without file first
         attendee = Attendee(**validated_data)
@@ -162,32 +185,80 @@ class AttendeeSerializer(serializers.ModelSerializer):
         if resume_file:
             attendee.resume = resume_file
             print(f"Assigning resume file to attendee: name={resume_file.name if hasattr(resume_file, 'name') else 'N/A'}, size={resume_file.size if hasattr(resume_file, 'size') else 'N/A'}")
-        
-        # Save the instance (this will trigger S3 upload if file is present)
-        try:
-            attendee.save()
-        except Exception as e:
-            print(f"ERROR saving attendee: {e}")
-            import traceback
-            print(f"Traceback: {traceback.format_exc()}")
-            raise
+            print(f"  File field before save: {attendee.resume}")
+            
+            # Explicitly save the file field to ensure S3 upload happens
+            # This is important - Django FileField needs save() called on the model for S3 upload
+            try:
+                # Save the model first to trigger file upload
+                attendee.save()
+                print(f"  Model saved, file should be uploaded to S3")
+                
+                # Verify the file was actually saved to S3
+                if attendee.resume:
+                    try:
+                        file_exists = attendee.resume.storage.exists(attendee.resume.name)
+                        print(f"  File exists in S3 storage: {file_exists}")
+                        if not file_exists:
+                            print(f"  WARNING: File path saved but file NOT found in S3!")
+                            print(f"  Attempting to explicitly save file to S3...")
+                            # Try to explicitly save the file
+                            attendee.resume.save(attendee.resume.name, resume_file, save=False)
+                            attendee.save()
+                            file_exists = attendee.resume.storage.exists(attendee.resume.name)
+                            print(f"  After explicit save, file exists in S3: {file_exists}")
+                    except Exception as s3_error:
+                        print(f"  ERROR checking S3: {s3_error}")
+                        import traceback
+                        print(f"  S3 Error Traceback: {traceback.format_exc()}")
+            except Exception as e:
+                print(f"ERROR saving attendee with file: {e}")
+                import traceback
+                print(f"Traceback: {traceback.format_exc()}")
+                raise
+        else:
+            # No file, just save the attendee
+            try:
+                attendee.save()
+                print(f"  Save completed successfully (no file)")
+            except Exception as e:
+                print(f"ERROR saving attendee: {e}")
+                import traceback
+                print(f"Traceback: {traceback.format_exc()}")
+                raise
         
         # Log after save
         if attendee.resume:
-            print(f"After save: Resume saved successfully - name={attendee.resume.name}")
+            print(f"After save: Resume saved successfully")
+            print(f"  File name: {attendee.resume.name}")
+            print(f"  File storage: {type(attendee.resume.storage)}")
+            print(f"  File path: {attendee.resume.path if hasattr(attendee.resume, 'path') else 'No path attribute'}")
+            print(f"  File URL: {attendee.resume.url if hasattr(attendee.resume, 'url') else 'No url attribute'}")
+            
+            # Check if file actually exists in storage
+            try:
+                file_exists = attendee.resume.storage.exists(attendee.resume.name)
+                print(f"  File exists in storage: {file_exists}")
+                if file_exists:
+                    file_size = attendee.resume.storage.size(attendee.resume.name)
+                    print(f"  File size in storage: {file_size} bytes")
+            except Exception as e:
+                print(f"  Error checking file in storage: {e}")
+            
             try:
                 # Try to get URL to verify S3 upload worked
                 from django.conf import settings
                 if hasattr(settings, 'DEFAULT_FILE_STORAGE') and 's3' in str(settings.DEFAULT_FILE_STORAGE).lower():
                     from .utils import generate_presigned_resume_url
                     url = generate_presigned_resume_url(attendee.resume.name)
-                    print(f"S3 URL generated: {url}")
+                    print(f"  Presigned S3 URL generated: {url}")
             except Exception as e:
-                print(f"Error generating S3 URL: {e}")
+                print(f"  Error generating presigned S3 URL: {e}")
                 import traceback
-                print(f"Traceback: {traceback.format_exc()}")
+                print(f"  Traceback: {traceback.format_exc()}")
         else:
             print("After save: WARNING - attendee.resume is None or empty")
+            print(f"  This means the file was NOT saved to S3!")
         
         return attendee
 

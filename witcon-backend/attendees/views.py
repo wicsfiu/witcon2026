@@ -53,7 +53,7 @@ class AttendeeCreateView(generics.CreateAPIView):
                         status=status.HTTP_400_BAD_REQUEST
                     )
             
-            # Logging for resume file (after email validation, since we might return early above)
+            # Logging for resume file
             if 'resume' in request.FILES:
                 resume_file = request.FILES['resume']
                 print(f"Resume file found: name={resume_file.name}, size={resume_file.size}, content_type={resume_file.content_type}")
@@ -237,6 +237,56 @@ def get_attendee_by_email(request):
         return Response(serializer.data)
     except Attendee.DoesNotExist:
         return Response({'error': 'Attendee not found'}, status=404)
+
+
+@api_view(['GET'])
+@permission_classes([AllowAny])
+def debug_s3_config(request):
+    """
+    Debug endpoint to check S3 configuration and recent registration status.
+    Accessible at: /backend-api/debug/s3-config/
+    """
+    from django.conf import settings
+    
+    config = {
+        'use_s3': hasattr(settings, 'USE_S3') and settings.USE_S3,
+        'default_file_storage': str(getattr(settings, 'DEFAULT_FILE_STORAGE', 'Not set')),
+        'aws_storage_bucket_name': getattr(settings, 'AWS_STORAGE_BUCKET_NAME', 'Not set'),
+        'aws_s3_region_name': getattr(settings, 'AWS_S3_REGION_NAME', 'Not set'),
+        'aws_access_key_id_set': bool(getattr(settings, 'AWS_ACCESS_KEY_ID', None)),
+        'aws_secret_access_key_set': bool(getattr(settings, 'AWS_SECRET_ACCESS_KEY', None)),
+    }
+    
+    # Get the most recent attendee registration
+    try:
+        latest_attendee = Attendee.objects.order_by('-created_at').first()
+        if latest_attendee:
+            config['latest_registration'] = {
+                'email': latest_attendee.email,
+                'created_at': latest_attendee.created_at.isoformat(),
+                'resume_field': {
+                    'has_resume': bool(latest_attendee.resume),
+                    'resume_name': latest_attendee.resume.name if latest_attendee.resume else None,
+                    'resume_url': latest_attendee.resume.url if latest_attendee.resume else None,
+                }
+            }
+            
+            # Check if file exists in storage
+            if latest_attendee.resume:
+                try:
+                    exists = latest_attendee.resume.storage.exists(latest_attendee.resume.name)
+                    config['latest_registration']['resume_field']['exists_in_storage'] = exists
+                    if exists:
+                        size = latest_attendee.resume.storage.size(latest_attendee.resume.name)
+                        config['latest_registration']['resume_field']['file_size'] = size
+                except Exception as e:
+                    config['latest_registration']['resume_field']['storage_check_error'] = str(e)
+        else:
+            config['latest_registration'] = None
+    except Exception as e:
+        config['error'] = f"Error checking registration: {str(e)}"
+    
+    return Response(config)
 
 
 # Router for protected endpoints
