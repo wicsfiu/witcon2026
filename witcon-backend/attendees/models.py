@@ -164,6 +164,7 @@ class Attendee(models.Model):
     photography_consent = models.BooleanField(default=False)
 
     # Files and tracking
+    # FileField will use DEFAULT_FILE_STORAGE from settings (S3 if configured)
     resume = models.FileField(upload_to="resumes/", blank=True, null=True)
     checked_in = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)

@@ -177,15 +177,29 @@ if USE_S3:
     AWS_S3_SIGNATURE_VERSION = os.getenv("AWS_S3_SIGNATURE_VERSION", "s3v4")
     AWS_S3_OBJECT_PARAMETERS = json.loads(os.getenv("AWS_S3_OBJECT_PARAMETERS", '{"CacheControl":"max-age=86400"}'))
     
-    # Use S3 as the default file storage backend
-    DEFAULT_FILE_STORAGE = "storages.backends.s3boto3.S3Boto3Storage"
-    
     # S3 bucket settings
     AWS_DEFAULT_ACL = None  # Keep files private by default
     AWS_QUERYSTRING_AUTH = False  # Don't require query string authentication
     
     # Media URL for accessing files
     MEDIA_URL = f"https://{AWS_STORAGE_BUCKET_NAME}.s3.{AWS_S3_REGION_NAME}.amazonaws.com/"
+    
+    # Use S3 as the default file storage backend
+    # Django 4.2+ uses STORAGES dictionary, but DEFAULT_FILE_STORAGE still works for backwards compatibility
+    DEFAULT_FILE_STORAGE = "storages.backends.s3boto3.S3Boto3Storage"
+    
+    # Django 4.2+ style - explicitly set default storage to S3
+    STORAGES = {
+        "default": {
+            "BACKEND": "storages.backends.s3boto3.S3Boto3Storage",
+        },
+        "staticfiles": {
+            "BACKEND": "django.contrib.staticfiles.storage.StaticFilesStorage",
+        },
+    }
+    
+    # IMPORTANT: Don't set MEDIA_ROOT when using S3 - it causes Django to use local storage
+    # MEDIA_ROOT is only set in the else clause below for local storage
     
     print(f"S3 storage configured: Resumes will be stored in S3 bucket '{AWS_STORAGE_BUCKET_NAME}'")
 else:
