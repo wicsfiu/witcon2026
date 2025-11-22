@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import {useEffect} from 'react';
 import type { ChangeEvent } from 'react';
+import { useSearchParams } from 'react-router-dom';
 //import { useLocation } from 'react-router-dom';
 //import { Camera, Edit, X, FileText, ExternalLink } from 'lucide-react';
 import Title from '../components/text/Title';
@@ -25,13 +26,16 @@ interface AttendeeData {
 }
 
 export default function Profile() {
-  const { userId, userEmail, logout } = useAuth();
+  const [searchParams, setSearchParams] = useSearchParams();
+  const { userId, userEmail, login, logout } = useAuth();
   const [_isEditing, setIsEditing] = useState<boolean>(false);
   const [_showQRScanner, setShowQRScanner] = useState<boolean>(false);
   const [_showResumeViewer, _setShowResumeViewer] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string>('');
 
+  // Get email from URL params (from OAuth redirect)
+  const emailFromUrl = searchParams.get('email');
 
   const [attendeeData, setAttendeeData] = useState<AttendeeData>({
     firstName: 'Ariana',
@@ -63,6 +67,37 @@ export default function Profile() {
     ((window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1')
       ? 'http://localhost:8000/backend-api'
       : 'https://witcon.duckdns.org/backend-api');
+
+  // Handle email from URL params (from OAuth redirect) - log user in if not already logged in
+  useEffect(() => {
+    if (emailFromUrl && !userId && !userEmail) {
+      // Email in URL but user not logged in - fetch user data and log them in
+      setLoading(true);
+      fetch(`${API_URL}/attendees/by-email/?email=${encodeURIComponent(emailFromUrl)}`)
+        .then(res => {
+          if (res.ok) {
+            return res.json();
+          }
+          throw new Error('User not found');
+        })
+        .then((data: AttendeeData) => {
+          // Log the user in
+          if (data.id && data.email) {
+            login(data.id, data.email);
+          }
+          // Clean up URL by removing email parameter
+          const newSearchParams = new URLSearchParams(searchParams);
+          newSearchParams.delete('email');
+          const newUrl = window.location.pathname + (newSearchParams.toString() ? `?${newSearchParams.toString()}` : '');
+          window.history.replaceState({}, '', newUrl);
+        })
+        .catch(err => {
+          console.error('Failed to log in user from email:', err);
+          setError('Failed to load profile. Please try logging in again.');
+          setLoading(false);
+        });
+    }
+  }, [emailFromUrl, userId, userEmail, login, API_URL, searchParams]);
 
   // Fetch attendee profile when userId or userEmail changes
   useEffect(() => {

@@ -37,12 +37,32 @@ class AttendeeCreateView(generics.CreateAPIView):
             print(f"Files: {list(request.FILES.keys())}")
             print(f"Data keys: {list(request.data.keys())}")
             
+            # Check if email already exists before attempting to create
+            email = request.data.get('email') or request.data.get('confirmEmail')
+            if email:
+                from .models import Attendee
+                if Attendee.objects.filter(email=email).exists():
+                    from rest_framework.response import Response
+                    from rest_framework import status
+                    return Response(
+                        {
+                            'error': 'This email is already registered.',
+                            'detail': f'An account with email {email} already exists. Please log in instead.',
+                            'email_exists': True
+                        },
+                        status=status.HTTP_400_BAD_REQUEST
+                    )
+            
             response = super().create(request, *args, **kwargs)
             print(f"Registration successful: {response.data.get('id', 'unknown')}")
             return response
         except Exception as e:
             # Log the full error for debugging
             import traceback
+            from django.db import IntegrityError
+            from rest_framework.response import Response
+            from rest_framework import status
+            
             error_msg = str(e)
             error_trace = traceback.format_exc()
             print("=" * 60)
@@ -51,8 +71,19 @@ class AttendeeCreateView(generics.CreateAPIView):
             print(f"Error: {error_msg}")
             print(f"Traceback:\n{error_trace}")
             print("=" * 60)
-            from rest_framework.response import Response
-            from rest_framework import status
+            
+            # Check if it's a duplicate email error
+            if isinstance(e, IntegrityError) and 'email' in error_msg.lower() and 'unique' in error_msg.lower():
+                email = request.data.get('email') or request.data.get('confirmEmail', 'this email')
+                return Response(
+                    {
+                        'error': 'This email is already registered.',
+                        'detail': f'An account with {email} already exists. Please log in instead.',
+                        'email_exists': True
+                    },
+                    status=status.HTTP_400_BAD_REQUEST
+                )
+            
             return Response(
                 {'error': error_msg, 'detail': 'Registration failed. Check server logs for details.'},
                 status=status.HTTP_500_INTERNAL_SERVER_ERROR
@@ -148,18 +179,32 @@ def google_oauth_callback(request):
     if not email:
         return Response({'error': 'Email not provided by Google'}, status=400)
     
+    # Check if user already exists in database
+    user_exists = Attendee.objects.filter(email=email).exists()
+    
     # Clear session state
     request.session.pop('oauth_state', None)
     redirect_uri = request.session.pop('oauth_redirect_uri', None)
     
-    # Redirect to frontend registration page with email
+    # Determine redirect destination
     if redirect_uri:
-        # Use the provided redirect URI
-        frontend_url = redirect_uri
+        # Parse the redirect URI to get the base URL and path
+        parsed_uri = urllib.parse.urlparse(redirect_uri)
+        base_url = f"{parsed_uri.scheme}://{parsed_uri.netloc}"
+        
+        if user_exists:
+            # User already registered - redirect to profile page
+            frontend_url = f"{base_url}/profile"
+        else:
+            # New user - redirect to registration page
+            frontend_url = redirect_uri
     else:
-        # Default to registration page
+        # Default behavior - use FRONTEND_URL or localhost
         frontend_base_url = os.getenv('FRONTEND_URL', 'http://localhost:5174')
-        frontend_url = f"{frontend_base_url}/register"
+        if user_exists:
+            frontend_url = f"{frontend_base_url}/profile"
+        else:
+            frontend_url = f"{frontend_base_url}/register"
     
     # Prefill email as query parameter
     redirect_url = f"{frontend_url}?email={urllib.parse.quote(email)}"
