@@ -188,7 +188,7 @@ class AttendeeSerializer(serializers.ModelSerializer):
             print(f"  File field before save: {attendee.resume}")
             
             # Explicitly save the file field to ensure S3 upload happens
-            # This is important - Django FileField needs save() called on the model for S3 upload
+            # Django FileField needs save() called on the model for S3 upload
             try:
                 # Save the model first to trigger file upload
                 attendee.save()
@@ -232,7 +232,13 @@ class AttendeeSerializer(serializers.ModelSerializer):
             print(f"After save: Resume saved successfully")
             print(f"  File name: {attendee.resume.name}")
             print(f"  File storage: {type(attendee.resume.storage)}")
-            print(f"  File path: {attendee.resume.path if hasattr(attendee.resume, 'path') else 'No path attribute'}")
+            # S3 storage doesn't support .path - it raises NotImplementedError
+            # Wrap in try/except to avoid errors with remote storage backends
+            try:
+                file_path = attendee.resume.path
+                print(f"  File path: {file_path}")
+            except (NotImplementedError, AttributeError):
+                print(f"  File path: N/A (remote storage - no local path)")
             print(f"  File URL: {attendee.resume.url if hasattr(attendee.resume, 'url') else 'No url attribute'}")
             
             # Check if file actually exists in storage
