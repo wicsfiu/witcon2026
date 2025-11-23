@@ -198,17 +198,27 @@ export default function Profile() {
         credentials: 'include', // Include cookies for session authentication
       });
       
-      const responseData = await res.json().catch(() => ({}));
-      
       if (!res.ok) {
+        const errorData = await res.json().catch(() => ({}));
         console.error('Upload failed - Status:', res.status);
-        console.error('Upload failed - Response:', responseData);
-        const errorMessage = responseData.resume?.[0] || responseData.resume || responseData.error || responseData.detail || `Failed to upload resume (Status: ${res.status})`;
+        console.error('Upload failed - Response:', errorData);
+        const errorMessage = errorData.resume?.[0] || errorData.resume || errorData.error || errorData.detail || `Failed to upload resume (Status: ${res.status})`;
         throw new Error(errorMessage);
       }
       
-      const updated: AttendeeData = await res.json();
-      setAttendeeData(updated);
+      // Upload succeeded - refresh profile data from server instead of reading response
+      // This avoids the "body stream already read" error and ensures we have the latest data
+      const fetchUrl = userEmail 
+        ? `${API_URL}/attendees/by-email/?email=${encodeURIComponent(userEmail)}`
+        : `${API_URL}/attendees/${userId}/`;
+      
+      const refreshRes = await fetch(fetchUrl);
+      if (refreshRes.ok) {
+        const updated: AttendeeData = await refreshRes.json();
+        setAttendeeData(updated);
+        setEditData(updated);
+      }
+      
       alert(`Resume updated successfully! ${replacementsRemaining - 1} replacement${replacementsRemaining - 1 === 1 ? '' : 's'} remaining.`);
       console.log('Resume updated:', file.name);
     } catch (err: any) {
