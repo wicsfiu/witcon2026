@@ -185,7 +185,7 @@ class AttendeeSerializer(serializers.ModelSerializer):
         if resume_file:
             attendee.resume = resume_file
             # Store the original filename before Django generates a unique name
-            if hasattr(resume_file, 'name'):
+            if hasattr(resume_file, 'name') and hasattr(attendee, 'resume_original_name'):
                 attendee.resume_original_name = resume_file.name
                 print(f"Storing original filename: {resume_file.name}")
             print(f"Assigning resume file to attendee: name={resume_file.name if hasattr(resume_file, 'name') else 'N/A'}, size={resume_file.size if hasattr(resume_file, 'size') else 'N/A'}")
@@ -276,16 +276,29 @@ class AttendeeSerializer(serializers.ModelSerializer):
         data = super().to_representation(instance)
         
         # Add resume information
-        if instance.resume:
+        if instance.resume and instance.resume.name:
             try:
                 # Use the original filename if stored, otherwise extract from path
-                if instance.resume_original_name:
+                if hasattr(instance, 'resume_original_name') and instance.resume_original_name:
                     data['resume_name'] = instance.resume_original_name
                 else:
                     # Fallback: Extract just the filename from the path
+                    # Remove the "resumes/" prefix and any Django-generated suffixes
                     resume_path = instance.resume.name
                     resume_filename = resume_path.split('/')[-1] if '/' in resume_path else resume_path
-                    data['resume_name'] = resume_filename
+                    
+                    # Try to extract original name from Django-generated filename
+                    # Format is usually: original_name_randomSuffix.ext
+                    if resume_filename and '_' in resume_filename:
+                        parts = resume_filename.rsplit('_', 1)
+                        if len(parts) == 2 and len(parts[1].split('.')[0]) >= 7:
+                            ext = resume_filename.split('.')[-1]
+                            potential_name = parts[0] + '.' + ext
+                            data['resume_name'] = potential_name
+                        else:
+                            data['resume_name'] = resume_filename
+                    else:
+                        data['resume_name'] = resume_filename
                 
                 # Try to get the resume URL - use S3 if configured, otherwise use local file URL
                 from django.conf import settings
@@ -308,9 +321,10 @@ class AttendeeSerializer(serializers.ModelSerializer):
             data['resume_url'] = None
             data['resume_name'] = None
         
-        # Add replacement count info
-        data['resume_replacement_count'] = instance.resume_replacement_count
-        data['resume_replacements_remaining'] = max(0, 2 - instance.resume_replacement_count)
+        # Add replacement count info (handle missing field)
+        replacement_count = getattr(instance, 'resume_replacement_count', 0)
+        data['resume_replacement_count'] = replacement_count
+        data['resume_replacements_remaining'] = max(0, 2 - replacement_count)
         
         return data
     
@@ -321,7 +335,9 @@ class AttendeeSerializer(serializers.ModelSerializer):
         
         if resume_file:
             # Check replacement limit (max 2 replacements, 3 total including initial registration)
-            if instance.resume_replacement_count >= 2:
+            # Handle case where field doesn't exist yet 
+            replacement_count = getattr(instance, 'resume_replacement_count', 0)
+            if replacement_count >= 2:
                 raise serializers.ValidationError({
                     'resume': 'You have reached the maximum number of resume replacements (2). You cannot replace your resume again.'
                 })
@@ -341,10 +357,12 @@ class AttendeeSerializer(serializers.ModelSerializer):
             # Assign new resume and increment replacement count
             instance.resume = resume_file
             # Store the original filename before Django generates a unique name
-            if hasattr(resume_file, 'name'):
+            if hasattr(resume_file, 'name') and hasattr(instance, 'resume_original_name'):
                 instance.resume_original_name = resume_file.name
                 print(f"Storing original filename: {resume_file.name}")
-            instance.resume_replacement_count += 1
+            # Increment replacement count if field exists
+            if hasattr(instance, 'resume_replacement_count'):
+                instance.resume_replacement_count = getattr(instance, 'resume_replacement_count', 0) + 1
             
             print(f"Replacing resume - new file: {resume_file.name if hasattr(resume_file, 'name') else 'N/A'}, size: {resume_file.size if hasattr(resume_file, 'size') else 'N/A'}, replacement count: {instance.resume_replacement_count}")
         

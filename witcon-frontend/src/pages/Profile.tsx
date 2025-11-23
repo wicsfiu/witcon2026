@@ -195,16 +195,24 @@ export default function Profile() {
       const res = await fetch(`${API_URL}/attendees/${userId}/`, {
         method: 'PATCH',
         body: formData,
+        credentials: 'include', // Include cookies for session authentication
       });
+      
+      const responseData = await res.json().catch(() => ({}));
+      
       if (!res.ok) {
-        const errorData = await res.json().catch(() => ({}));
-        throw new Error(errorData.resume?.[0] || errorData.error || 'Failed to upload resume');
+        console.error('Upload failed - Status:', res.status);
+        console.error('Upload failed - Response:', responseData);
+        const errorMessage = responseData.resume?.[0] || responseData.resume || responseData.error || responseData.detail || `Failed to upload resume (Status: ${res.status})`;
+        throw new Error(errorMessage);
       }
+      
       const updated: AttendeeData = await res.json();
       setAttendeeData(updated);
       alert(`Resume updated successfully! ${replacementsRemaining - 1} replacement${replacementsRemaining - 1 === 1 ? '' : 's'} remaining.`);
       console.log('Resume updated:', file.name);
     } catch (err: any) {
+      console.error('Resume upload error:', err);
       alert(err.message || 'Failed to upload resume. Please try again.');
     } finally {
       event.target.value = ''; // Reset file input
