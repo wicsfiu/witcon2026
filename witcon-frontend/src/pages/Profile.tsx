@@ -18,6 +18,10 @@ interface AttendeeData {
   levelOfStudy: string;
   yearLevel?: string;
   resume?: string;
+  resume_name?: string;
+  resume_url?: string;
+  resume_replacement_count?: number;
+  resume_replacements_remaining?: number;
   linkedin?: string;
   github?: string;
   discord?: string;
@@ -169,6 +173,21 @@ export default function Profile() {
     const file = event.target.files?.[0];
     if (!file) return;
 
+    // Check file size (600 KB limit)
+    if (file.size > 600 * 1024) {
+      alert("Resume file size must be 600 KB or smaller");
+      event.target.value = ''; // Reset file input
+      return;
+    }
+
+    // Check if user has replacements remaining
+    const replacementsRemaining = attendeeData.resume_replacements_remaining ?? 2;
+    if (replacementsRemaining <= 0) {
+      alert("You have reached the maximum number of resume replacements (2). You cannot replace your resume again.");
+      event.target.value = ''; // Reset file input
+      return;
+    }
+
     const formData = new FormData();
     formData.append('resume', file);
 
@@ -177,12 +196,18 @@ export default function Profile() {
         method: 'PATCH',
         body: formData,
       });
-      if (!res.ok) throw new Error('Failed to upload resume');
+      if (!res.ok) {
+        const errorData = await res.json().catch(() => ({}));
+        throw new Error(errorData.resume?.[0] || errorData.error || 'Failed to upload resume');
+      }
       const updated: AttendeeData = await res.json();
       setAttendeeData(updated);
+      alert(`Resume updated successfully! ${replacementsRemaining - 1} replacement${replacementsRemaining - 1 === 1 ? '' : 's'} remaining.`);
       console.log('Resume updated:', file.name);
     } catch (err: any) {
-      alert(err.message);
+      alert(err.message || 'Failed to upload resume. Please try again.');
+    } finally {
+      event.target.value = ''; // Reset file input
     }
   };
 
@@ -282,17 +307,92 @@ const AcademicInfoBox = () => (
 );
 
 
-const ResumeSocialBox = () => (
-  <InfoSection>
-    <div className="flex items-center gap-4">
-      <img src="/images/pdfIcon.png" alt="PDF Icon" className="w-20 h-20" />
-      <p className="text-sm text-[color:var(--color-primary-brown)] font-[Actor] text-center w-full">
-        You only have a limit of 2 more resume uploads.
-      </p>
-    </div>
+const ResumeSocialBox = ({ attendeeData, handleResumeUpdate }: { attendeeData: AttendeeData; handleResumeUpdate: (event: ChangeEvent<HTMLInputElement>) => void }) => {
+  const replacementsRemaining = attendeeData.resume_replacements_remaining ?? 2;
+  const hasResume = !!attendeeData.resume_name;
+  
+  return (
+    <InfoSection>
+      {/* Resume Section */}
+      <div className="space-y-3">
+        {/* Always show replacement count message at the top */}
+        <div className="bg-[#FFF6F6] rounded-full px-4 py-2 border-2 border-[color:var(--color-primary-pink)]">
+          <p className={`text-sm text-[color:var(--color-primary-brown)] font-[Actor] text-center ${
+            replacementsRemaining === 0 ? 'text-red-600 font-semibold' : 'font-medium'
+          }`}>
+            {replacementsRemaining > 0 
+              ? `Resume Replacements Remaining: ${replacementsRemaining} of 2 (Max 600 KB per file)`
+              : 'Resume Replacements Remaining: 0 of 2 (Maximum reached - no more replacements allowed)'
+            }
+          </p>
+        </div>
 
-    <div className="flex items-center gap-4">
-      <label className="text-[color:var(--color-primary-brown)] font-medium min-w-[100px]">LinkedIn:</label>
+        <div className="flex items-center gap-4">
+          <img src="/images/pdfIcon.png" alt="PDF Icon" className="w-20 h-20" />
+          <div className="flex-1">
+            {hasResume ? (
+              <div className="space-y-2">
+                <div className="flex items-center gap-2">
+                  <label className="text-[color:var(--color-primary-brown)] font-medium min-w-[100px]">Resume:</label>
+                  <p className="flex-1 px-4 py-2 rounded-full bg-[#FFF6F6] text-[color:var(--color-primary-brown)] font-[Actor] truncate" title={attendeeData.resume_name}>
+                    {attendeeData.resume_name}
+                  </p>
+                </div>
+                {replacementsRemaining > 0 && (
+                  <div className="flex items-center gap-2">
+                    <input
+                      id="resume-upload"
+                      type="file"
+                      accept=".pdf,.doc,.docx"
+                      onChange={handleResumeUpdate}
+                      className="hidden"
+                    />
+                    <label
+                      htmlFor="resume-upload"
+                      className="bg-[color:var(--color-secondary-yellow)] text-[color:var(--color-primary-pink)] px-4 py-2 rounded-full hover:bg-[color:var(--color-primary-yellow)] transition cursor-pointer text-sm font-medium"
+                    >
+                      Choose New File
+                    </label>
+                  </div>
+                )}
+              </div>
+            ) : (
+              <p className="text-sm text-[color:var(--color-primary-brown)] font-[Actor] text-center w-full">
+                No resume uploaded yet.
+              </p>
+            )}
+          </div>
+        </div>
+
+        {!hasResume && replacementsRemaining > 0 && (
+          <div className="flex items-center gap-2">
+            <label htmlFor="resume-upload-initial" className="text-[color:var(--color-primary-brown)] font-medium min-w-[100px]">
+              Upload Resume:
+            </label>
+            <input
+              id="resume-upload-initial"
+              type="file"
+              accept=".pdf,.doc,.docx"
+              onChange={handleResumeUpdate}
+              className="hidden"
+            />
+            <label
+              htmlFor="resume-upload-initial"
+              className="bg-[color:var(--color-secondary-yellow)] text-[color:var(--color-primary-pink)] px-4 py-2 rounded-full hover:bg-[color:var(--color-primary-yellow)] transition cursor-pointer text-sm font-medium"
+            >
+              Choose File
+            </label>
+          </div>
+        )}
+        {!hasResume && replacementsRemaining === 0 && (
+          <p className="text-sm text-[color:var(--color-primary-brown)] font-[Actor] text-center w-full italic">
+            You cannot upload or replace your resume at this time.
+          </p>
+        )}
+      </div>
+
+      <div className="flex items-center gap-4 mt-4">
+        <label className="text-[color:var(--color-primary-brown)] font-medium min-w-[100px]">LinkedIn:</label>
       <input
         type="text"
         value={attendeeData.linkedin || ""}
@@ -321,11 +421,11 @@ const ResumeSocialBox = () => (
       />
     </div>
   </InfoSection>
-);
+  );
+};
 
 
-
-  const WiCSResourcesBox = () => (
+const WiCSResourcesBox = () => (
   <InfoSection>
     <h3 className="font-semibold text-lg text-[color:var(--color-primary-brown)]">Make the best of WiTCON</h3>
     <div className="flex items-center gap-3">
@@ -467,7 +567,7 @@ return (
     <div className="columns-1 md:columns-2 gap-6 mt-2">
           <AcademicInfoBox />
           <WiCSResourcesBox />
-          <ResumeSocialBox />
+          <ResumeSocialBox attendeeData={attendeeData} handleResumeUpdate={handleResumeUpdate} />
           <ReportIncidentBox />
     </div>
   </section>

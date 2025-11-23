@@ -51,9 +51,9 @@ class AttendeeSerializer(serializers.ModelSerializer):
             'school', 'schoolOther', 'pantherID',
             'linkedin', 'github', 'website', 'discord',
             'shirtSize', 'codeOfConduct', 'photographyConsent',
-            'resume', 'checked_in', 'created_at', 'updated_at'
+            'resume', 'resume_replacement_count', 'checked_in', 'created_at', 'updated_at'
         )
-        read_only_fields = ('id', 'created_at', 'updated_at', 'checked_in')
+        read_only_fields = ('id', 'created_at', 'updated_at', 'checked_in', 'resume_replacement_count')
 
     # normalize complex data
     def to_internal_value(self, data):
@@ -184,6 +184,10 @@ class AttendeeSerializer(serializers.ModelSerializer):
         # Explicitly assign and save the file if present
         if resume_file:
             attendee.resume = resume_file
+            # Store the original filename before Django generates a unique name
+            if hasattr(resume_file, 'name'):
+                attendee.resume_original_name = resume_file.name
+                print(f"Storing original filename: {resume_file.name}")
             print(f"Assigning resume file to attendee: name={resume_file.name if hasattr(resume_file, 'name') else 'N/A'}, size={resume_file.size if hasattr(resume_file, 'size') else 'N/A'}")
             print(f"  File field before save: {attendee.resume}")
             
@@ -270,8 +274,19 @@ class AttendeeSerializer(serializers.ModelSerializer):
 
     def to_representation(self, instance):
         data = super().to_representation(instance)
+        
+        # Add resume information
         if instance.resume:
             try:
+                # Use the original filename if stored, otherwise extract from path
+                if instance.resume_original_name:
+                    data['resume_name'] = instance.resume_original_name
+                else:
+                    # Fallback: Extract just the filename from the path
+                    resume_path = instance.resume.name
+                    resume_filename = resume_path.split('/')[-1] if '/' in resume_path else resume_path
+                    data['resume_name'] = resume_filename
+                
                 # Try to get the resume URL - use S3 if configured, otherwise use local file URL
                 from django.conf import settings
                 # Check if S3 is configured
@@ -284,6 +299,105 @@ class AttendeeSerializer(serializers.ModelSerializer):
             except Exception as e:
                 # Fallback - use the file name/path
                 data['resume_url'] = f"/media/{instance.resume.name}" if instance.resume.name else None
+                # Use original name if available, otherwise extract from path
+                if instance.resume_original_name:
+                    data['resume_name'] = instance.resume_original_name
+                else:
+                    data['resume_name'] = instance.resume.name.split('/')[-1] if instance.resume.name else None
         else:
             data['resume_url'] = None
+            data['resume_name'] = None
+        
+        # Add replacement count info
+        data['resume_replacement_count'] = instance.resume_replacement_count
+        data['resume_replacements_remaining'] = max(0, 2 - instance.resume_replacement_count)
+        
         return data
+    
+    def update(self, instance, validated_data):
+        """Handle updating attendee, including resume replacement with limit checking"""
+        # Check if resume is being updated
+        resume_file = validated_data.pop('resume', None)
+        
+        if resume_file:
+            # Check replacement limit (max 2 replacements, 3 total including initial registration)
+            if instance.resume_replacement_count >= 2:
+                raise serializers.ValidationError({
+                    'resume': 'You have reached the maximum number of resume replacements (2). You cannot replace your resume again.'
+                })
+            
+            # Validate file size
+            if resume_file.size > 600 * 1024:
+                raise serializers.ValidationError({'resume': 'Resume size must be <= 600 KB'})
+            
+            # Store old resume info before replacing
+            old_resume_name = None
+            old_resume_storage = None
+            if instance.resume:
+                old_resume_name = instance.resume.name
+                old_resume_storage = instance.resume.storage
+                print(f"Resume replacement: Old resume will be deleted after new one is saved - {old_resume_name}")
+            
+            # Assign new resume and increment replacement count
+            instance.resume = resume_file
+            # Store the original filename before Django generates a unique name
+            if hasattr(resume_file, 'name'):
+                instance.resume_original_name = resume_file.name
+                print(f"Storing original filename: {resume_file.name}")
+            instance.resume_replacement_count += 1
+            
+            print(f"Replacing resume - new file: {resume_file.name if hasattr(resume_file, 'name') else 'N/A'}, size: {resume_file.size if hasattr(resume_file, 'size') else 'N/A'}, replacement count: {instance.resume_replacement_count}")
+        
+        # Update other fields
+        for attr, value in validated_data.items():
+            setattr(instance, attr, value)
+        
+        # Save the instance (this will upload new resume to S3 if present)
+        try:
+            instance.save()
+            
+            # If resume was replaced, verify new file is in S3 and then delete old one
+            if resume_file and instance.resume:
+                print(f"  Model saved, verifying new resume upload to S3...")
+                
+                # Verify the new file exists in S3 before deleting old one
+                try:
+                    new_file_exists = instance.resume.storage.exists(instance.resume.name)
+                    print(f"  New resume exists in S3 storage: {new_file_exists}")
+                    
+                    if new_file_exists:
+                        # New file successfully saved to S3 - now safe to delete old one
+                        if old_resume_name and old_resume_storage:
+                            try:
+                                # Double-check old file still exists before deleting
+                                if old_resume_storage.exists(old_resume_name):
+                                    old_resume_storage.delete(old_resume_name)
+                                    print(f"  Successfully deleted old resume from S3: {old_resume_name}")
+                                else:
+                                    print(f"  Old resume already deleted or doesn't exist: {old_resume_name}")
+                            except Exception as delete_error:
+                                print(f"  WARNING: Could not delete old resume file: {delete_error}")
+                                import traceback
+                                print(f"  Delete error traceback: {traceback.format_exc()}")
+                                # Don't fail the update if old file deletion fails - new file is already saved
+                    else:
+                        print(f"  ERROR: New resume file NOT found in S3 after save!")
+                        print(f"  Keeping old resume ({old_resume_name}) - new file upload may have failed")
+                        raise Exception("New resume file not found in S3 storage after save")
+                        
+                except Exception as verify_error:
+                    print(f"  ERROR verifying resume upload: {verify_error}")
+                    import traceback
+                    print(f"  Verification error traceback: {traceback.format_exc()}")
+                    # Re-raise to fail the update if verification fails
+                    raise
+            else:
+                print(f"  Update completed successfully (no resume change)")
+                
+        except Exception as e:
+            print(f"ERROR during resume update: {e}")
+            import traceback
+            print(f"Traceback: {traceback.format_exc()}")
+            raise
+        
+        return instance
