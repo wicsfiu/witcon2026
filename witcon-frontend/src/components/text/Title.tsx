@@ -8,6 +8,6 @@ interface TextProps {
 
 export default function Text({ children, className = "" }: TextProps) {
   return (
-    <h1 className={twMerge("text-4xl text-primary-pink font-actor font-normal antialiased", className)}>{children}</h1>
+    <h1 className={twMerge("text-3xl text-primary-pink font-actor font-normal antialiased", className)}>{children}</h1>
   );
 }
