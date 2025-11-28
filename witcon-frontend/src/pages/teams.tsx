@@ -1,99 +1,209 @@
-
 import Title from '../components/text/Title';
 import Text from '../components/text/Text';
 import Header from "../components/text/Header";
+import rhode from '../assets/eboard/rhode.png';
+import devin from '../assets/eboard/devin.png';
+import narel from '../assets/eboard/narel.png';
 
 interface Team {
     name: string;
     position?: string;
+  image: string;
 }
-const Executive: Team[] = [
+
+const WiCS: Team[] = [
+
     {
-        name: "Margarita Gutierrez",
-        position: "President"
+        name: "Margarita Guitierrez",
+        position: "President",
+        image:""
     },
+
     {
         name: "Amber Garcia",
-        position: "Vice-President"
-    }
-]
-const industryRelations: Team[] = [
+        position: "Vice President",
+        image:""
+    },
+
+    {
+        name: "Agoritsa",
+        position: "Faculty Advisor",
+        image:""
+    },
+
+    {
+        name: "Gabriela Lopez",
+        position: "WiTCON Director",
+        image:""
+    },
+
+    {
+        name: "Sruti Simran",
+        position: "WiTCON Chair",
+        image:""
+    },
+
     {
         name: "Devin Diaz",
-        position: "Industry Relations Chair"
+        position: "Industry Relations Director",
+        image: devin
     },
+
     {
         name: "Rhode Sanchez",
-        position: "Industry Relations Lead"
+        position: "Industry Relations Lead",
+        image:rhode
     },
+
+
     {
         name: "Narel Rodriguez",
-        position: "Industry Relations Lead"
+        position: "Industry Relations Chair",
+        image:narel
     },
+
     {
         name: "Victoria Hernandez",
-        position: "Industry Relations Lead"
+        position: "Industry Relations Chair",
+        image:""
     },
-// make a function for ir, witcon, and then in the export
+
+    {
+        name: "Allison Romero",
+        position: "Marketing & Commms Director",
+        image:""
+    },
+
+    {
+        name: "Yana Kostenko",
+        position: "Marketing Lead",
+        image:""
+    },
+
+    {
+        name: "Natalia Boodram",
+        position: "Marketing Lead",
+        image:""
+    },
+
+    {
+        name: "Manar Alhamad",
+        position: "Comms Lead",
+        image:""
+    },
+
+    {
+        name: "Laiba Mahmud",
+        position: "Comms Lead",
+        image:""
+    },
+
+
+
 ]
 
 
-export default function Teams(){
+export default function Teams() {
     return (
-        <section className = 'w-full pt-6 pb-10'>
-        <Header className='py-6'>Teams</Header>
-
-        <div className="flex flex-col md:flex-row gap-6 justify-center items-start">
-        <div className="w-full rounded-2xl bg-[color:var(--color-secondary-mint)]/100 py-6 md:p-8 shadow-md flex-row">
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-y-6 gap-x-6 place-items-center">
-        <Title className="text-3xl font-semibold text-center mb-4">Executive</Title> 
-        {/* make title on top? */}
-        {Executive.map((team, index)=>(
-        <div key={index} className="flex flex-col items-center text-cente hover:scale-105 transition-transform duration-300">
-          {/* Circle for photo */}
-          {/* make a link for everyones linkedin when you click?? */}
-          <div className="w-24 h-24 rounded-full bg-neutral-200 overflow-hidden mb-3  ">
-            {/* If you have images: */}
-            {/* <img src={team.image} alt={team.name} className="w-full h-full object-cover" /> */}
-            
-          </div>
+      <div style={{ margin: 0, padding: 0 }}>
+        <style>
+          {`
+            html, body { margin: 0; padding: 0; }
   
-          {/* Name + position */}
-          <Text className="font-medium leading-tight">{team.name || 'First Last Name'}</Text>
-          <Text className="text-sm opacity-80 leading-tight">{team.position || 'Position'}</Text>
-        </div>
-    ))}
-        </div>
-        </div>
-        <div className="w-full rounded-2xl bg-[color:var(--color-secondary-mint)]/100 py-6 md:p-8 shadow-md flex-row">
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-y-6 gap-x-6 place-items-center">
-{/* //make another div for each row
-//make another grid for each team */}
-
-<Title className="text-3xl font-semibold text-center mb-4">Industry Relations</Title> 
-    {industryRelations.map((team, index) => (
-      <div key={index} className="flex flex-col items-center text-cente hover:scale-105 transition-transform duration-300
-      ">
-        {/* Circle for photo */}
-        {/* make a link for everyones linkedin when you click?? */}
-        <div className="w-24 h-24 rounded-full bg-neutral-200 overflow-hidden mb-3  ">
-          {/* If you have images: */}
-          {/* <img src={team.image} alt={team.name} className="w-full h-full object-cover" /> */}
-        </div>
-
-
-        {/* Name + position */}
-        <Text className="font-medium leading-tight">{team.name || 'First Last Name'}</Text>
-        <Text className="text-sm opacity-80 leading-tight">{team.position || 'Position'}</Text>
+            .comic {
+              display: grid;
+              padding: 5px;
+              gap: 10px;
+              justify-items: stretch;
+              /* Desktop / default: as many 200px panels per row as fit */
+              grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            }
+  
+            /* 👉 Mobile: force exactly 2 per row */
+            @media (max-width: 600px) {
+              .comic {
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+              }
+  
+              .panel {
+                height: 160px; /* optional: slightly shorter on mobile */
+              }
+  
+              .panel-name,
+              .panel-position {
+                font-size: 0.8rem;
+                padding: 2px 6px;
+              }
+            }
+  
+            .panel {
+              background-color: var(--color-secondary-pink);
+              background-image:
+                radial-gradient(var(--color-primary-pink) 20%, transparent 20%),
+                radial-gradient(#fafafa 20%, transparent 20%);
+              background-position: 0 0, 5px 5px;
+              background-size: 10px 10px;
+              border: solid 2px var(--color-primary-pink);
+              box-shadow: 0 6px 6px -6px #c2ae82;
+              display: flex;
+              flex-direction: row;
+              height: 200px;
+              overflow: hidden;
+              position: relative;
+            }
+  
+            .panel-image {
+              flex: 1;
+              width: 100%;
+              height: 100%;
+              position: relative;
+              background-size: cover;
+              background-position: center;
+            }
+  
+            .panel-name {
+              position: absolute;
+              top: -6px;
+              right: -6px;
+              background-color: #fff;
+              padding: 3px 10px;
+              border: solid 2px var(--color-primary-pink);
+              font-size: 0.75em;
+              transform: skew(-15deg);
+            }
+  
+            .panel-position {
+              position: absolute;
+              bottom: -6px;
+              left: -6px;
+              background-color: #fff;
+              padding: 3px 10px;
+              border: solid 2px var(--color-primary-pink);
+              font-size: 0.75em;
+              transform: skew(-15deg);
+            }
+          `}
+        </style>
+  
+        <article className="comic">
+          {WiCS.map((member, index) => (
+            <div key={index} className="panel">
+              <div
+                className="panel-image"
+                style={
+                  member.image
+                    ? { backgroundImage: `url(${member.image})`, backgroundSize: 'cover', backgroundPosition: 'center' }
+                    : undefined
+                }
+              >
+                {/* you can later set backgroundImage here if you add real photos */}
+                <div className="panel-name">{member.name}</div>
+                <div className="panel-position">{member.position}</div>
+              </div>
+            </div>
+          ))}
+        </article>
       </div>
-    ))}
-  </div>
-  </div>
-        </div>
-        
-
-
-
-
-    </section>);
-}
+    );
+  }
+  
