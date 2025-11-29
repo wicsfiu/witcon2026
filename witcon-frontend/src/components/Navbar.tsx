@@ -24,15 +24,21 @@ export default function Navbar() {
   const handleRegisterClick = (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
-    // Redirect to backend OAuth endpoint with redirect URI
-    const currentUrl = window.location.origin;
-    const redirectUri = `${currentUrl}/register`;
-    // Construct OAuth URL - ensure API_URL doesn't have trailing slash
-    const baseUrl = API_URL.endsWith('/') ? API_URL.slice(0, -1) : API_URL;
-    const oauthUrl = `${baseUrl}/auth/google/?redirect_uri=${encodeURIComponent(redirectUri)}`;
-    
-    // Direct navigation - this bypasses React Router completely
-    window.location.href = oauthUrl;
+    try {
+      // Redirect to backend OAuth endpoint with redirect URI
+      const currentUrl = window.location.origin;
+      const redirectUri = `${currentUrl}/register`;
+      // Construct OAuth URL - ensure API_URL doesn't have trailing slash
+      const baseUrl = API_URL.endsWith('/') ? API_URL.slice(0, -1) : API_URL;
+      const oauthUrl = `${baseUrl}/auth/google/?redirect_uri=${encodeURIComponent(redirectUri)}`;
+      
+      console.log('Register clicked - OAuth URL:', oauthUrl);
+      
+      // Direct navigation - this bypasses React Router completely
+      window.location.href = oauthUrl;
+    } catch (error) {
+      console.error('Error in handleRegisterClick:', error);
+    }
   };
 
   const handleLoginClick = (e: React.MouseEvent) => {
@@ -53,8 +59,10 @@ export default function Navbar() {
   };
 
   const handleLogout = () => {
+    // Clear auth state, then do a full reload to Home so the navbar
+    // definitely reflects the logged-out state (showing Login/Register only).
     logout();
-    navigate("/");
+    window.location.href = '/';
   };
 
   return (
