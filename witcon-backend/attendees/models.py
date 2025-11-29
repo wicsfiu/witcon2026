@@ -78,6 +78,8 @@ class Attendee(models.Model):
         ('Undergraduate', 'Undergraduate'),
         ('Graduate', 'Graduate'),
         ('Post-Doctorate', 'Post-Doctorate'),
+        ('Faculty', 'Faculty'),
+        ('Alumni', 'Alumni'),
         ('Other', 'Other'),
         ("I'm not a student", "I'm not a student"),
         ('Prefer not to answer', 'Prefer not to answer')

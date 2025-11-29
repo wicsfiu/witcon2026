@@ -23,7 +23,6 @@ interface FormData {
     fieldOther: string;
     school: string;
     schoolOther: string;
-    pantherID: string;
     linkedin: string;
     github: string;
     website: string;
@@ -71,7 +70,6 @@ export default function Register() {
         fieldOther: '',
         school: '',
         schoolOther: '',
-        pantherID: '',
         linkedin: '',
         github: '',
         website: '',
@@ -149,6 +147,8 @@ export default function Register() {
         'Undergraduate',
         'Graduate',
         'Post-Doctorate',
+        'Faculty',
+        'Alumni',
         'Other',
         'I\'m not a student',
         'Prefer not to answer'
@@ -225,11 +225,6 @@ export default function Register() {
         return age >= 18;
     };
 
-    const validatePantherID = (id: string) => {
-        if (id.length !== 7 || !/^\d{7}$/.test(id)) return false;
-        const invalidIDs = ['0000000','1111111','2222222','3333333','4444444','5555555','6666666','7777777','8888888','9999999','1234567'];
-        return !invalidIDs.includes(id);
-    };
 
     const validateForm = () => {
         const newErrors: FormErrors = {};
@@ -259,10 +254,6 @@ export default function Register() {
         if (formData.fieldOfStudy === 'Other' && !formData.fieldOther) newErrors.fieldOther = 'Required';
         if (!formData.school) newErrors.school = 'Required';
         if (formData.school === 'Other' && !formData.schoolOther) newErrors.schoolOther = 'Required';
-        if (formData.school === 'Florida International University' && !formData.pantherID) newErrors.pantherID = 'Required';
-        if (formData.school === 'Florida International University' && formData.pantherID && !validatePantherID(formData.pantherID)) {
-            newErrors.pantherID = 'Invalid Panther ID';
-        }
 
         //Resume and Agreements
         if (!resumeFile) newErrors.resume = 'Required';
@@ -464,7 +455,7 @@ return (
                 
                 {/* Social Profiles */}
                 <div className="bg-[color:var(--color-secondary-pink)] rounded-xl p-6 shadow-sm space-y-6">
-                    <h3 className="text-xl font-bold text-[color:var(--color-primary-pink)]" style={{ fontFamily: 'Actor, sans-serif' }}>Social Profiles (Optional)</h3>
+                    <h3 className="text-xl font-bold text-[color:var(--color-primary-pink)]" style={{ fontFamily: 'Actor, sans-serif' }}>Social Profiles</h3>
                     
                     <div>
                         <label htmlFor="linkedin" className="block text-sm font-medium text-[color:var(--color-primary-brown)]">LinkedIn</label>
@@ -632,9 +623,36 @@ return (
                 <div className="bg-[color:var(--color-secondary-pink)] rounded-xl p-6 shadow-sm space-y-6">
                     <h3 className="text-xl font-bold text-[color:var(--color-primary-pink)]" style={{ fontFamily: 'Actor, sans-serif' }}>Academic Information</h3>
                     
+                    {/* School */}
+                    <div>
+                        <label htmlFor="school" className="block text-sm font-medium text-[color:var(--color-primary-brown)]">School *</label>
+                        <select
+                            id="school"
+                            value={formData.school}
+                            onChange={(e) => handleInputChange('school', e.target.value)}
+                            className="mt-1 block w-full px-4 py-2 rounded-full bg-white focus:outline-none focus:ring-2 focus:ring-[color:var(--color-primary-pink)] transition duration-150 ease-in-out text-[color:var(--color-primary-brown)]"
+                            required
+                        >
+                            <option value="">Select school</option>
+                            {schools.map(school => (
+                                <option key={school} value={school}>{school}</option>
+                            ))}
+                        </select>
+                        {formData.school === 'Other' && (
+                            <input
+                                type="text"
+                                placeholder="Please specify school"
+                                value={formData.schoolOther}
+                                onChange={(e) => handleInputChange('schoolOther', e.target.value)}
+                                className="mt-1 block w-full px-4 py-2 rounded-full bg-white focus:outline-none focus:ring-2 focus:ring-[color:var(--color-primary-pink)] transition duration-150 ease-in-out text-[color:var(--color-primary-brown)]"
+                            />
+                        )}
+                        {errors.school && <div className="text-red-600 text-sm mt-1">{errors.school}</div>}
+                    </div>
+
                     {/* Level of Study */}
                     <div>
-                        <label htmlFor="levelOfStudy" className="block text-sm font-medium text-[color:var(--color-primary-brown)]">Current Level of Study *</label>
+                        <label htmlFor="levelOfStudy" className="block text-sm font-medium text-[color:var(--color-primary-brown)]">Class Standing *</label>
                         <select
                             id="levelOfStudy"
                             value={formData.levelOfStudy}
@@ -706,50 +724,6 @@ return (
                         )}
                         {errors.fieldOfStudy && <div className="text-red-600 text-sm mt-1">{errors.fieldOfStudy}</div>}
                     </div>
-
-                    <div>
-                        <label htmlFor="school" className="block text-sm font-medium text-[color:var(--color-primary-brown)]">School *</label>
-                        <select
-                            id="school"
-                            value={formData.school}
-                            onChange={(e) => handleInputChange('school', e.target.value)}
-                            className="mt-1 block w-full px-4 py-2 rounded-full bg-white focus:outline-none focus:ring-2 focus:ring-[color:var(--color-primary-pink)] transition duration-150 ease-in-out text-[color:var(--color-primary-brown)]"
-                            required
-                        >
-                            <option value="">Select school</option>
-                            {schools.map(school => (
-                                <option key={school} value={school}>{school}</option>
-                            ))}
-                        </select>
-                        {formData.school === 'Other' && (
-                            <input
-                                type="text"
-                                placeholder="Please specify school"
-                                value={formData.schoolOther}
-                                onChange={(e) => handleInputChange('schoolOther', e.target.value)}
-                                className="mt-1 block w-full px-4 py-2 rounded-full bg-white focus:outline-none focus:ring-2 focus:ring-[color:var(--color-primary-pink)] transition duration-150 ease-in-out text-[color:var(--color-primary-brown)]"
-                            />
-                        )}
-                        {errors.school && <div className="text-red-600 text-sm mt-1">{errors.school}</div>}
-                    </div>
-
-                    {formData.school === 'Florida International University' && (
-                        <div>
-                            <label htmlFor="pantherID" className="block text-sm font-medium text-[color:var(--color-primary-brown)]">Panther ID *</label>
-                            <input
-                                id="pantherID"
-                                type="text"
-                                value={formData.pantherID}
-                                onChange={(e) => handleInputChange('pantherID', e.target.value)}
-                                className="mt-1 block w-full px-4 py-2 rounded-full bg-white focus:outline-none focus:ring-2 focus:ring-[color:var(--color-primary-pink)] transition duration-150 ease-in-out text-[color:var(--color-primary-brown)]"
-                                placeholder="7 digits"
-                                maxLength={7}
-                                required
-                            />
-                            <div className="text-sm text-gray-600">Must be 7 digits</div>
-                            {errors.pantherID && <div className="text-red-600 text-sm mt-1">{errors.pantherID}</div>}
-                        </div>
-                    )}
                 </div>
                 </div>
 
