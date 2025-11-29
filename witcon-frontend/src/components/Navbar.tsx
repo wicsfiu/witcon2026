@@ -23,13 +23,11 @@ export default function Navbar() {
       // Redirect to backend OAuth endpoint with redirect URI
       const currentUrl = window.location.origin;
       const redirectUri = `${currentUrl}/register`;
+
       // Construct OAuth URL - ensure API_URL doesn't have trailing slash
       const baseUrl = API_URL.endsWith('/') ? API_URL.slice(0, -1) : API_URL;
       const oauthUrl = `${baseUrl}/auth/google/?redirect_uri=${encodeURIComponent(redirectUri)}`;
-
       window.location.href = `${baseUrl}/auth/google/?redirect_uri=${encodeURIComponent(redirectUri)}`;
-
-      
       console.log('Register clicked - OAuth URL:', oauthUrl);
       
       // Direct navigation - this bypasses React Router completely
