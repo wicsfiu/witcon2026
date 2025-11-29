@@ -59,8 +59,7 @@ export default function Navbar() {
   };
 
   const handleLogout = () => {
-    // Clear auth state, then do a full reload to Home so the navbar
-    // definitely reflects the logged-out state (showing Login/Register only).
+
     logout();
     window.location.href = '/';
   };
