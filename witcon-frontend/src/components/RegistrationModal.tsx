@@ -7,6 +7,7 @@ interface RegistrationModalProps {
   onClose: () => void;
   headerText: string;
   bodyText: string;
+  isRegister?: boolean; // true for register, false for login
 }
 
 export default function RegistrationModal({
@@ -14,6 +15,7 @@ export default function RegistrationModal({
   onClose,
   headerText,
   bodyText,
+  isRegister = true,
 }: RegistrationModalProps) {
   // Close modal on ESC key
   useEffect(() => {
@@ -32,10 +34,40 @@ export default function RegistrationModal({
       document.body.style.overflow = "unset";
     }
 
+    // Cleanup: restore scroll when component unmounts
     return () => {
       document.body.style.overflow = "unset";
     };
   }, [isOpen]);
+
+  // OAuth handler - same logic as Navbar
+  const handleGoogleAuth = () => {
+    // Use local backend for development, production API for deployed frontend
+    const getApiUrl = () => {
+      const envUrl = import.meta.env.VITE_API_URL;
+      if (envUrl && envUrl.trim() !== '') {
+        return envUrl;
+      }
+      // Fallback based on hostname
+      if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
+        return 'http://localhost:8000/backend-api';
+      }
+      return 'https://witcon.duckdns.org/backend-api';
+    };
+    
+    const API_URL = getApiUrl();
+    const currentUrl = window.location.origin;
+    const redirectUri = isRegister 
+      ? `${currentUrl}/register` 
+      : `${currentUrl}/login`;
+    
+    // Construct OAuth URL - ensure API_URL doesn't have trailing slash
+    const baseUrl = API_URL.endsWith('/') ? API_URL.slice(0, -1) : API_URL;
+    const oauthUrl = `${baseUrl}/auth/google/?redirect_uri=${encodeURIComponent(redirectUri)}`;
+    
+    // Direct navigation - this bypasses React Router completely
+    window.location.href = oauthUrl;
+  };
 
   if (!isOpen) return null;
 
@@ -49,6 +81,7 @@ export default function RegistrationModal({
         className="bg-secondary-yellow dark:bg-gray-900 rounded-2xl p-6 max-w-md w-full shadow-lg relative animate-scaleIn mx-4"
         onClick={(e) => e.stopPropagation()}
       >
+        {/* Close X button */}
         <button
           onClick={onClose}
           className="absolute top-2 right-4 text-primary-pink dark:text-gray-300 hover:text-pink-300 dark:hover:text-white text-xl font-bold"
@@ -57,12 +90,12 @@ export default function RegistrationModal({
         </button>
 
         <div className="mt-5 mb-3">
-          <Header className="text-2xl sm:text-xl mb-4 sm:mb-6 text-center">{headerText}</Header>
+          <Header className="text-2xl sm:text-3xl mb-4 sm:mb-6 text-center">{headerText}</Header>
           <Text className="pb-2 text-primary-pink text-sm sm:text-base">{bodyText}</Text>
 
           <div className="flex justify-center">
             <button
-              onClick={() => console.log("Continue with Google clicked")}
+              onClick={handleGoogleAuth}
               className="flex items-center justify-center gap-3 px-4 py-2 rounded-full bg-white text-primary-pink hover:shadow-md active:bg-gray-200 transition-all w-full max-w-xs"
             >
               {/* Google SVG icon */}

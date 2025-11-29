@@ -10,12 +10,14 @@ export default function Hero() {
   const [modalContent, setModalContent] = useState({
     header: "",
     body: "",
+    isRegister: true,
   });
 
   const openRegisterModal = () => {
     setModalContent({
       header: "Welcome to WiTCON!",
       body: "Please sign in to your email to start your registration",
+      isRegister: true,
     });
     setIsModalOpen(true);
   };
@@ -24,6 +26,7 @@ export default function Hero() {
     setModalContent({
       header: "Log in to Dashboard",
       body: "Please sign in to your email to access your profile",
+      isRegister: false,
     });
     setIsModalOpen(true);
   };
@@ -89,10 +92,12 @@ export default function Hero() {
 
       {/* Registration Modal */}
       <RegistrationModal
+        key={modalContent.header}
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
         headerText={modalContent.header}
         bodyText={modalContent.body}
+        isRegister={modalContent.isRegister}
       />
     </>
   );

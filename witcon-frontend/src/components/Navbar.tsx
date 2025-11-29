@@ -31,8 +31,6 @@ export default function Navbar() {
     const baseUrl = API_URL.endsWith('/') ? API_URL.slice(0, -1) : API_URL;
     const oauthUrl = `${baseUrl}/auth/google/?redirect_uri=${encodeURIComponent(redirectUri)}`;
     
-    console.log('OAuth URL:', oauthUrl);
-    
     // Direct navigation - this bypasses React Router completely
     window.location.href = oauthUrl;
   };
