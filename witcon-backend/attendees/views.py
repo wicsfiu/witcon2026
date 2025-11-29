@@ -7,6 +7,7 @@ from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
 from django.http import HttpResponseRedirect
 from django.conf import settings
+from django.core.mail import send_mail
 import os
 import secrets
 import urllib.parse
@@ -15,7 +16,6 @@ from .models import Attendee
 from .serializers import AttendeeSerializer
 
 # Custom permission to allow updates without session authentication
-# (Frontend uses localStorage-based auth, not Django sessions)
 class CanUpdateOwnProfile(BasePermission):
     """
     Allow update (PATCH/PUT) operations without Django session authentication.
@@ -38,7 +38,7 @@ class AttendeeViewSet(viewsets.ModelViewSet):
     parser_classes = (MultiPartParser, FormParser, JSONParser)
     filter_backends = [filters.SearchFilter]
     search_fields = ["first_name", "last_name", "email", "school"]
-    # Allow updates without session auth (frontend handles access control)
+    # Allow updates without session auth 
     permission_classes = [CanUpdateOwnProfile]
 
 # Public Registration View
@@ -82,6 +82,62 @@ class AttendeeCreateView(generics.CreateAPIView):
             
             response = super().create(request, *args, **kwargs)
             print(f"Registration successful: {response.data.get('id', 'unknown')}")
+            
+            # Send confirmation email after successful registration
+            if response.status_code == 201:  # Created successfully
+                attendee_email = response.data.get('email') or email
+                attendee_first_name = response.data.get('firstName', '')
+                
+                if attendee_email:
+                    try:
+                        # Email content
+                        subject = "Thank You for Registering for WiTCON 2026! 💛"
+                        message = f"""Hi {attendee_first_name if attendee_first_name else 'there'}!
+
+Thanks for signing up for WiTCON 2026! We can't wait to see you! 💛
+
+Your registration has been confirmed. We'll be in touch with more details about the event soon.
+
+Best regards,
+The WiTCON Team"""
+                        
+                        from_email = settings.DEFAULT_FROM_EMAIL or settings.EMAIL_HOST_USER
+                        
+                        # Check if email backend is configured
+                        email_backend = getattr(settings, 'EMAIL_BACKEND', '')
+                        needs_password = 'smtp' in email_backend.lower()
+                        
+                        # Only send email if properly configured
+                        if needs_password:
+                            # SMTP backend requires password
+                            if from_email and settings.EMAIL_HOST_PASSWORD:
+                                send_mail(
+                                    subject=subject,
+                                    message=message,
+                                    from_email=from_email,
+                                    recipient_list=[attendee_email],
+                                    fail_silently=False,
+                                )
+                                print(f"Confirmation email sent to {attendee_email}")
+                            else:
+                                print("Email not configured - skipping confirmation email")
+                                print(f"  Missing: from_email={bool(from_email)}, EMAIL_HOST_PASSWORD={bool(settings.EMAIL_HOST_PASSWORD)}")
+                        else:
+                            # Console/file backends don't need password
+                            send_mail(
+                                subject=subject,
+                                message=message,
+                                from_email=from_email,
+                                recipient_list=[attendee_email],
+                                fail_silently=False,
+                            )
+                            print(f"Confirmation email sent to {attendee_email} (using {email_backend})")
+                    except Exception as email_error:
+                        # Log email error but don't fail the registration
+                        print(f"Error sending confirmation email: {email_error}")
+                        import traceback
+                        print(f"Email error traceback: {traceback.format_exc()}")
+            
             return response
         except Exception as e:
             # Log the full error for debugging
