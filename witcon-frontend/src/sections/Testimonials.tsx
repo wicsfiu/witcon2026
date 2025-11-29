@@ -41,7 +41,7 @@ export default function Testimonials() {
         <div style = {{margin: 0, padding: 0}}>
             <style> 
                 {`
-                    .text-center{
+                    .text-section{
                         text-align: center;
                         font-family: var(--font-bukhari);
                         font-size: 2.5em;
@@ -147,7 +147,7 @@ export default function Testimonials() {
                 `}
             </style>
 
-            <Header className="col-span-full text-center">Testimonials</Header>
+            <Header className="col-span-full text-section">Testimonials</Header>
 
             <div className= "wrapper">
                 
@@ -167,29 +167,5 @@ export default function Testimonials() {
                 ))}
             </div>
         </div>
-
-        
-
-
-        // <section className='w-full pt-6 pb-10'>
-        //     <Header className='py-6'>Testimonials</Header>
-        //     <div className='grid place-content-center '>
-        //         <div className='w-full align-center mx-auto grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 gap-15'>
-        //         {testimonials.map((testimonial, index) => (
-        //             <div className='flex flex-row gap-4'>
-        //                 <div key={index} className='flex-1 p-6 bg-[color:var(--color-secondary-mint)] bg-opacity-70 rounded-xl flex flex-col justify-end items-center space-y-4 hover:scale-105 transition-transform duration-300'>  
-        //                     <div className='text-center'>
-        //                         <Title className='text-lg font-semibold'>{testimonial.name}</Title>
-        //                     </div>
-        //                 </div>
-        //                 <div className='flex-1 p-4 mb-4'>
-        //                     <Text className="w-full whitespace-normal break-words leading-relaxed">"{testimonial.quote}"</Text>
-        //                 </div>
-        //             </div>
-        //             ))}
-        //     </div>
-        //     </div>
-            
-        // </section>
     );
 }
