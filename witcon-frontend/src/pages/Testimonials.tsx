@@ -41,7 +41,7 @@ export default function Testimonials() {
         <div style = {{margin: 0, padding: 0}}>
             <style> 
                 {`
-                    .text-center{
+                    .text-testimonials{
                         text-align: center;
                         font-family: var(--font-bukhari);
                         font-size: 2.5em;
@@ -147,7 +147,7 @@ export default function Testimonials() {
                 `}
             </style>
 
-            <Header className="col-span-full text-center">Testimonials</Header>
+            <Header className="col-span-full text-testimonials">Testimonials</Header>
 
             <div className= "wrapper">
                 
