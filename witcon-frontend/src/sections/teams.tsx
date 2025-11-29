@@ -260,7 +260,7 @@ export default function Teams() {
        </style>
        
        <article className="comic">
-        <Header className="col-span-full text-center pb-6">WiCS Team</Header>
+        <Header className="col-span-full text-section pb-6">WiCS Team</Header>
          {WiCS.map((member, index) => (
            <div key={index} className="panel">
              <div className="panel-image">
