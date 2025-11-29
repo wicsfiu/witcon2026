@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
-import {useEffect} from 'react';
+import { useEffect } from 'react';
 import type { ChangeEvent } from 'react';
-import { useSearchParams } from 'react-router-dom';
+import { useLocation, useSearchParams } from 'react-router-dom';
 //import { useLocation } from 'react-router-dom';
 //import { Camera, Edit, X, FileText, ExternalLink } from 'lucide-react';
 import Title from '../components/text/Title';
@@ -32,10 +32,14 @@ interface AttendeeData {
 export default function Profile() {
   const [searchParams, setSearchParams] = useSearchParams();
   const { userId, userEmail, login, logout } = useAuth();
+  // Details about the current URL location
+  const location = useLocation();
+  const navigationState = location.state as { attendee?: AttendeeData } | null;
+  const attendeeFromNavigation = navigationState?.attendee;
   const [_isEditing, setIsEditing] = useState<boolean>(false);
   const [_showQRScanner, setShowQRScanner] = useState<boolean>(false);
   const [_showResumeViewer, _setShowResumeViewer] = useState<boolean>(false);
-  const [loading, setLoading] = useState<boolean>(true);
+  const [loading, setLoading] = useState<boolean>(!attendeeFromNavigation);
   const [error, setError] = useState<string>('');
 
   // Get email from URL params (from OAuth redirect)
@@ -107,7 +111,9 @@ export default function Profile() {
   useEffect(() => {
     if (!userId && !userEmail) return; // don't fetch if no user logged in
 
-    setLoading(true);
+    if (!attendeeFromNavigation) {
+      setLoading(true);
+    }
     
     // Use email-based endpoint if email is available
     // Else fall back to userId endpoint
@@ -129,7 +135,7 @@ export default function Profile() {
         setError(err.message);
         setLoading(false);
       });
-  }, [userId, userEmail, API_URL]);
+  }, [userId, userEmail, API_URL, attendeeFromNavigation]);
 
 
   const handleEdit = () => {
@@ -243,19 +249,7 @@ export default function Profile() {
 
 
   if (!userId && !userEmail) {
-    return (
-      <main className="w-full max-w-screen-xl mx-auto px-6">
-        <section className="space-y-4">
-          <h2 className="text-2xl font-bold">Profile</h2>
-          <div className="bg-white border rounded p-6 text-center space-y-4">
-            <p>Please register to view your attendee profile.</p>
-            <a href="/register" className="text-blue-600 hover:underline">
-              Go to Registration
-            </a>
-          </div>
-        </section>
-      </main>
-    );
+    return null;
   }
 
   if (loading) {

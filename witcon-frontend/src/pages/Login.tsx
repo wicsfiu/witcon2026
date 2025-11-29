@@ -29,7 +29,7 @@ export default function Login() {
           return res.json();
         } else if (res.status === 404) {
           // User doesn't exist - redirect to registration
-          navigate(`/register?email=${encodeURIComponent(emailFromOAuth)}`);
+          navigate(`/register?email=${encodeURIComponent(emailFromOAuth)}`, { replace: true });
           return null;
         } else {
           throw new Error('Failed to check user status');
@@ -41,20 +41,20 @@ export default function Login() {
           if (data.id) {
             login(data.id, data.email || emailFromOAuth);
           }
-          navigate('/profile');
+          // Pass attendee data along so Profile can render immediately
+          navigate('/profile', {
+            replace: true,
+            state: { attendee: data },
+          });
         }
       })
       .catch(err => {
         console.error('Login error:', err);
         // On error, redirect to registration
-        navigate(`/register?email=${encodeURIComponent(emailFromOAuth)}`);
+        navigate(`/register?email=${encodeURIComponent(emailFromOAuth)}`, { replace: true });
       });
   }, [emailFromOAuth, navigate, login, API_URL]);
 
-  return (
-    <div className="flex items-center justify-center min-h-screen">
-      <p>Logging you in...</p>
-    </div>
-  );
+  return null;
 }
 
