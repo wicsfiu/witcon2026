@@ -27,7 +27,6 @@ class AttendeeSerializer(serializers.ModelSerializer):
     fieldOther = serializers.CharField(source='field_other', required=False, allow_blank=True)
     school = serializers.CharField(required=False, allow_blank=True)
     schoolOther = serializers.CharField(source='school_other', required=False, allow_blank=True)
-    pantherID = serializers.CharField(source='panther_id', required=False, allow_blank=True)
 
     linkedin = serializers.CharField(required=False, allow_blank=True)
     github = serializers.CharField(required=False, allow_blank=True)
@@ -48,7 +47,7 @@ class AttendeeSerializer(serializers.ModelSerializer):
             'raceEthnicity', 'raceOther',
             'levelOfStudy', 'yearLevel', 'studyOther',
             'fieldOfStudy', 'fieldOther',
-            'school', 'schoolOther', 'pantherID',
+            'school', 'schoolOther',
             'linkedin', 'github', 'website', 'discord',
             'shirtSize', 'codeOfConduct', 'photographyConsent',
             'resume', 'resume_replacement_count', 'checked_in', 'created_at', 'updated_at'
