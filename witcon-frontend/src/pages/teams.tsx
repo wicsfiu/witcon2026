@@ -5,6 +5,8 @@ import rhode from '../assets/eboard/rhode.png';
 import devin from '../assets/eboard/devin.png';
 import narel from '../assets/eboard/narel.png';
 
+console.log('Teams.tsx module loaded', { rhode, devin, narel }); // 👈 ADD THIS
+
 interface Team {
     name: string;
     position?: string;
@@ -104,6 +106,7 @@ const WiCS: Team[] = [
 
 
 export default function Teams() {
+  console.log({ rhode, devin, narel });
     return (
       <div style={{ margin: 0, padding: 0 }}>
         <style>
