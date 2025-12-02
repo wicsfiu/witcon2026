@@ -28,7 +28,7 @@ class AttendeeAdmin(admin.ModelAdmin):
                        "field_of_study", "field_other", "school", "school_other")
         }),
         ("Social Profiles", {
-            "fields": ("panther_id", "linkedin", "github", "website", "discord")
+            "fields": ("linkedin", "github", "website", "discord")
         }),
         ("Additional Information", {
             "fields": ("shirt_size",)
