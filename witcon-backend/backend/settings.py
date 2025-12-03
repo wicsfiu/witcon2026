@@ -33,8 +33,8 @@ if not SECRET_KEY:
     raise Exception("Missing DJANGO_SECRET_KEY in environment!")
 
 # SECURITY WARNING: don't run with debug turned on in production!
-# DEBUG = True
-DEBUG = True
+# Set DEBUG via environment variable, default to False for security
+DEBUG = os.getenv('DEBUG', 'False').lower() == 'true'
 
 ALLOWED_HOSTS = [
     '127.0.0.1', 
