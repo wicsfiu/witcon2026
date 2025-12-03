@@ -8,6 +8,7 @@ import Title from '../components/text/Title';
 import { useAuth } from '../context/AuthContext';
 import {Instagram, Linkedin} from "lucide-react"
 import { FaDiscord } from "react-icons/fa"; // Discord icon
+import DeleteProfileModal from '../components/DeleteProfileModal';
 
 interface AttendeeData {
   id?: number;
@@ -72,6 +73,11 @@ export default function Profile() {
   ];
 
   const [editData, setEditData] = useState<AttendeeData>({ ...attendeeData });
+  
+  // Delete profile modal state
+  const [deleteModalOpen, setDeleteModalOpen] = useState(false);
+  const [deleteModalType, setDeleteModalType] = useState<"confirm" | "success" | "error">("confirm");
+  const [deleteModalMessage, setDeleteModalMessage] = useState<string>("");
 
   const API_URL = import.meta.env.VITE_API_URL ||
     ((window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1')
@@ -247,6 +253,51 @@ export default function Profile() {
 
   const handleLogout = () => {
     logout(); // clears the userId in context
+  };
+
+  const handleDeleteProfileClick = () => {
+    setDeleteModalType("confirm");
+    setDeleteModalMessage("");
+    setDeleteModalOpen(true);
+  };
+
+  const handleDeleteConfirm = async () => {
+    if (!userId && !userEmail) return;
+
+    try {
+      const deleteUrl = userEmail 
+        ? `${API_URL}/attendees/delete-by-email/?email=${encodeURIComponent(userEmail)}`
+        : `${API_URL}/attendees/${userId}/delete/`;
+      
+      const res = await fetch(deleteUrl, {
+        method: 'DELETE',
+        credentials: 'include',
+      });
+
+      if (!res.ok) {
+        const errorData = await res.json().catch(() => ({}));
+        throw new Error(errorData.error || errorData.detail || 'Failed to delete profile');
+      }
+
+      // Successfully deleted - show success modal, then log out and redirect
+      setDeleteModalType("success");
+      setDeleteModalMessage("Your profile has been successfully deleted.");
+      setDeleteModalOpen(true);
+    } catch (err: any) {
+      console.error('Delete profile error:', err);
+      setDeleteModalType("error");
+      setDeleteModalMessage(err.message || 'Failed to delete profile. Please try again.');
+      setDeleteModalOpen(true);
+    }
+  };
+
+  const handleDeleteModalClose = () => {
+    setDeleteModalOpen(false);
+    // If it was a success modal, redirect after closing
+    if (deleteModalType === "success") {
+      logout();
+      window.location.href = '/';
+    }
   };
 
 
@@ -442,6 +493,16 @@ const ResumeSocialBox = ({ attendeeData, handleResumeUpdate }: { attendeeData: A
 const WiCSResourcesBox = () => (
   <InfoSection>
     <h3 className="font-semibold text-lg text-[color:var(--color-primary-brown)]">Make the best of WiTCON</h3>
+    <div className="flex items-center gap-3">
+      <img src="/images/notionIcon.png" alt="Notion Icon" className="w-8 h-8" />
+      <a
+        href="https://www.notion.so/WiTCON-2026-Attendee-Guide"
+        target="_blank"
+        className="w-full px-4 py-2 rounded-4xl bg-[#FFF6F6] text-[color:var(--color-primary-brown)] font-[Actor]"
+      >
+        WiTCON '26 Attendee Guide
+      </a>
+    </div>
 
     <div className="flex items-center gap-3">
       <FaDiscord className="w-8 h-8  fill-[var(--color-primary-pink)]" />
@@ -476,6 +537,17 @@ const WiCSResourcesBox = () => (
       </a>
     </div>
   </InfoSection>
+);
+
+const DeleteProfileBox = ({ onDelete }: { onDelete: () => void }) => (
+  <div className="break-inside-avoid mb-6 flex items-center justify-center">
+    <button
+      onClick={onDelete}
+      className="w-full px-4 py-2 rounded-full bg-[color:var(--color-primary-pink)] text-white font-[Actor] font-semibold hover:bg-pink-700 transition"
+    >
+      Delete Profile
+    </button>
+  </div>
 );
 
 
@@ -571,10 +643,20 @@ return (
     <div className="columns-1 md:columns-2 gap-6 mt-2">
           <AcademicInfoBox />
           <WiCSResourcesBox />
+          <DeleteProfileBox onDelete={handleDeleteProfileClick} />
           <ResumeSocialBox attendeeData={attendeeData} handleResumeUpdate={handleResumeUpdate} />
           <ReportIncidentBox />
     </div>
   </section>
+
+  {/* Delete Profile Modal */}
+  <DeleteProfileModal
+    isOpen={deleteModalOpen}
+    onClose={handleDeleteModalClose}
+    onConfirm={handleDeleteConfirm}
+    type={deleteModalType}
+    message={deleteModalMessage}
+  />
   </main>
 );
 }    

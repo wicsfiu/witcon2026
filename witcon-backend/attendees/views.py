@@ -363,6 +363,78 @@ def debug_s3_config(request):
     return Response(config)
 
 
+@api_view(['DELETE'])
+@permission_classes([AllowAny])
+def delete_attendee_by_id(request, pk):
+    """
+    Delete attendee profile by ID.
+    Deletes the attendee record from database and their resume from S3.
+    """
+    try:
+        attendee = Attendee.objects.get(pk=pk)
+        
+        # Delete resume file from S3 if it exists
+        if attendee.resume:
+            try:
+                resume_storage = attendee.resume.storage
+                resume_name = attendee.resume.name
+                if resume_storage.exists(resume_name):
+                    resume_storage.delete(resume_name)
+                    print(f"Deleted resume from storage: {resume_name}")
+            except Exception as e:
+                print(f"Warning: Could not delete resume file: {e}")
+        
+        # Delete the attendee record
+        attendee.delete()
+        
+        return Response({'message': 'Profile deleted successfully'}, status=200)
+    except Attendee.DoesNotExist:
+        return Response({'error': 'Attendee not found'}, status=404)
+    except Exception as e:
+        print(f"Error deleting attendee: {e}")
+        import traceback
+        print(traceback.format_exc())
+        return Response({'error': 'Failed to delete profile'}, status=500)
+
+
+@api_view(['DELETE'])
+@permission_classes([AllowAny])
+def delete_attendee_by_email(request):
+    """
+    Delete attendee profile by email.
+    Deletes the attendee record from database and their resume from S3.
+    """
+    email = request.GET.get('email')
+    if not email:
+        return Response({'error': 'Email parameter required'}, status=400)
+    
+    try:
+        attendee = Attendee.objects.get(email=email)
+        
+        # Delete resume file from S3 if it exists
+        if attendee.resume:
+            try:
+                resume_storage = attendee.resume.storage
+                resume_name = attendee.resume.name
+                if resume_storage.exists(resume_name):
+                    resume_storage.delete(resume_name)
+                    print(f"Deleted resume from storage: {resume_name}")
+            except Exception as e:
+                print(f"Warning: Could not delete resume file: {e}")
+        
+        # Delete the attendee record
+        attendee.delete()
+        
+        return Response({'message': 'Profile deleted successfully'}, status=200)
+    except Attendee.DoesNotExist:
+        return Response({'error': 'Attendee not found'}, status=404)
+    except Exception as e:
+        print(f"Error deleting attendee: {e}")
+        import traceback
+        print(traceback.format_exc())
+        return Response({'error': 'Failed to delete profile'}, status=500)
+
+
 # Router for protected endpoints
 router = DefaultRouter(trailing_slash=True)
 router.register(r'attendees', AttendeeViewSet, basename='attendee')
