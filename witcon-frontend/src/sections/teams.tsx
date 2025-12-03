@@ -162,12 +162,6 @@ const WiCS: Team[] = [
     },
 
     {
-        name: "Mareline Ramirez",
-        position: "Alumni Advisor",
-        image: ""
-    },
-
-    {
         name: "Fer Pacho",
         position: "Alumni Advisor",
         image: ""
@@ -273,4 +267,3 @@ export default function Teams() {
      </div>
    );
 }
-

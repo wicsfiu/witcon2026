@@ -4,17 +4,15 @@ import WhatIsWiTCON from '../sections/WhatIsWiTCON';
 import Testimonials from '../sections/Testimonials';
 import Teams from '../sections/teams';
 import Carousel from '../components/Carousel';
-import Faq from '../sections/Faq';
 
 export default function Home() {
     return (
         <>
         <Hero />
         <Timer />
-        <Carousel />
         <WhatIsWiTCON/>
+        <Carousel />
         <Testimonials />
-        <Faq />
         <Teams />
         </>
     )

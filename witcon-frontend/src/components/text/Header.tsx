@@ -8,6 +8,6 @@ interface HeaderProps {
 
 export default function Header({ children, className = "" }: HeaderProps) {
   return (
-<h1 className={twMerge("text-4xl text-primary-pink font-bukhari antialiased", className)}>{children}</h1>
+<h1 className={twMerge("text-4xl md:text-2xl text-primary-pink font-bukhari antialiased", className)}>{children}</h1>
   );
 }
