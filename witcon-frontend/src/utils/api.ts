@@ -70,10 +70,22 @@ export const apiRequest = async (
 ): Promise<Response> => {
   const token = getAccessToken();
   
-  // Build headers
-  const headers: HeadersInit = {
-    ...(options.headers as HeadersInit),
-  };
+  // Convert headers to a Record for easier manipulation
+  const existingHeaders = options.headers || {};
+  const headers: Record<string, string> = {};
+  
+  // Copy existing headers
+  if (existingHeaders instanceof Headers) {
+    existingHeaders.forEach((value, key) => {
+      headers[key] = value;
+    });
+  } else if (Array.isArray(existingHeaders)) {
+    existingHeaders.forEach(([key, value]) => {
+      headers[key] = value;
+    });
+  } else if (existingHeaders) {
+    Object.assign(headers, existingHeaders);
+  }
 
   // Add Content-Type if not already set and body exists
   if (options.body && !headers['Content-Type'] && !headers['content-type']) {
