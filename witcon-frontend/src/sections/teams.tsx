@@ -116,14 +116,14 @@ const WiCS: Team[] = [
 
     {
         name: "Manar Alhamad",
-        position: "Digital Media",
+        position: "Comms Lead",
         image:"/eboard/manar.png",
         link: "http://linkedin.com/in/manar-alhamad",
     },
 
     {
         name: "Laiba Mahmud",
-        position: "Comms Lead",
+        position: "Digital Media",
         image:"/eboard/laiba.png",
         link: "https://www.linkedin.com/in/laibam/",
     },
