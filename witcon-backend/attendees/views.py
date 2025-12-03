@@ -215,15 +215,9 @@ def google_oauth_callback(request):
     and redirects to frontend registration page with email.
     """
     # Handle cancel
-    err = request.GET.get("error")
-    if err == "access_denied":
-        # Clean up session state
+    if request.GET.get("error") == "access_denied":
         request.session.pop("oauth_state", None)
-        # If the frontend originally supplied a redirect_uri, use it; otherwise fallback to FRONTEND_URL
-        redirect_uri = request.session.pop("oauth_redirect_uri", None)
-        if redirect_uri:
-            # If a specific redirect_uri was stored, send the user there (likely /register)
-            return HttpResponseRedirect(redirect_uri)
+        request.session.pop("oauth_redirect_uri", None)
         frontend_base_url = os.getenv("FRONTEND_URL", "http://localhost:5174")
         return HttpResponseRedirect(frontend_base_url)
 
@@ -240,7 +234,7 @@ def google_oauth_callback(request):
         error = request.GET.get('error', 'Unknown error')
         # If any other error happened, clear session and return JSON error (or redirect to home)
         request.session.pop("oauth_state", None)
-        redirect_uri = request.session.pop("oauth_redirect_uri", None)
+        request.session.pop("oauth_redirect_uri", None)
         # If you prefer redirecting the user home on other errors too, uncomment the following lines:
         # frontend_base_url = os.getenv("FRONTEND_URL", "http://localhost:5174")
         # return HttpResponseRedirect(redirect_uri or frontend_base_url)
