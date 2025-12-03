@@ -161,11 +161,11 @@ export default function Faq() {
           {faqs.map((faq, index) => (
             <div
               key={index}
-              className={`w-full transition rounded-xl p-5 cursor-pointer
+              className={`w-full transition p-5 cursor-pointer border-3 border-primary-pink
                     ${
                     openIndex === index
-                        ? "bg-tertiary-yellow"
-                        : "bg-secondary-yellow hover:bg-tertiary-yellow"
+                        ? "bg-secondary-pink"
+                        : "bg-secondary-pink hover:bg-secondary-yellow"
                     }
                 `}
               onClick={() => toggleFAQ(index)}
