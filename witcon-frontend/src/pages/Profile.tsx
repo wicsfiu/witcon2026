@@ -262,7 +262,12 @@ export default function Profile() {
   };
 
   const handleDeleteConfirm = async () => {
-    if (!userId && !userEmail) {
+    // Use attendeeData which has the actual fetched data from the database
+    // This is more reliable than context values which might be stale
+    const attendeeId = attendeeData.id;
+    const attendeeEmail = attendeeData.email;
+
+    if (!attendeeId && !attendeeEmail) {
       setDeleteModalType("error");
       setDeleteModalMessage("Unable to delete profile: No user information available.");
       setDeleteModalOpen(true);
@@ -275,16 +280,17 @@ export default function Profile() {
       
       // Prefer email-based deletion if available, otherwise use ID
       let deleteUrl: string;
-      if (userEmail) {
-        deleteUrl = `${baseUrl}/attendees/delete-by-email/?email=${encodeURIComponent(userEmail)}`;
-      } else if (userId) {
-        deleteUrl = `${baseUrl}/attendees/${userId}/delete/`;
+      if (attendeeEmail) {
+        deleteUrl = `${baseUrl}/attendees/delete-by-email/?email=${encodeURIComponent(attendeeEmail)}`;
+      } else if (attendeeId) {
+        deleteUrl = `${baseUrl}/attendees/${attendeeId}/delete/`;
       } else {
         throw new Error("No user identifier available for deletion");
       }
       
       console.log('Delete profile URL:', deleteUrl);
-      console.log('User ID:', userId, 'User Email:', userEmail);
+      console.log('Attendee ID from data:', attendeeId, 'Attendee Email from data:', attendeeEmail);
+      console.log('Context User ID:', userId, 'Context User Email:', userEmail);
       console.log('API_URL:', API_URL);
       
       const res = await fetch(deleteUrl, {
