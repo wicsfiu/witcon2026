@@ -1,5 +1,6 @@
 #attendees/models.py
 from django.db import models
+from django.core.validators import FileExtensionValidator 
 
 class Attendee(models.Model):
     # Basic info
@@ -166,7 +167,8 @@ class Attendee(models.Model):
 
     # Files and tracking
     # FileField will use DEFAULT_FILE_STORAGE from settings (S3 if configured)
-    resume = models.FileField(upload_to="resumes/", blank=True, null=True)
+    resume = models.FileField(upload_to="resumes/", blank=True, null=True,
+        validators=[FileExtensionValidator(allowed_extensions=["pdf"])])
     resume_original_name = models.CharField(max_length=255, blank=True, null=True, help_text="Original filename of the uploaded resume")
     resume_replacement_count = models.IntegerField(default=0, help_text="Number of times the resume has been replaced (max 2)")
     checked_in = models.BooleanField(default=False)
