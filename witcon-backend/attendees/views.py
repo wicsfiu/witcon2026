@@ -214,23 +214,36 @@ def google_oauth_callback(request):
     Handles Google OAuth callback, exchanges code for token, gets user email,
     and redirects to frontend registration page with email.
     """
-    # Handle cancel case 
-    if request.GET.get("error") == "access_denied":
+    # Handle cancel
+    err = request.GET.get("error")
+    if err == "access_denied":
+        # Clean up session state
         request.session.pop("oauth_state", None)
-        request.session.pop("oauth_redirect_uri", None)
-        # Redirect user to frontend home instead of error JSON
+        # If the frontend originally supplied a redirect_uri, use it; otherwise fallback to FRONTEND_URL
+        redirect_uri = request.session.pop("oauth_redirect_uri", None)
+        if redirect_uri:
+            # If a specific redirect_uri was stored, send the user there (likely /register)
+            return HttpResponseRedirect(redirect_uri)
         frontend_base_url = os.getenv("FRONTEND_URL", "http://localhost:5174")
         return HttpResponseRedirect(frontend_base_url)
 
     # Verify state token
     state = request.GET.get('state')
     if not state or state != request.session.get('oauth_state'):
+        request.session.pop("oauth_state", None)
+        request.session.pop("oauth_redirect_uri", None)
         return Response({'error': 'Invalid state parameter'}, status=400)
     
     # Get authorization code
     code = request.GET.get('code')
     if not code:
         error = request.GET.get('error', 'Unknown error')
+        # If any other error happened, clear session and return JSON error (or redirect to home)
+        request.session.pop("oauth_state", None)
+        redirect_uri = request.session.pop("oauth_redirect_uri", None)
+        # If you prefer redirecting the user home on other errors too, uncomment the following lines:
+        # frontend_base_url = os.getenv("FRONTEND_URL", "http://localhost:5174")
+        # return HttpResponseRedirect(redirect_uri or frontend_base_url)
         return Response({'error': f'OAuth error: {error}'}, status=400)
     
     # Exchange code for token
@@ -251,6 +264,8 @@ def google_oauth_callback(request):
     
     token_response = requests.post(token_url, data=token_data)
     if token_response.status_code != 200:
+        request.session.pop('oauth_state', None)
+        redirect_uri = request.session.pop('oauth_redirect_uri', None)
         return Response({'error': 'Failed to exchange code for token'}, status=400)
     
     token_json = token_response.json()
@@ -262,12 +277,16 @@ def google_oauth_callback(request):
     userinfo_response = requests.get(userinfo_url, headers=headers)
     
     if userinfo_response.status_code != 200:
+        request.session.pop('oauth_state', None)
+        redirect_uri = request.session.pop('oauth_redirect_uri', None)
         return Response({'error': 'Failed to get user info'}, status=400)
     
     userinfo = userinfo_response.json()
     email = userinfo.get('email')
     
     if not email:
+        request.session.pop('oauth_state', None)
+        redirect_uri = request.session.pop('oauth_redirect_uri', None)
         return Response({'error': 'Email not provided by Google'}, status=400)
     
     # Check if user already exists in database
