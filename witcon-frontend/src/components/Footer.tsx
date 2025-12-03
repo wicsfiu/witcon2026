@@ -48,7 +48,7 @@ export default function Footer() {
             href="https://www.canva.com/design/DAG3mF4xUB0/neLb0iokgmgdpACMbABLFw/view?utm_content=DAG3mF4xUB0&utm_campaign=designshare&utm_medium=link2&utm_source=uniquelinks&utlId=h3d237c553d"
             target="_blank"
             rel="noopener noreferrer"
-            className="font-bold hover:text-secondary-mint transition"
+            className="font-bold hover:text-secondary-mint underline transition"
           >
             Code of Conduct
           </a>.

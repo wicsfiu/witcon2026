@@ -139,7 +139,6 @@ class Attendee(models.Model):
     ]
     school = models.CharField(max_length=255, choices=SCHOOLS, blank=True)
     school_other = models.CharField(max_length=100, blank=True)
-    panther_id = models.CharField(max_length=50, blank=True)
 
     # Social
     linkedin = models.URLField(blank=True)

@@ -6,6 +6,8 @@ import { useLocation, useSearchParams } from 'react-router-dom';
 //import { Camera, Edit, X, FileText, ExternalLink } from 'lucide-react';
 import Title from '../components/text/Title';
 import { useAuth } from '../context/AuthContext';
+import {Instagram, Linkedin} from "lucide-react"
+import { FaDiscord } from "react-icons/fa"; // Discord icon
 
 interface AttendeeData {
   id?: number;
@@ -440,19 +442,9 @@ const ResumeSocialBox = ({ attendeeData, handleResumeUpdate }: { attendeeData: A
 const WiCSResourcesBox = () => (
   <InfoSection>
     <h3 className="font-semibold text-lg text-[color:var(--color-primary-brown)]">Make the best of WiTCON</h3>
-    <div className="flex items-center gap-3">
-      <img src="/images/notionIcon.png" alt="Notion Icon" className="w-8 h-8" />
-      <a
-        href="https://www.notion.so/WiTCON-2026-Attendee-Guide"
-        target="_blank"
-        className="w-full px-4 py-2 rounded-4xl bg-[#FFF6F6] text-[color:var(--color-primary-brown)] font-[Actor]"
-      >
-        WiTCON ‘26 Attendee Guide
-      </a>
-    </div>
 
     <div className="flex items-center gap-3">
-      <img src="/images/discordIcon.png" alt="Discord Icon" className="w-8 h-8" />
+      <FaDiscord className="w-8 h-8  fill-[var(--color-primary-pink)]" />
       <a
         href="https://discord.gg/wicsfiu"
         target="_blank"
@@ -462,8 +454,8 @@ const WiCSResourcesBox = () => (
       </a>
     </div>
 
-    <div className="flex items-center gap-3">
-      <img src="/images/linkedInIcon.png" alt="LinkedIn Icon" className="w-8 h-8" />
+    <div className="flex items-center gap-3 ">
+      <Linkedin className="w-8 h-8 text-primary-pink border-transparent" />
       <a
         href="https://www.linkedin.com/company/wicsatfiu/"
         target="_blank"
@@ -474,7 +466,7 @@ const WiCSResourcesBox = () => (
     </div>
 
     <div className="flex items-center gap-3">
-      <img src="/images/instagramIcon.png" alt="Instagram Icon" className="w-8 h-8" />
+      <Instagram className="w-8 h-8 text-primary-pink" />
       <a
         href="https://instagram.com/wicsfiu"
         target="_blank"
