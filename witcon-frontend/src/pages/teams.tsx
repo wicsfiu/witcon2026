@@ -122,7 +122,7 @@ export default function Teams() {
               grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
             }
   
-            /* 👉 Mobile: force exactly 2 per row */
+            
             @media (max-width: 600px) {
               .comic {
                 grid-template-columns: repeat(2, minmax(0, 1fr));

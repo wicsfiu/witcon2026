@@ -7,7 +7,9 @@ import Header from "../components/text/Header";
 interface Team {
     name: string;
     position?: string;
-  image: string;
+    image: string;
+    panelClassName?: string;
+
 }
 
 const WiCS: Team[] = [
@@ -15,7 +17,7 @@ const WiCS: Team[] = [
     {
         name: "Margarita Guitierrez",
         position: "President",
-        image:"/eboard/marg.png"
+        image:"/eboard/marg.png",
     },
 
     {
@@ -25,7 +27,7 @@ const WiCS: Team[] = [
     },
 
     {
-        name: "Agoritsa",
+        name: "Agoritsa Polyzou",
         position: "Faculty Advisor",
         image:"/eboard/agoritsa.png"
     },
@@ -33,13 +35,18 @@ const WiCS: Team[] = [
     {
         name: "Gabriela Lopez",
         position: "WiTCON Director",
-        image:"/eboard/gabriela.png"
+        image:"/eboard/gabriela.png",
+        panelClassName: "panel-gabriela",
+        
+
     },
 
     {
         name: "Sruti Simran",
         position: "WiTCON Chair",
-        image:"/eboard/sruti.png"
+        image:"/eboard/sruti.png",
+        panelClassName: "panel-sruti",
+
     },
 
     {
@@ -64,7 +71,8 @@ const WiCS: Team[] = [
     {
         name: "Victoria Hernandez",
         position: "Industry Relations Chair",
-        image:"/eboard/victoria.png"
+        image:"/eboard/victoria.png",
+        panelClassName: "panel-fix",
     },
     {
       name: "Aaiena Sattar",
@@ -80,13 +88,15 @@ const WiCS: Team[] = [
     {
         name: "Yana Kostenko",
         position: "Marketing Lead",
-        image:"/eboard/yana.png"
+        image:"/eboard/yana.png",
+        
     },
 
     {
         name: "Natalia Boodram",
         position: "Marketing Lead",
-        image:"/eboard/natalia.png"
+        image:"/eboard/natalia.png",
+        panelClassName: "panel-natalia",
     },
 
     {
@@ -129,13 +139,16 @@ const WiCS: Team[] = [
 {
   name: "Alessandra Uribe",
   position: "Web Dev",
-  image:"/eboard/alessandra.png"
+  image:"/eboard/alessandra.png",
+  panelClassName: "panel-alessandra",
 },
 
 {
   name: "Pooja Lad",
   position: "Creative Director",
-  image:"/eboard/pooja.png"
+  image:"/eboard/pooja.png",
+  panelClassName: "panel-fix",
+  
 },
 
 {
@@ -146,25 +159,35 @@ const WiCS: Team[] = [
 
 {
   name: "Barbara Semidey",
-  position: "Outreach",
-  image:"/eboard/barb.png"
+  position: "Outreach Lead",
+  image:"/eboard/barb.png",
+  panelClassName: "panel-fix",
 },
 
 {
   name: "Aisha Nishat",
-  position: "Outreach",
+  position: "Outreach Lead",
   image:"/eboard/aisha.png"
 },
 
+{
+  name: "Emily Salgueiros",
+  position: "Alumni Advisor",
+  image:"/eboard/emily.png"
+},
 
+{
+  name: "Fer Pacheco",
+  position: "Alumni Advisor",
+  image:"/eboard/fer.png"
+},
 
-
-
-
-
-
-
-
+{
+  name: "Alessandra Ortega",
+  position: "Alumni Relations",
+  image:"/eboard/ale.png",
+  panelClassName: "panel-ale",
+},
 
 ]
 
@@ -186,7 +209,7 @@ export default function Teams() {
               grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
             }
   
-            /* 👉 Mobile: force exactly 2 per row */
+            
             @media (max-width: 600px) {
               .comic {
                 grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -218,15 +241,42 @@ export default function Teams() {
               overflow: hidden;
               position: relative;
             }
-  
+            
+              
             .panel-image {
               flex: 1;
               width: 100%;
               height: 100%;
               position: relative;
               background-size: cover;
-              background-position: center;
+              background-position: top;
             }
+
+            .panel-fix{
+            background-position: center;
+            }
+
+            .panel-ale{
+            background-position: top -60px center;
+            }
+
+            .panel-alessandra{
+            background-position: top -10px center;
+            }
+
+            .panel-natalia{
+              background-position: top -80px center;
+            }
+
+            .panel-gabriela{
+              background-position: bottom -80px center;
+            }
+
+            .panel-sruti{
+              background-position: bottom -10px center;
+            }
+
+            
   
             .panel-name {
               position: absolute;
@@ -254,16 +304,16 @@ export default function Teams() {
   
         <article className="comic">
           {WiCS.map((member, index) => (
+
             <div key={index} className="panel">
-              <div
-                className="panel-image"
-                style={
-                  member.image
-                    ? { backgroundImage: `url(${member.image})`, backgroundSize: 'cover', backgroundPosition: 'center' }
-                    : undefined
-                }
-              >
-                {/* you can later set backgroundImage here if you add real photos */}
+              <div className={`panel-image ${member.panelClassName ?? ""}`}
+              style={ 
+                member.image
+      ? { backgroundImage: `url(${member.image})`, backgroundSize: 'cover'}
+      : undefined
+  }
+>
+
                 <div className="panel-name">{member.name}</div>
                 <div className="panel-position">{member.position}</div>
               </div>
