@@ -25,7 +25,7 @@ export default function WhatIsWiTCON() {
       {/* Image - order 2 on mobile */}
       <div className="order-2 md:order-none">
         <img
-          className="relative object-cover rounded-3xl"
+          className="relative object-cover comic-image-left comic-image-pop-left"
           src={witcon_group}
           alt="WiTCON 2025 volunteer crew"
         />

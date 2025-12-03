@@ -148,42 +148,58 @@ export default function Faq() {
     },
   ];
 
-  const [openIndex, setOpenIndex] = useState<number | null>(null);
-  const toggleFAQ = (index: number) =>
-    setOpenIndex(openIndex === index ? null : index);
+  const [openIndexes, setOpenIndexes] = useState<number[]>([]);
+
+  const toggleFAQ = (index: number) => {
+    setOpenIndexes((prev) =>
+      prev.includes(index)
+        ? prev.filter((i) => i !== index) // close it
+        : [...prev, index] // open it
+    );
+  };
 
   return (
-    <section className=" py-12">
+    <section className="py-12">
       <div className="mx-auto">
         <Header className="text-section"> FAQ </Header>
 
         <div className="space-y-4 py-10">
-          {faqs.map((faq, index) => (
-            <div
-              key={index}
-              className={`w-full transition rounded-xl p-5 cursor-pointer
-                    ${
-                    openIndex === index
-                        ? "bg-tertiary-yellow"
-                        : "bg-secondary-yellow hover:bg-tertiary-yellow"
-                    }
-                `}
-              onClick={() => toggleFAQ(index)}
-            >
-              <div className="flex justify-between items-center">
-                <Text className="text-lg font-semibold text-left">{faq.question}</Text>
-                <span className="text-2xl text-primary-pink">
-                  {openIndex === index ? "−" : "+"}
-                </span>
-              </div>
+          {faqs.map((faq, index) => {
+            const isOpen = openIndexes.includes(index);
 
-              {openIndex === index && (
-                <Text className="mt-3 text-primary-brown text-base text-left">
-                  {faq.answer}
-                </Text>
-              )}
-            </div>
-          ))}
+            return (
+              <div
+                key={index}
+                className={`w-full transition p-5 cursor-pointer border-3 border-primary-pink
+                  ${
+                    isOpen
+                      ? "bg-secondary-pink"
+                      : "bg-secondary-pink hover:bg-secondary-yellow"
+                  }
+                `}
+                onClick={() => toggleFAQ(index)}
+              >
+                <div className="flex justify-between items-center">
+                  <Text className="text-lg font-semibold text-left">
+                    {faq.question}
+                  </Text>
+                  <span className="text-2xl text-primary-pink">
+                    {isOpen ? "−" : "+"}
+                  </span>
+                </div>
+
+                <div
+                  className={`overflow-hidden transition-all duration-300 ${
+                    isOpen ? "max-h-96 opacity-100" : "max-h-0 opacity-0"
+                  }`}
+                >
+                  <Text className="mt-3 text-primary-brown text-base text-left">
+                    {faq.answer}
+                  </Text>
+                </div>
+              </div>
+            );
+          })}
         </div>
       </div>
     </section>

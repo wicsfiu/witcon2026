@@ -41,7 +41,7 @@ export default function Carousel() {
         className="w-full max-w-full h-[30vh] lg:h-[80%]"
       >
         {slides.map((image, index) => (
-          <SwiperSlide key={index} className="overflow-hidden rounded-3xl">
+          <SwiperSlide key={index} className="overflow-hidden comic-imager">
             <img 
               src={image} 
               alt={`Slide ${index + 1}`}

@@ -36,7 +36,7 @@ export default function Hero() {
       <section className="grid grid-cols-1 lg:grid-cols-2 items-start gap-x-10 sm:pt-2 md:pt-4 lg:pt-6 gap-y-8 mt-5">
         <div>
           <img
-            className="relative object-cover rounded-3xl max-h-96 mx-auto"
+            className="relative object-cover max-h-96 mx-auto comic-image comic-image-pop"
             src={hero}
             alt="WiTCON 2025 volunteer crew"
           />
