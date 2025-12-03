@@ -343,9 +343,33 @@ export default function Register() {
             } else {
                 const data = await res.json();
                 console.log("Registration success:", data);
-                // Store user ID and email in AuthContext so Profile page can fetch their data
-                if (data.id) {
-                    login(data.id, data.email || formData.email);
+                // Store tokens and user info in AuthContext
+                if (data.id && data.access_token && data.refresh_token) {
+                    login(
+                        data.access_token,
+                        data.refresh_token,
+                        data.id,
+                        data.email || formData.email
+                    );
+                } else if (data.id) {
+                    // Fallback: if tokens not in response, try to get them
+                    fetch(`${API_URL}/auth/token/`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ email: data.email || formData.email }),
+                    })
+                        .then(tokenRes => tokenRes.json())
+                        .then(tokenData => {
+                            if (tokenData.access_token && tokenData.refresh_token) {
+                                login(
+                                    tokenData.access_token,
+                                    tokenData.refresh_token,
+                                    data.id,
+                                    data.email || formData.email
+                                );
+                            }
+                        })
+                        .catch(err => console.error('Failed to get tokens:', err));
                 }
                 navigate("/profile");
                 setIsSubmitted(true);

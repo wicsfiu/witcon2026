@@ -33,8 +33,8 @@ if not SECRET_KEY:
     raise Exception("Missing DJANGO_SECRET_KEY in environment!")
 
 # SECURITY WARNING: don't run with debug turned on in production!
-# DEBUG = True
-DEBUG = True
+# Set DEBUG via environment variable, default to False for security
+DEBUG = os.getenv('DEBUG', 'False').lower() == 'true'
 
 ALLOWED_HOSTS = [
     '127.0.0.1', 
@@ -63,6 +63,7 @@ INSTALLED_APPS = [
 
     # Third-party apps
     'rest_framework',
+    'rest_framework_simplejwt',
     'corsheaders',
 
     # My apps
@@ -110,12 +111,21 @@ REST_FRAMEWORK = {
     "DEFAULT_PAGINATION_CLASS": "rest_framework.pagination.PageNumberPagination",
     "PAGE_SIZE": 20,
     'DEFAULT_AUTHENTICATION_CLASSES': [
+        'attendees.authentication.AttendeeJWTAuthentication',  # Custom JWT for Attendees
+        'rest_framework_simplejwt.authentication.JWTAuthentication',  # For admin users
         'rest_framework.authentication.SessionAuthentication',  
         'rest_framework.authentication.BasicAuthentication',  # optional for testing
     ],
     'DEFAULT_PERMISSION_CLASSES': [
         'rest_framework.permissions.IsAuthenticated',
     ],
+    # Disable browsable API in production to prevent API exploration
+    'DEFAULT_RENDERER_CLASSES': (
+        'rest_framework.renderers.JSONRenderer',
+    ) if not DEBUG else (
+        'rest_framework.renderers.JSONRenderer',
+        'rest_framework.renderers.BrowsableAPIRenderer',
+    ),
 }
 
 ROOT_URLCONF = 'backend.urls'
@@ -254,6 +264,25 @@ SESSION_ENGINE = 'django.contrib.sessions.backends.db'
 SESSION_COOKIE_SECURE = not DEBUG  # Use secure cookies in production
 SESSION_COOKIE_HTTPONLY = True
 SESSION_COOKIE_SAMESITE = 'Lax'  # Allow cross-site requests for OAuth redirects
+
+# JWT Authentication Configuration
+from datetime import timedelta
+from rest_framework_simplejwt.settings import api_settings
+
+SIMPLE_JWT = {
+    'ACCESS_TOKEN_LIFETIME': timedelta(days=7),  # Token valid for 7 days
+    'REFRESH_TOKEN_LIFETIME': timedelta(days=30),  # Refresh token valid for 30 days
+    'ROTATE_REFRESH_TOKENS': True,  # Rotate refresh tokens on use
+    'BLACKLIST_AFTER_ROTATION': True,  # Blacklist old tokens after rotation
+    'ALGORITHM': 'HS256',
+    'SIGNING_KEY': SECRET_KEY,
+    'AUTH_HEADER_TYPES': ('Bearer',),
+    'AUTH_HEADER_NAME': 'HTTP_AUTHORIZATION',
+    'USER_ID_FIELD': 'id',
+    'USER_ID_CLAIM': 'user_id',
+    'AUTH_TOKEN_CLASSES': ('rest_framework_simplejwt.tokens.AccessToken',),
+    'TOKEN_TYPE_CLAIM': 'token_type',
+}
 
 # Email configuration
 EMAIL_BACKEND = os.getenv('EMAIL_BACKEND', 'django.core.mail.backends.smtp.EmailBackend')

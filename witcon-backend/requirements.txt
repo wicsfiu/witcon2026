@@ -13,3 +13,7 @@ psycopg2-binary>=2.9.0
 
 # OAuth dependencies
 requests>=2.31.0
+
+# JWT Authentication
+djangorestframework-simplejwt>=5.3.0
+PyJWT>=2.8.0
