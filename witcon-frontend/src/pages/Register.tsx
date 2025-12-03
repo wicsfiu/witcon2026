@@ -82,6 +82,8 @@ export default function Register() {
 });
 
     const [resumeFile, setResumeFile] = useState<File | null>(null);
+    const [resumeError, setResumeError] = useState<string | null>(null);
+
     const [errors, setErrors] = useState<FormErrors>({});
     const [isSubmitted, setIsSubmitted] = useState(false);
 
@@ -209,10 +211,18 @@ export default function Register() {
 
     // Handle file input
     const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
-        if (e.target.files && e.target.files[0]) {
-            setResumeFile(e.target.files[0]);
-        }
-    };
+        const file = e.target.files?.[0];
+        if (!file) return;
+
+        if (file.type !== "application/pdf") {
+            alert("Please upload a PDF file only.");
+            e.target.value = "";  // clear input
+            setResumeFile(null);
+            return;
+    }
+
+    setResumeFile(file);
+};
 
     const validateAge = (dateOfBirth: string) => {
         const birthDate = new Date(dateOfBirth);
@@ -224,7 +234,6 @@ export default function Register() {
         }
         return age >= 18;
     };
-
 
     const validateForm = () => {
         const newErrors: FormErrors = {};
@@ -277,14 +286,18 @@ export default function Register() {
 
         const fd = new FormData();
         if (resumeFile) {
+        if (!resumeFile.name.toLowerCase().endsWith(".pdf")) {
+            alert("Resume must be a PDF file.");
+            return;
+        }
+        
         if (resumeFile.size > 600 * 1024) {
-                alert("Resume file size must be 600 KB or smaller");
-                return;
+            alert("Resume file size must be 600 KB or smaller");
+            return;
         }
+
         fd.append("resume", resumeFile);
-        }
-
-
+    }
 
     Object.entries(formData).forEach(([key, value]) => {
         if (value === null || value === undefined) return;
@@ -514,7 +527,7 @@ return (
                             type="file"
                             onChange={handleFileChange}
                             className="w-full text-sm text-gray-700 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-[color:var(--color-primary-pink)] file:text-white hover:file:bg-pink-600"
-                            accept=".pdf"
+                            accept=".pdf,application/pdf"
                             required
                         />
                         {errors.resume && <div className="text-red-600 text-sm mt-2">{errors.resume}</div>}
