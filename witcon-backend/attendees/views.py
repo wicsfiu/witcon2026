@@ -214,10 +214,14 @@ def google_oauth_callback(request):
     Handles Google OAuth callback, exchanges code for token, gets user email,
     and redirects to frontend registration page with email.
     """
-    # Handle cancel
-    if request.GET.get("error") == "access_denied":
+    # Handle ANY OAuth error BEFORE checking state
+    oauth_error = request.GET.get("error")
+    if oauth_error:
+        # Always clear session
         request.session.pop("oauth_state", None)
         request.session.pop("oauth_redirect_uri", None)
+
+        # Redirect home on *any* error
         frontend_base_url = os.getenv("FRONTEND_URL", "http://localhost:5174")
         return HttpResponseRedirect(frontend_base_url)
 
