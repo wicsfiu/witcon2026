@@ -9,6 +9,7 @@ interface Team {
     position?: string;
     image: string;
     panelClassName?: string;
+    link?: string;
 
 }
 
@@ -18,18 +19,21 @@ const WiCS: Team[] = [
         name: "Margarita Guitierrez",
         position: "President",
         image:"/eboard/marg.png",
+        link: "https://www.linkedin.com/in/margarita-rosa/",
     },
 
     {
         name: "Amber Garcia",
         position: "Vice President",
-        image:"/eboard/amber.png"
+        image:"/eboard/amber.png",
+        link: "https://www.linkedin.com/in/amberg12/",
     },
 
     {
         name: "Agoritsa Polyzou",
         position: "Faculty Advisor",
-        image:"/eboard/agoritsa.png"
+        image:"/eboard/agoritsa.png",
+        link: "https://www.linkedin.com/in/agoritsa-polyzou/",
     },
 
     {
@@ -37,6 +41,7 @@ const WiCS: Team[] = [
         position: "WiTCON Director",
         image:"/eboard/gabriela.png",
         panelClassName: "panel-gabriela",
+        link: "https://www.linkedin.com/in/gabriela-lopez-fiu/",
         
 
     },
@@ -46,6 +51,7 @@ const WiCS: Team[] = [
         position: "WiTCON Chair",
         image:"/eboard/sruti.png",
         panelClassName: "panel-fix",
+        link: "https://www.linkedin.com/in/fnusruti-simran-1836602a6/",
 
 
     },
@@ -53,20 +59,23 @@ const WiCS: Team[] = [
     {
         name: "Devin Diaz",
         position: "Industry Relations Director",
-        image: "/eboard/devin.png"
+        image: "/eboard/devin.png",
+        link: "https://www.linkedin.com/in/devinldiaz/",
     },
 
     {
         name: "Rhode Sanchez",
         position: "Industry Relations Lead",
-        image:"/eboard/rhode.png"
+        image:"/eboard/rhode.png",
+        link: "https://www.linkedin.com/in/rhode-sanchez/",
     },
 
 
     {
         name: "Narel Rodriguez",
         position: "Industry Relations Chair",
-        image:"/eboard/narel.png"
+        image:"/eboard/narel.png",
+        link: "https://www.linkedin.com/in/narel-rodriguez/",
     },
 
     {
@@ -74,22 +83,26 @@ const WiCS: Team[] = [
         position: "Industry Relations Chair",
         image:"/eboard/victoria.png",
         panelClassName: "panel-fix",
+        link: "https://www.linkedin.com/in/victoriadez/",
     },
     {
       name: "Aaiena Sattar",
       position: "Treasurer",
-      image:"/eboard/aaiena.png"
+      image:"/eboard/aaiena.png",
+      link: "",
   },
     {
         name: "Allison Romero",
-        position: "Marketing & Commms Director",
-        image:"/eboard/allison.png"
+        position: "Marketing & Comms Director",
+        image:"/eboard/allison.png",
+        link: "https://www.linkedin.com/in/allisonrome5002/",
     },
 
     {
         name: "Yana Kostenko",
         position: "Marketing Lead",
         image:"/eboard/yana.png",
+        link: "https://www.linkedin.com/in/yana-kostenko/",
         
     },
 
@@ -98,43 +111,50 @@ const WiCS: Team[] = [
         position: "Marketing Lead",
         image:"/eboard/natalia.png",
         panelClassName: "panel-natalia",
+        link: "https://www.linkedin.com/in/nataliaboodhram/",
     },
 
     {
         name: "Manar Alhamad",
         position: "Digital Media",
-        image:"/eboard/manar.png"
+        image:"/eboard/manar.png",
+        link: "http://linkedin.com/in/manar-alhamad",
     },
 
     {
         name: "Laiba Mahmud",
         position: "Comms Lead",
-        image:"/eboard/laiba.png"
+        image:"/eboard/laiba.png",
+        link: "https://www.linkedin.com/in/laibam/",
     },
 
     {
       name: "Angela Banov",
       position: "Operations Director",
-      image:"/eboard/angela.png"
+      image:"/eboard/angela.png",
+      link: "https://www.linkedin.com/in/angela-banov-168953232/",
   },
 
   {
     name: "Khanh Truong",
     position: "Operations Chair",
-    image:"/eboard/khanh.png"
+    image:"/eboard/khanh.png",
+    link: "https://www.linkedin.com/in/khanhtruong2610/",
 },
 
 
     {
       name: "Mahi Patel",
       position: "RSO",
-      image:"/eboard/mahi.png"
+      image:"/eboard/mahi.png",
+      link: "https://www.linkedin.com/in/mahipatel18/",
   },
 
   {
     name: "Shatoya Gardner",
     position: "Web Dev",
-    image:"/eboard/shatoya.png"
+    image:"/eboard/shatoya.png",
+    link: "https://www.linkedin.com/in/shatoya-gardner/",
 },
 
 {
@@ -142,6 +162,7 @@ const WiCS: Team[] = [
   position: "Web Dev",
   image:"/eboard/alessandra.png",
   panelClassName: "panel-alessandra",
+  link: "https://www.linkedin.com/in/aleuribeencina05/",
 },
 
 {
@@ -149,13 +170,15 @@ const WiCS: Team[] = [
   position: "Creative Director",
   image:"/eboard/pooja.png",
   panelClassName: "panel-fix",
+  link: "https://www.linkedin.com/in/pooja-lad/",
   
 },
 
 {
   name: "Mia Mader",
   position: "Creative Lead",
-  image:"/eboard/mia.png"
+  image:"/eboard/mia.png",
+  link: "https://www.linkedin.com/in/mia-mader-1a6a13278/",
 },
 
 {
@@ -163,24 +186,28 @@ const WiCS: Team[] = [
   position: "Outreach Lead",
   image:"/eboard/barb.png",
   panelClassName: "panel-fix",
+  link: "https://www.linkedin.com/in/barbarasemidey/",
 },
 
 {
   name: "Aisha Nishat",
   position: "Outreach Lead",
-  image:"/eboard/aisha.png"
+  image:"/eboard/aisha.png",
+  link: "https://www.linkedin.com/in/aisha-nish-aisha/",
 },
 
 {
   name: "Emily Salgueiros",
   position: "Alumni Advisor",
-  image:"/eboard/emily.png"
+  image:"/eboard/emily.png",
+  link: "https://www.linkedin.com/in/emily-salgueiros"
 },
 
 {
   name: "Fer Pacheco",
   position: "Alumni Advisor",
-  image:"/eboard/fer.png"
+  image:"/eboard/fer.png",
+  link: "https://www.linkedin.com/in/pmfer/",
 },
 
 {
@@ -188,6 +215,7 @@ const WiCS: Team[] = [
   position: "Alumni Relations",
   image:"/eboard/ale.png",
   panelClassName: "panel-fix",
+  link: "https://www.linkedin.com/in/alessandra-ortega-arrieta/",
 },
 
 ]
@@ -300,23 +328,30 @@ export default function Teams() {
         </style>
   
         <article className="comic">
-          {WiCS.map((member, index) => (
+  {WiCS.map((member, index) => (
+    <a
+      key={index}
+      href={member.link ?? "#"}
+      target={member.link ? "_blank" : undefined}
+      rel="noopener noreferrer"
+      className="panel"
+      style={{ display: "block" }}
+    >
+      <div
+        className={`panel-image ${member.panelClassName ?? ""}`}
+        style={
+          member.image
+            ? { backgroundImage: `url(${member.image})`, backgroundSize: "cover" }
+            : undefined
+        }
+      >
+        <div className="panel-name">{member.name}</div>
+        <div className="panel-position">{member.position}</div>
+      </div>
+    </a>
+  ))}
+</article>
 
-            <div key={index} className="panel">
-              <div className={`panel-image ${member.panelClassName ?? ""}`}
-              style={ 
-                member.image
-      ? { backgroundImage: `url(${member.image})`, backgroundSize: 'cover'}
-      : undefined
-  }
->
-
-                <div className="panel-name">{member.name}</div>
-                <div className="panel-position">{member.position}</div>
-              </div>
-            </div>
-          ))}
-        </article>
       </div>
     );
   }
