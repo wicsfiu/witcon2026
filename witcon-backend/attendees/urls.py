@@ -11,7 +11,7 @@
 # attendees/urls.py
 from django.contrib import admin
 from django.urls import path, include
-from .views import AttendeeCreateView, router, google_oauth_initiate, google_oauth_callback, get_attendee_by_email, debug_s3_config
+from .views import AttendeeCreateView, router, google_oauth_initiate, google_oauth_callback, get_attendee_by_email, debug_s3_config, delete_attendee_by_id, delete_attendee_by_email
 
 urlpatterns = [
     # Admin panel
@@ -26,6 +26,10 @@ urlpatterns = [
 
     # Public profile endpoint (by email)
     path('attendees/by-email/', get_attendee_by_email, name='attendee-by-email'),
+
+    # Delete profile endpoints
+    path('attendees/<int:pk>/delete/', delete_attendee_by_id, name='delete-attendee-by-id'),
+    path('attendees/delete-by-email/', delete_attendee_by_email, name='delete-attendee-by-email'),
 
     # Debug endpoint (temporary - for diagnosing S3 issues)
     path('debug/s3-config/', debug_s3_config, name='debug-s3-config'),
