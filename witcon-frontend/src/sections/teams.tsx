@@ -44,7 +44,7 @@ const WiCS: Team[] = [
     {
         name: "Sruti Simran",
         position: "WiTCON Chair",
-        image:"/eboard/sruti (1).png",
+        image:"/eboard/sruti.png",
         panelClassName: "panel-fix",
 
 

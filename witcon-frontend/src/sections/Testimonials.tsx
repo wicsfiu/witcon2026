@@ -64,9 +64,8 @@ export default function Testimonials() {
                     .speechbubble {
                         background-color: #ffffffff;
                         border-color: var(--color-primary-mint);
-                        border-width: 2px;
+                        border-width: 4px;
                         border-style: solid;
-                        border-radius: 15px;
                         font-size: 0.95em;
                         line-height: 1.75;
                         padding: 20px 20px;
@@ -81,7 +80,7 @@ export default function Testimonials() {
                     }
 
                     .speechbubble:nth-of-type(even) {
-                        border-left: 10px solid var(--color-primary-mint);
+                        border-left: 14px solid var(--color-primary-mint);
                     }
                     
                     .speechbubble:nth-of-type(even)::after {
