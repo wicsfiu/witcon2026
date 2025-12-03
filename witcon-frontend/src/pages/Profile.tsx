@@ -262,21 +262,52 @@ export default function Profile() {
   };
 
   const handleDeleteConfirm = async () => {
-    if (!userId && !userEmail) return;
+    if (!userId && !userEmail) {
+      setDeleteModalType("error");
+      setDeleteModalMessage("Unable to delete profile: No user information available.");
+      setDeleteModalOpen(true);
+      return;
+    }
 
     try {
-      const deleteUrl = userEmail 
-        ? `${API_URL}/attendees/delete-by-email/?email=${encodeURIComponent(userEmail)}`
-        : `${API_URL}/attendees/${userId}/delete/`;
+      // Normalize API_URL to ensure no trailing slash
+      const baseUrl = API_URL.endsWith('/') ? API_URL.slice(0, -1) : API_URL;
+      
+      // Prefer email-based deletion if available, otherwise use ID
+      let deleteUrl: string;
+      if (userEmail) {
+        deleteUrl = `${baseUrl}/attendees/delete-by-email/?email=${encodeURIComponent(userEmail)}`;
+      } else if (userId) {
+        deleteUrl = `${baseUrl}/attendees/${userId}/delete/`;
+      } else {
+        throw new Error("No user identifier available for deletion");
+      }
+      
+      console.log('Delete profile URL:', deleteUrl);
+      console.log('User ID:', userId, 'User Email:', userEmail);
+      console.log('API_URL:', API_URL);
       
       const res = await fetch(deleteUrl, {
         method: 'DELETE',
         credentials: 'include',
       });
 
+      console.log('Delete response status:', res.status);
+      console.log('Delete response URL:', res.url);
+      
       if (!res.ok) {
-        const errorData = await res.json().catch(() => ({}));
-        throw new Error(errorData.error || errorData.detail || 'Failed to delete profile');
+        let errorMessage = `Failed to delete profile (Status: ${res.status})`;
+        try {
+          const errorData = await res.json();
+          console.error('Delete error response:', errorData);
+          errorMessage = errorData.error || errorData.detail || errorMessage;
+        } catch (e) {
+          // If response is not JSON, try to get text
+          const text = await res.text().catch(() => '');
+          console.error('Delete error response (text):', text);
+          errorMessage = text || errorMessage;
+        }
+        throw new Error(errorMessage);
       }
 
       // Successfully deleted - show success modal, then log out and redirect
