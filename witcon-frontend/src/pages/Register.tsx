@@ -214,15 +214,21 @@ export default function Register() {
         const file = e.target.files?.[0];
         if (!file) return;
 
-        if (file.type !== "application/pdf") {
-            alert("Please upload a PDF file only.");
+        const name = file.name.toLowerCase();
+
+        const isPDF =
+            file.type === "application/pdf" ||
+            name.endsWith(".pdf");
+
+        if (!isPDF) {
+            alert("Only PDF files are allowed.");
             e.target.value = "";  // clear input
             setResumeFile(null);
             return;
-    }
+        }
 
-    setResumeFile(file);
-};
+        setResumeFile(file);
+    };
 
     const validateAge = (dateOfBirth: string) => {
         const birthDate = new Date(dateOfBirth);
@@ -384,16 +390,6 @@ return (
                 <div className="flex justify-between items-start">
                     <h3 className="text-2xl font-bold text-[color:var(--color-primary-pink)]"
                     style={{ fontFamily: 'Actor, sans-serif' }}>Register here</h3>
-
-                    <div className="text-right text-sm">
-                        <span className="text-gray-700 mr-2">Already Registered?</span>
-                        <button
-                            type="button"
-                            className="bg-[color:var(--color-primary-yellow)] text-white font-semibold px-3 py-1 rounded-md hover:bg-yellow-500 transition"
-                        >
-                            Click Here
-                        </button>
-                    </div>
                 </div>
       
                     <div className="grid grid-cols-1 gap-4">
