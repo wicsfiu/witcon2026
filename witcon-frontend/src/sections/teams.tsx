@@ -45,7 +45,8 @@ const WiCS: Team[] = [
         name: "Sruti Simran",
         position: "WiTCON Chair",
         image:"/eboard/sruti.png",
-        panelClassName: "panel-sruti",
+        panelClassName: "panel-fix",
+
 
     },
 
@@ -186,7 +187,7 @@ const WiCS: Team[] = [
   name: "Alessandra Ortega",
   position: "Alumni Relations",
   image:"/eboard/ale.png",
-  panelClassName: "panel-ale",
+  panelClassName: "panel-fix",
 },
 
 ]
@@ -256,9 +257,7 @@ export default function Teams() {
             background-position: center;
             }
 
-            .panel-ale{
-            background-position: top -60px center;
-            }
+            
 
             .panel-alessandra{
             background-position: top -10px center;
@@ -269,12 +268,10 @@ export default function Teams() {
             }
 
             .panel-gabriela{
-              background-position: bottom -80px center;
+              background-position: bottom 60% center;
             }
 
-            .panel-sruti{
-              background-position: bottom -10px center;
-            }
+            
 
             
   
