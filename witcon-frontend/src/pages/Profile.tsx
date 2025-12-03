@@ -34,7 +34,7 @@ interface AttendeeData {
 
 export default function Profile() {
   const [searchParams, setSearchParams] = useSearchParams();
-  const { userId, userEmail, login, logout } = useAuth();
+  const { userId, userEmail, accessToken, login, logout } = useAuth();
   // Details about the current URL location
   const location = useLocation();
   const navigationState = location.state as { attendee?: AttendeeData } | null;
@@ -87,19 +87,23 @@ export default function Profile() {
   // Handle email from URL params (from OAuth redirect) - log user in if not already logged in
   useEffect(() => {
     if (emailFromUrl && !userId && !userEmail) {
-      // Email in URL but user not logged in - fetch user data and log them in
+      // Email in URL but user not logged in - get token and log them in
       setLoading(true);
-      fetch(`${API_URL}/attendees/by-email/?email=${encodeURIComponent(emailFromUrl)}`)
+      fetch(`${API_URL}/auth/token/`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email: emailFromUrl }),
+      })
         .then(res => {
           if (res.ok) {
             return res.json();
           }
-          throw new Error('User not found');
+          throw new Error('Failed to get token');
         })
-        .then((data: AttendeeData) => {
-          // Log the user in
-          if (data.id && data.email) {
-            login(data.id, data.email);
+        .then((data) => {
+          // Log the user in with tokens
+          if (data.access_token && data.refresh_token && data.attendee_id) {
+            login(data.access_token, data.refresh_token, data.attendee_id, data.email || emailFromUrl);
           }
           // Clean up URL by removing email parameter
           const newSearchParams = new URLSearchParams(searchParams);
@@ -115,23 +119,27 @@ export default function Profile() {
     }
   }, [emailFromUrl, userId, userEmail, login, API_URL, searchParams]);
 
-  // Fetch attendee profile when userId or userEmail changes
+  // Fetch attendee profile when user is authenticated
   useEffect(() => {
-    if (!userId && !userEmail) return; // don't fetch if no user logged in
+    if (!accessToken) return; // don't fetch if no token
 
     if (!attendeeFromNavigation) {
       setLoading(true);
     }
     
-    // Use email-based endpoint if email is available
-    // Else fall back to userId endpoint
-    const fetchUrl = userEmail 
-      ? `${API_URL}/attendees/by-email/?email=${encodeURIComponent(userEmail)}`
-      : `${API_URL}/attendees/${userId}/`;
-    
-    fetch(fetchUrl)
+    // Use token-based endpoint
+    fetch(`${API_URL}/attendees/me/`, {
+      headers: {
+        'Authorization': `Bearer ${accessToken}`,
+      },
+    })
       .then(res => {
-        if (!res.ok) throw new Error('Failed to fetch profile data');
+        if (!res.ok) {
+          if (res.status === 401) {
+            throw new Error('Authentication failed. Please log in again.');
+          }
+          throw new Error('Failed to fetch profile data');
+        }
         return res.json();
       })
       .then((data: AttendeeData) => {
@@ -143,7 +151,7 @@ export default function Profile() {
         setError(err.message);
         setLoading(false);
       });
-  }, [userId, userEmail, API_URL, attendeeFromNavigation]);
+  }, [accessToken, API_URL, attendeeFromNavigation]);
 
 
   const handleEdit = () => {
@@ -153,14 +161,25 @@ export default function Profile() {
 
 
   const handleSave = async () => {
-    if (!userId) return;
+    if (!accessToken) {
+      alert('You must be logged in to save your profile');
+      return;
+    }
     try {
-      const res = await fetch(`${API_URL}/attendees/${userId}/`, {
-        method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
+      const res = await fetch(`${API_URL}/attendees/me/`, {
+        method: 'PATCH',
+        headers: {
+          'Authorization': `Bearer ${accessToken}`,
+          'Content-Type': 'application/json',
+        },
         body: JSON.stringify(editData),
       });
-      if (!res.ok) throw new Error('Failed to save profile');
+      if (!res.ok) {
+        if (res.status === 401) {
+          throw new Error('Authentication failed. Please log in again.');
+        }
+        throw new Error('Failed to save profile');
+      }
       const updated: AttendeeData = await res.json();
       setAttendeeData(updated);
       setIsEditing(false);
@@ -183,7 +202,10 @@ export default function Profile() {
 
 
   const handleResumeUpdate = async (event: ChangeEvent<HTMLInputElement>) => {
-    if (!userId) return;
+    if (!accessToken) {
+      alert('You must be logged in to update your resume');
+      return;
+    }
     const file = event.target.files?.[0];
     if (!file) return;
 
@@ -206,13 +228,18 @@ export default function Profile() {
     formData.append('resume', file);
 
     try {
-      const res = await fetch(`${API_URL}/attendees/${userId}/`, {
+      const res = await fetch(`${API_URL}/attendees/me/`, {
         method: 'PATCH',
+        headers: {
+          'Authorization': `Bearer ${accessToken}`,
+        },
         body: formData,
-        credentials: 'include', // Include cookies for session authentication
       });
       
       if (!res.ok) {
+        if (res.status === 401) {
+          throw new Error('Authentication failed. Please log in again.');
+        }
         const errorData = await res.json().catch(() => ({}));
         console.error('Upload failed - Status:', res.status);
         console.error('Upload failed - Response:', errorData);
@@ -220,13 +247,12 @@ export default function Profile() {
         throw new Error(errorMessage);
       }
       
-      // Upload succeeded - refresh profile data from server instead of reading response
-      // This avoids the "body stream already read" error and ensures we have the latest data
-      const fetchUrl = userEmail 
-        ? `${API_URL}/attendees/by-email/?email=${encodeURIComponent(userEmail)}`
-        : `${API_URL}/attendees/${userId}/`;
-      
-      const refreshRes = await fetch(fetchUrl);
+      // Upload succeeded - refresh profile data from server
+      const refreshRes = await fetch(`${API_URL}/attendees/me/`, {
+        headers: {
+          'Authorization': `Bearer ${accessToken}`,
+        },
+      });
       if (refreshRes.ok) {
         const updated: AttendeeData = await refreshRes.json();
         setAttendeeData(updated);
@@ -262,40 +288,24 @@ export default function Profile() {
   };
 
   const handleDeleteConfirm = async () => {
-    // Use attendeeData which has the actual fetched data from the database
-    // This is more reliable than context values which might be stale
-    const attendeeId = attendeeData.id;
-    const attendeeEmail = attendeeData.email;
-
-    if (!attendeeId && !attendeeEmail) {
+    if (!accessToken) {
       setDeleteModalType("error");
-      setDeleteModalMessage("Unable to delete profile: No user information available.");
+      setDeleteModalMessage("You must be logged in to delete your profile.");
       setDeleteModalOpen(true);
       return;
     }
 
     try {
-      // Normalize API_URL to ensure no trailing slash
-      const baseUrl = API_URL.endsWith('/') ? API_URL.slice(0, -1) : API_URL;
-      
-      // Prefer email-based deletion if available, otherwise use ID
-      let deleteUrl: string;
-      if (attendeeEmail) {
-        deleteUrl = `${baseUrl}/attendees/delete-by-email/?email=${encodeURIComponent(attendeeEmail)}`;
-      } else if (attendeeId) {
-        deleteUrl = `${baseUrl}/attendees/${attendeeId}/delete/`;
-      } else {
-        throw new Error("No user identifier available for deletion");
-      }
+      // Use the user-facing delete endpoint - users can only delete their own profile
+      const deleteUrl = `${API_URL}/attendees/me/delete/`;
       
       console.log('Delete profile URL:', deleteUrl);
-      console.log('Attendee ID from data:', attendeeId, 'Attendee Email from data:', attendeeEmail);
-      console.log('Context User ID:', userId, 'Context User Email:', userEmail);
-      console.log('API_URL:', API_URL);
       
       const res = await fetch(deleteUrl, {
         method: 'DELETE',
-        credentials: 'include',
+        headers: {
+          'Authorization': `Bearer ${accessToken}`,
+        },
       });
 
       console.log('Delete response status:', res.status);
@@ -308,7 +318,6 @@ export default function Profile() {
           console.error('Delete error response:', errorData);
           errorMessage = errorData.error || errorData.detail || errorMessage;
         } catch (e) {
-          // If response is not JSON, try to get text
           const text = await res.text().catch(() => '');
           console.error('Delete error response (text):', text);
           errorMessage = text || errorMessage;

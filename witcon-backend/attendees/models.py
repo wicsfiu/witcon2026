@@ -177,4 +177,13 @@ class Attendee(models.Model):
 
     def __str__(self):
         return f"{self.first_name} {self.last_name} <{self.email}>"
+    
+    @property
+    def is_authenticated(self):
+        """
+        Required property for Django REST Framework compatibility.
+        Since this is an Attendee instance returned by authentication,
+        it is always authenticated.
+        """
+        return True
 

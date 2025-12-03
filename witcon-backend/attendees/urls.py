@@ -11,7 +11,12 @@
 # attendees/urls.py
 from django.contrib import admin
 from django.urls import path, include
-from .views import AttendeeCreateView, router, google_oauth_initiate, google_oauth_callback, get_attendee_by_email, debug_s3_config, delete_attendee_by_id, delete_attendee_by_email
+from .views import (
+    AttendeeCreateView, router, google_oauth_initiate, google_oauth_callback,
+    get_current_attendee_profile, get_token_by_email, refresh_attendee_token,
+    debug_s3_config, delete_attendee_by_id, delete_attendee_by_email,
+    delete_current_attendee_profile
+)
 
 urlpatterns = [
     # Admin panel
@@ -24,10 +29,15 @@ urlpatterns = [
     path('auth/google/', google_oauth_initiate, name='google-oauth-initiate'),
     path('auth/google/callback/', google_oauth_callback, name='google-oauth-callback'),
 
-    # Public profile endpoint (by email)
-    path('attendees/by-email/', get_attendee_by_email, name='attendee-by-email'),
+    # Token-based profile endpoint (requires Bearer token)
+    path('attendees/me/', get_current_attendee_profile, name='attendee-profile'),
+    path('attendees/me/delete/', delete_current_attendee_profile, name='delete-attendee-profile'),
+    
+    # Token management endpoints
+    path('auth/token/', get_token_by_email, name='get-token-by-email'),
+    path('auth/token/refresh/', refresh_attendee_token, name='refresh-token'),
 
-    # Delete profile endpoints
+    # Admin-only delete profile endpoints
     path('attendees/<int:pk>/delete/', delete_attendee_by_id, name='delete-attendee-by-id'),
     path('attendees/delete-by-email/', delete_attendee_by_email, name='delete-attendee-by-email'),
 
