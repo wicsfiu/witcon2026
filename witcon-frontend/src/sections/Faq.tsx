@@ -9,22 +9,7 @@ export default function Faq() {
       answer:
         "The conference is free and open to all students interested in technology, networking, and empowerment, with a focus on celebrating and supporting women in the tech field.",
     },
-    {
-      question: "Where can I register?",
-      answer: (
-        <>
-          You can register for the event by clicking on the following link:{" "}
-          <a
-            href="https://lu.ma/hwyplw5v"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="text-primary-pink underline hover:text-pink-300"
-          >
-            https://lu.ma/hwyplw5v
-          </a>
-        </>
-      ),
-    },
+    
     {
       question: "When and where will the event be held?",
       answer: (
