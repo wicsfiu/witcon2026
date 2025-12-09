@@ -62,9 +62,8 @@ export default function Profile() {
 
 
   const [showIconPicker, setShowIconPicker] = useState(false);
-  const [selectedImage, setSelectedImage] = useState(attendeeData.profileImage || "profilePic1.png");
+  const [selectedImage, setSelectedImage] = useState(attendeeData.profileImage || "profilePic2.png");
   const iconOptions = [
-    "profilePic1.png",
     "profilePic2.png",
     "profilePic3.png",
     "profilePic4.png",
@@ -377,7 +376,7 @@ type InfoSectionProps = {
 
 function InfoSection({ children }: InfoSectionProps) {
   return (
-    <div className="break-inside-avoid mb-6 bg-[color:var(--color-tertiary-yellow)] p-6 rounded-xl space-y-4">
+    <div className="mb-6 bg-[color:var(--color-tertiary-yellow)] p-6 rounded-xl space-y-4">
       {children}
     </div>
   );
@@ -385,33 +384,37 @@ function InfoSection({ children }: InfoSectionProps) {
 
 const AcademicInfoBox = () => (
   <InfoSection>
-    <div className="flex items-center gap-4">
-      <label className="text-[color:var(--color-primary-brown)] font-medium min-w-[100px]">Major:</label>
+    <div className="flex items-center gap-5">
+      <label className="text-[color:var(--color-primary-brown)] font-medium w-32 text-left">
+        Major:
+      </label>
       <input
         type="text"
         value={attendeeData.fieldOfStudy || ""}
         readOnly
-        className="flex-1 px-4 py-2 rounded-full bg-[#FFF6F6] text-[color:var(--color-primary-brown)] font-[Actor] w-fit min-w-[150px]"
+        className="flex-1 px-4 py-2 rounded-full bg-[#FFF6F6] text-[color:var(--color-primary-brown)] font-[Actor]"
       />
     </div>
-
     <div className="flex items-center gap-4">
-      <label className="text-[color:var(--color-primary-brown)] font-medium min-w-[100px]">School:</label>
+      <label className="text-[color:var(--color-primary-brown)] font-medium text-left w-32">
+        School:
+      </label>
       <input
         type="text"
         value={attendeeData.school || attendeeData.schoolOther || ""}
         readOnly
-        className="flex-1 px-4 py-2 rounded-full bg-[#FFF6F6] text-[color:var(--color-primary-brown)] font-[Actor] w-fit min-w-[150px]"
+        className="flex-1 px-4 py-2 rounded-full bg-[#FFF6F6] text-[color:var(--color-primary-brown)] font-[Actor]"
       />
     </div>
-
     <div className="flex items-center gap-4">
-      <label className="text-[color:var(--color-primary-brown)] font-medium min-w-[100px]">Level of Study:</label>
+      <label className="text-[color:var(--color-primary-brown)] font-medium text-left w-32">
+        Level of Study:
+      </label>
       <input
         type="text"
         value={attendeeData.levelOfStudy || ""}
         readOnly
-        className="flex-1 px-4 py-2 rounded-full bg-[#FFF6F6] text-[color:var(--color-primary-brown)] font-[Actor] w-fit min-w-[150px]"
+        className="flex-1 px-4 py-2 rounded-full bg-[#FFF6F6] text-[color:var(--color-primary-brown)] font-[Actor]"
       />
     </div>
   </InfoSection>
@@ -424,114 +427,125 @@ const ResumeSocialBox = ({ attendeeData, handleResumeUpdate }: { attendeeData: A
   
   return (
     <InfoSection>
-      {/* Resume Section */}
-      <div className="space-y-3">
-        {/* Always show replacement count message at the top */}
-        <div className="bg-[#FFF6F6] rounded-full px-4 py-2 border-2 border-[color:var(--color-primary-pink)]">
-          <p className={`text-sm text-[color:var(--color-primary-brown)] font-[Actor] text-center ${
-            replacementsRemaining === 0 ? 'text-red-600 font-semibold' : 'font-medium'
-          }`}>
-            {replacementsRemaining > 0 
-              ? `Resume Replacements Remaining: ${replacementsRemaining} of 2 (Max 600 KB per file)`
-              : 'Resume Replacements Remaining: 0 of 2 (Maximum reached - no more replacements allowed)'
-            }
-          </p>
-        </div>
+  {/* Resume Section */}
+  <div className="space-y-3 flex flex-col">
+    {/* Always show replacement count message at the top */}
+    <div className="bg-[#FFF6F6] rounded-full px-4 py-2 border-2 border-[color:var(--color-primary-pink)]">
+      <p className={`text-sm text-[color:var(--color-primary-brown)] font-[Actor] text-center ${
+        replacementsRemaining === 0 ? 'text-red-600 font-semibold' : 'font-medium'
+      }`}>
+        {replacementsRemaining > 0 
+          ? `Resume Replacements Remaining: ${replacementsRemaining} of 2 (Max 600 KB per file)`
+          : 'Resume Replacements Remaining: 0 of 2 (Maximum reached - no more replacements allowed)'
+        }
+      </p>
+    </div>
 
-        <div className="flex items-center gap-4">
-          <img src="/images/pdfIcon.png" alt="PDF Icon" className="w-20 h-20" />
-          <div className="flex-1">
-            {hasResume ? (
-              <div className="space-y-2">
-                <div className="flex items-center gap-2">
-                  <label className="text-[color:var(--color-primary-brown)] font-medium min-w-[100px]">Resume:</label>
-                  <p className="flex-1 px-4 py-2 rounded-full bg-[#FFF6F6] text-[color:var(--color-primary-brown)] font-[Actor] truncate" title={attendeeData.resume_name}>
-                    {attendeeData.resume_name}
-                  </p>
-                </div>
-                {replacementsRemaining > 0 && (
-                  <div className="flex items-center gap-2">
-                    <input
-                      id="resume-upload"
-                      type="file"
-                      accept=".pdf,.doc,.docx"
-                      onChange={handleResumeUpdate}
-                      className="hidden"
-                    />
-                    <label
-                      htmlFor="resume-upload"
-                      className="bg-[color:var(--color-secondary-yellow)] text-[color:var(--color-primary-pink)] px-4 py-2 rounded-full hover:bg-[color:var(--color-primary-yellow)] transition cursor-pointer text-sm font-medium"
-                    >
-                      Choose New File
-                    </label>
-                  </div>
-                )}
-              </div>
-            ) : (
-              <p className="text-sm text-[color:var(--color-primary-brown)] font-[Actor] text-center w-full">
-                No resume uploaded yet.
+
+    <div className="flex">
+      
+        {hasResume ? (
+          <div className="flex flex-row justify-between">
+            <div className="flex items-center w-full">
+              <label className="text-[color:var(--color-primary-brown)] font-medium w-[150px] text-left">
+                Resume:
+              </label>
+              <p className="flex-1 min-w-0 px-4 py-2 rounded-full bg-[#FFF6F6] text-[color:var(--color-primary-brown)] font-[Actor] truncate w-full" title={attendeeData.resume_name}>
+                {attendeeData.resume_name}
               </p>
-            )}
-          </div>
-        </div>
 
-        {!hasResume && replacementsRemaining > 0 && (
-          <div className="flex items-center gap-2">
-            <label htmlFor="resume-upload-initial" className="text-[color:var(--color-primary-brown)] font-medium min-w-[100px]">
-              Upload Resume:
-            </label>
-            <input
-              id="resume-upload-initial"
-              type="file"
-              accept=".pdf,.doc,.docx"
-              onChange={handleResumeUpdate}
-              className="hidden"
-            />
-            <label
-              htmlFor="resume-upload-initial"
-              className="bg-[color:var(--color-secondary-yellow)] text-[color:var(--color-primary-pink)] px-4 py-2 rounded-full hover:bg-[color:var(--color-primary-yellow)] transition cursor-pointer text-sm font-medium"
-            >
-              Choose File
-            </label>
+              {replacementsRemaining > 0 && (
+              <div className="flex">
+                <input
+                  id="resume-upload"
+                  type="file"
+                  accept=".pdf,.doc,.docx"
+                  onChange={handleResumeUpdate}
+                  className="hidden"
+                />
+                <label
+                  htmlFor="resume-upload"
+                  className="bg-[color:var(--color-secondary-yellow)] text-[color:var(--color-primary-pink)] px-3 py-3 rounded-full hover:bg-[color:var(--color-primary-yellow)] transition cursor-pointer text-sm font-medium"
+                >
+                  Choose New File
+                </label>
+              </div>
+            )}
+            </div>
+            
           </div>
-        )}
-        {!hasResume && replacementsRemaining === 0 && (
-          <p className="text-sm text-[color:var(--color-primary-brown)] font-[Actor] text-center w-full italic">
-            You cannot upload or replace your resume at this time.
+        ) : (
+          <p className="text-sm text-[color:var(--color-primary-brown)] font-[Actor] text-center w-full">
+            No resume uploaded yet.
           </p>
         )}
+    </div>
+
+
+
+    {!hasResume && replacementsRemaining > 0 && (
+      <div className="flex items-center gap-2">
+        <label htmlFor="resume-upload-initial" className="text-[color:var(--color-primary-brown)] font-medium text-right">
+          Upload Resume:
+        </label>
+        <input
+          id="resume-upload-initial"
+          type="file"
+          accept=".pdf,.doc,.docx"
+          onChange={handleResumeUpdate}
+          className="hidden"
+        />
+        <label
+          htmlFor="resume-upload-initial"
+          className="bg-[color:var(--color-secondary-yellow)] text-[color:var(--color-primary-pink)] px-4 py-2 rounded-full hover:bg-[color:var(--color-primary-yellow)] transition cursor-pointer text-sm font-medium"
+        >
+          Choose File
+        </label>
       </div>
+    )}
+    {!hasResume && replacementsRemaining === 0 && (
+      <p className="text-sm text-[color:var(--color-primary-brown)] font-[Actor] text-center w-full italic">
+        You cannot upload or replace your resume at this time.
+      </p>
+    )}
+  </div>
 
-      <div className="flex items-center gap-4 mt-4">
-        <label className="text-[color:var(--color-primary-brown)] font-medium min-w-[100px]">LinkedIn:</label>
-      <input
-        type="text"
-        value={attendeeData.linkedin || ""}
-        readOnly
-        className="flex-1 px-4 py-2 rounded-full bg-[#FFF6F6] text-[color:var(--color-primary-brown)] font-[Actor] w-fit min-w-[150px]"
-      />
-    </div>
+  <div className="flex items-center gap-4 mt-4">
+    <label className="text-[color:var(--color-primary-brown)] font-medium w-[150px] text-left">
+      LinkedIn:
+    </label>
+    <input
+      type="text"
+      value={attendeeData.linkedin || ""}
+      readOnly
+      className="flex-1 px-4 py-2 rounded-full bg-[#FFF6F6] text-[color:var(--color-primary-brown)] font-[Actor]"
+    />
+  </div>
 
-    <div className="flex items-center gap-4">
-      <label className="text-[color:var(--color-primary-brown)] font-medium min-w-[100px]">GitHub:</label>
-      <input
-        type="text"
-        value={attendeeData.github || ""}
-        readOnly
-        className="flex-1 px-4 py-2 rounded-full bg-[#FFF6F6] text-[color:var(--color-primary-brown)] font-[Actor] w-fit min-w-[150px]"
-      />
-    </div>
+  <div className="flex items-center gap-4">
+    <label className="text-[color:var(--color-primary-brown)] font-medium w-[150px] text-left">
+      GitHub:
+    </label>
+    <input
+      type="text"
+      value={attendeeData.github || ""}
+      readOnly
+      className="flex-1 px-4 py-2 rounded-full bg-[#FFF6F6] text-[color:var(--color-primary-brown)] font-[Actor]"
+    />
+  </div>
 
-    <div className="flex items-center gap-4">
-      <label className="text-[color:var(--color-primary-brown)] font-medium min-w-[100px]">Discord Username:</label>
-      <input
-        type="text"
-        value={attendeeData.discord || ""}
-        readOnly
-        className="flex-1 px-4 py-2 rounded-full bg-[#FFF6F6] text-[color:var(--color-primary-brown)] font-[Actor] w-fit min-w-[150px]"
-      />
-    </div>
-  </InfoSection>
+  <div className="flex items-center gap-4">
+    <label className="text-[color:var(--color-primary-brown)] font-medium w-[150px] text-left">
+      Discord Username:
+    </label>
+    <input
+      type="text"
+      value={attendeeData.discord || ""}
+      readOnly
+      className="flex-1 px-4 py-2 rounded-full bg-[#FFF6F6] text-[color:var(--color-primary-brown)] font-[Actor]"
+    />
+  </div>
+</InfoSection>
   );
 };
 
@@ -620,8 +634,8 @@ return (
   <main className="w-full max-w-screen-xl mx-auto px-6">
   <section className="mb-2">
     {/* Profile Header */}
-    <div className="flex flex-col md:flex-row justify-between items-center bg-white p-6 rounded-xl">
-      <div className="flex items-center gap-4">
+    <div className="flex md:flex-row lg:flex-row justify-between items-center bg-white py-6 rounded-xl">
+      <div className="flex items-center gap-4 ">
         <div className="w-32 h-32 rounded-full border-6 border-[color:var(--color-primary-pink)] overflow-hidden">
           <img
             src={`/images/${selectedImage}`}
@@ -678,7 +692,7 @@ return (
         <img
           src="/images/editIcon.png"
           alt="Edit"
-          className="w-12 h-12 hover:scale-105 transition-transform"
+          className="w-8 h-8 hover:scale-105 transition-transform"
         />
       </button>
     </div>
