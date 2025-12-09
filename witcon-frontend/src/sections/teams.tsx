@@ -15,6 +15,23 @@ interface Team {
 
 const WiCS: Team[] = [
 
+  {
+    name: "Gabriela Lopez",
+    position: "WiTCON Director",
+    image:"/eboard/gabriela.png",
+    panelClassName: "panel-gabriela",
+    link: "https://www.linkedin.com/in/gabriela-lopez-fiu/",
+    
+
+},
+{
+  name: "Yana Kostenko",
+  position: "WiTCON Chair",
+  image:"/eboard/yana.png",
+  link: "https://www.linkedin.com/in/yana-kostenko/",
+  
+},
+
     {
         name: "Margarita Guitierrez",
         position: "President",
@@ -35,26 +52,7 @@ const WiCS: Team[] = [
         image:"/eboard/agoritsa.png",
         link: "https://www.linkedin.com/in/agoritsa-polyzou/",
     },
-
-    {
-        name: "Gabriela Lopez",
-        position: "WiTCON Director",
-        image:"/eboard/gabriela.png",
-        panelClassName: "panel-gabriela",
-        link: "https://www.linkedin.com/in/gabriela-lopez-fiu/",
-        
-
-    },
-
-    {
-        name: "Sruti Simran",
-        position: "WiTCON Chair",
-        image:"/eboard/sruti.png",
-        panelClassName: "panel-fix",
-        link: "https://www.linkedin.com/in/fnusruti-simran-1836602a6/",
-
-
-    },
+    
 
     {
         name: "Devin Diaz",
@@ -98,16 +96,10 @@ const WiCS: Team[] = [
         link: "https://www.linkedin.com/in/allisonrome5002/",
     },
 
-    {
-        name: "Yana Kostenko",
-        position: "Marketing Lead",
-        image:"/eboard/yana.png",
-        link: "https://www.linkedin.com/in/yana-kostenko/",
-        
-    },
+    
 
     {
-        name: "Natalia Boodram",
+        name: "Natalia Boodhram",
         position: "Marketing Lead",
         image:"/eboard/natalia.png",
         panelClassName: "panel-natalia",

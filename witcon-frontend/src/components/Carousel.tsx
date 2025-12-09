@@ -25,7 +25,7 @@ export default function Carousel() {
         slidesPerView={2}
         slideToClickedSlide={true}
         loop={true}
-        speed={10000}
+        speed={800}
         autoplay={{
           delay: 500,
         }}
