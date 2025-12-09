@@ -264,7 +264,7 @@ def google_oauth_callback(request):
         request.session.pop("oauth_redirect_uri", None)
 
         # Redirect home on *any* error
-        frontend_base_url = os.getenv("FRONTEND_URL", "http://localhost:5174")
+        frontend_base_url = os.getenv("FRONTEND_URL", "https://witcon2026.vercel.app/")
         return HttpResponseRedirect(frontend_base_url)
 
     # Verify state token
