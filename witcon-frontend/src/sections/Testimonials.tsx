@@ -46,12 +46,11 @@ export default function Testimonials() {
                         font-family: var(--font-bukhari);
                         font-size: 2.5em;
                         color: var(--color-primary-pink);
+                        margin-bottom: 2.5rem;
                     }
 
                    .wrapper {
-                    max-width: 1200px;
-                    margin: 0 auto;
-                    padding: 40px 20px;
+                   justify-content:center;
                     }
 
                     .wrapper h1 {
@@ -72,9 +71,7 @@ export default function Testimonials() {
                         margin-bottom: 75px;
                         cursor: default;
                         position: relative;
-                        max-width: 800px;
-                        margin-left: auto;
-                        margin-right: auto;
+
                         color: var(--color-primary-pink);
                         font-family: 'Actor', sans-serif;
                     }

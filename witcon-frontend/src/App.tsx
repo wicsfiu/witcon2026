@@ -12,7 +12,7 @@ export default function App() {
     <Router>
       <div className="flex flex-col min-h-screen bg-primary-background">
         <Navbar />
-        <main className="flex-grow p-6 max-w-7xl mx-auto w-full">
+        <main className="flex-grow p-6 w-[90vw] mx-auto">
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/login" element={<Login />} />

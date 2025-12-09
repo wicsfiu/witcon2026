@@ -33,10 +33,10 @@ export default function Hero() {
 
   return (
     <>
-      <section className="grid grid-cols-1 lg:grid-cols-2 items-start gap-x-10 sm:pt-2 md:pt-4 lg:pt-6 gap-y-8 mt-5">
+      <section className="grid grid-cols-1 lg:grid-cols-2 items-center gap-x-10 gap-y-8 mt-5 md:mt-15">
         <div>
           <img
-            className="relative object-cover max-h-96 mx-auto comic-image comic-image-pop"
+            className="w-full h-auto object-cover max-h-96 mx-auto comic-image comic-image-pop"
             src={hero}
             alt="WiTCON 2025 volunteer crew"
           />
@@ -67,10 +67,10 @@ export default function Hero() {
             Women in Computer Science at Florida International University
           </Text>
 
-          <div className="flex flex-row gap-x-2 mt-5 items-center flex-wrap justify-center md:justify-start lg:justify-start">
+          <div className="flex flex-row gap-x-4 mt-5 items-center flex-wrap justify-center md:justify-start lg:justify-start">
             {/* Register button opens modal */}
             <button
-              className="inline-block bg-secondary-yellow hover:bg-tertiary-yellow active:bg-primary-yellow text-primary-pink py-2 px-4 rounded-xl max-w-30 text-center text-md lg:text-lg"
+              className="inline-block bg-secondary-yellow hover:bg-tertiary-yellow active:bg-primary-yellow text-primary-pink py-2 px-4 max-w-30 text-center text-md lg:text-lg comic-image"
               onClick={openRegisterModal}
             >
               Register
