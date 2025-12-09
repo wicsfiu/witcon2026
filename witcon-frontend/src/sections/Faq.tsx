@@ -70,11 +70,6 @@ export default function Faq() {
       ),
     },
     {
-      question: "Where can I update my resume?",
-      answer:
-        "Please check your registration confirmation email. It contains a link to update/submit your resume!",
-    },
-    {
       question: "Do I need experience to participate?",
       answer:
         "Not at all! No prior experience in technology or any tech major is required. WiTCON features workshops and panels beneficial for all future professionals interested in learning!",
