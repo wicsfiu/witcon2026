@@ -62,8 +62,9 @@ export default function Profile() {
 
 
   const [showIconPicker, setShowIconPicker] = useState(false);
-  const [selectedImage, setSelectedImage] = useState(attendeeData.profileImage || "profilePic2.png");
+  const [selectedImage, setSelectedImage] = useState(attendeeData.profileImage || "profilePic1.png");
   const iconOptions = [
+    "profilePic1.png",
     "profilePic2.png",
     "profilePic3.png",
     "profilePic4.png",
