@@ -4,7 +4,8 @@ import witcon_group from "../assets/witcon_group.jpg";
 
 export default function WhatIsWiTCON() {
   return (
-    <section className="grid grid-cols-1 md:grid-cols-2 md:items-center gap-x-10 gap-y-8 w-full pt-6 pb-10 mt-15">
+    <section className="grid grid-cols-1 md:grid-cols-2 md:items-center gap-x-10 gap-y-8
+    ">
       {/* Left column container - groups header and body text together */}
       <div className="flex flex-col gap-5 order-1 md:order-none text-center md:text-left">
         <Header>What is WiTCON?</Header>
@@ -23,9 +24,9 @@ export default function WhatIsWiTCON() {
       </div>
 
       {/* Image - order 2 on mobile */}
-      <div className="order-2 md:order-none">
+      <div className="order-2 md:order-none w-full">
         <img
-          className="relative object-cover comic-image-left comic-image-pop-left"
+          className="w-full h-auto object-cover comic-image-left comic-image-pop-left"
           src={witcon_group}
           alt="WiTCON 2025 volunteer crew"
         />
