@@ -282,7 +282,7 @@ def google_oauth_callback(request):
         request.session.pop("oauth_state", None)
         request.session.pop("oauth_redirect_uri", None)
         # If you prefer redirecting the user home on other errors too, uncomment the following lines:
-        # frontend_base_url = os.getenv("FRONTEND_URL", "http://localhost:5174")
+        # frontend_base_url = os.getenv("FRONTEND_URL", "https://witcon2026.vercel.app/")
         # return HttpResponseRedirect(redirect_uri or frontend_base_url)
         return Response({'error': f'OAuth error: {error}'}, status=400)
     
@@ -358,8 +358,8 @@ def google_oauth_callback(request):
             # New user - redirect to registration page
             frontend_url = redirect_uri
     else:
-        # Default behavior - use FRONTEND_URL or localhost
-        frontend_base_url = os.getenv('FRONTEND_URL', 'http://localhost:5174')
+        # Default behavior - use FRONTEND_URL or front page
+        frontend_base_url = os.getenv('FRONTEND_URL', 'https://witcon2026.vercel.app/')
         if user_exists:
             frontend_url = f"{frontend_base_url}/profile"
         else:
