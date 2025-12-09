@@ -9,27 +9,12 @@ export default function Faq() {
       answer:
         "The conference is free and open to all students interested in technology, networking, and empowerment, with a focus on celebrating and supporting women in the tech field.",
     },
-    {
-      question: "Where can I register?",
-      answer: (
-        <>
-          You can register for the event by clicking on the following link:{" "}
-          <a
-            href="https://lu.ma/hwyplw5v"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="text-primary-pink underline hover:text-pink-300"
-          >
-            https://lu.ma/hwyplw5v
-          </a>
-        </>
-      ),
-    },
+    
     {
       question: "When and where will the event be held?",
       answer: (
         <>
-          When: March 28th, 2025, from 9AM to 7PM <br />
+          When: March 27th, 2026, from 9AM to 7PM <br />
           Where: Graham Center Ballrooms <br />
           <br />
           10955 SW 15th St <br />
@@ -113,10 +98,10 @@ export default function Faq() {
       ),
     },
     {
-      question: "Who is organizing WiTCON25?",
+      question: "Who is organizing WiTCON26?",
       answer: (
         <>
-          WiTCON 2025 is organized by{" "}
+          WiTCON 2026 is organized by{" "}
           <a
             href="https://wics.cs.fiu.edu/"
             target="_blank"
