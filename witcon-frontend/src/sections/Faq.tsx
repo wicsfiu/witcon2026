@@ -14,7 +14,7 @@ export default function Faq() {
       question: "When and where will the event be held?",
       answer: (
         <>
-          When: March 27th, 2026, from 9AM to 7PM <br />
+          When: March 27th, 2026, from 9AM to 9PM <br />
           Where: Graham Center Ballrooms <br />
           <br />
           10955 SW 15th St <br />
