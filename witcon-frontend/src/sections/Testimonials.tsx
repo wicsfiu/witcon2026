@@ -13,9 +13,9 @@ interface Testimonial {
 const testimonials: Testimonial[] = [
     
     {   
-        name: "Jesse Cline",
-        title: "UKG, Sponsor",
-        quote: "I look forward to WiTCON all year! There is no other space the matches the energy in the room at WiTCON. It is truly an inspiration to see these women creating community and building space to uplift and empower each other.",
+        name: "Tatiana Rodriguez",
+        title: "Student at FIU",
+        quote: "I look forward to WiTCON every year! It is such a valuable event to attend as a woman in tech - with the career fair, sponsor workshops, and entertaining activities, the opportunities to create meaningful connections with others in the industry are endless!",
     },
 
     {
