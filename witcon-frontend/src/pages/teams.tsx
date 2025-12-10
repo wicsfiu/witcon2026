@@ -12,33 +12,91 @@ interface Team {
 }
 
 const WiCS: Team[] = [
-  { name: "Margarita Guitierrez", position: "President", image: "" },
-  { name: "Amber Garcia", position: "Vice President", image: "" },
-  { name: "Agoritsa", position: "Faculty Advisor", image: "" },
-  { name: "Gabriela Lopez", position: "WiTCON Director", image: "" },
-  { name: "Sruti Simran", position: "WiTCON Chair", image: "" },
-  { name: "Devin Diaz", position: "Industry Relations Director", image: devin },
-  { name: "Rhode Sanchez", position: "Industry Relations Lead", image: rhode },
-  {
-    name: "Narel Rodriguez",
-    position: "Industry Relations Chair",
-    image: narel,
-  },
-  {
-    name: "Victoria Hernandez",
-    position: "Industry Relations Chair",
-    image: "",
-  },
-  {
-    name: "Allison Romero",
-    position: "Marketing & Commms Director",
-    image: "",
-  },
-  { name: "Yana Kostenko", position: "Marketing Lead", image: "" },
-  { name: "Natalia Boodram", position: "Marketing Lead", image: "" },
-  { name: "Manar Alhamad", position: "Comms Lead", image: "" },
-  { name: "Laiba Mahmud", position: "Comms Lead", image: "" },
-];
+
+    {
+        name: "Margarita Guitierrez",
+        position: "President",
+        image:""
+    },
+
+    {
+        name: "Amber Garcia",
+        position: "Vice President",
+        image:""
+    },
+
+    {
+        name: "Agoritsa",
+        position: "Faculty Advisor",
+        image:""
+    },
+
+    {
+        name: "Gabriela Lopez",
+        position: "WiTCON Director",
+        image:""
+    },
+
+
+    {
+        name: "Devin Diaz",
+        position: "Industry Relations Director",
+        image: devin
+    },
+
+    {
+        name: "Rhode Sanchez",
+        position: "Industry Relations Lead",
+        image:rhode
+    },
+
+
+    {
+        name: "Narel Rodriguez",
+        position: "Industry Relations Chair",
+        image:narel
+    },
+
+    {
+        name: "Victoria Hernandez",
+        position: "Industry Relations Chair",
+        image:""
+    },
+
+    {
+        name: "Allison Romero",
+        position: "Marketing & Commms Director",
+        image:""
+    },
+
+    {
+        name: "Yana Kostenko",
+        position: "Marketing Lead",
+        image:""
+    },
+
+    {
+        name: "Natalia Boodram",
+        position: "Marketing Lead",
+        image:""
+    },
+
+    {
+        name: "Manar Alhamad",
+        position: "Comms Lead",
+        image:""
+    },
+
+    {
+        name: "Laiba Mahmud",
+        position: "Comms Lead",
+        image:""
+    },
+
+
+
+]
+
 
 export default function Teams() {
   return (

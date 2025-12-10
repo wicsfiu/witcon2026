@@ -14,7 +14,7 @@ export default function Faq() {
       question: "When and where will the event be held?",
       answer: (
         <>
-          When: March 27th, 2026, from 9AM to 7PM <br />
+          When: March 27th, 2026, from 9AM to 9PM <br />
           Where: Graham Center Ballrooms <br />
           <br />
           10955 SW 15th St <br />
@@ -68,11 +68,6 @@ export default function Faq() {
           garages.
         </>
       ),
-    },
-    {
-      question: "Where can I update my resume?",
-      answer:
-        "Please check your registration confirmation email. It contains a link to update/submit your resume!",
     },
     {
       question: "Do I need experience to participate?",
