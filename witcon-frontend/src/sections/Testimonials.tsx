@@ -13,9 +13,9 @@ interface Testimonial {
 const testimonials: Testimonial[] = [
     
     {   
-        name: "Jesse Cline",
-        title: "UKG, Sponsor",
-        quote: "I look forward to WiTCON all year! There is no other space the matches the energy in the room at WiTCON. It is truly an inspiration to see these women creating community and building space to uplift and empower each other.",
+        name: "Tatiana Rodriguez",
+        title: "Student at FIU",
+        quote: "I look forward to WiTCON every year! It is such a valuable event to attend as a woman in tech - with the career fair, sponsor workshops, and entertaining activities, the opportunities to create meaningful connections with others in the industry are endless!",
     },
 
     {
@@ -46,12 +46,11 @@ export default function Testimonials() {
                         font-family: var(--font-bukhari);
                         font-size: 2.5em;
                         color: var(--color-primary-pink);
+                        margin-bottom: 2.5rem;
                     }
 
                    .wrapper {
-                    max-width: 1200px;
-                    margin: 0 auto;
-                    padding: 40px 20px;
+                   justify-content:center;
                     }
 
                     .wrapper h1 {
@@ -72,9 +71,7 @@ export default function Testimonials() {
                         margin-bottom: 75px;
                         cursor: default;
                         position: relative;
-                        max-width: 800px;
-                        margin-left: auto;
-                        margin-right: auto;
+
                         color: var(--color-primary-pink);
                         font-family: 'Actor', sans-serif;
                     }

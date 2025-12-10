@@ -1,5 +1,6 @@
 #attendees/models.py
 from django.db import models
+from django.core.validators import FileExtensionValidator 
 
 class Attendee(models.Model):
     # Basic info
@@ -166,7 +167,8 @@ class Attendee(models.Model):
 
     # Files and tracking
     # FileField will use DEFAULT_FILE_STORAGE from settings (S3 if configured)
-    resume = models.FileField(upload_to="resumes/", blank=True, null=True)
+    resume = models.FileField(upload_to="resumes/", blank=True, null=True,
+        validators=[FileExtensionValidator(allowed_extensions=["pdf"])])
     resume_original_name = models.CharField(max_length=255, blank=True, null=True, help_text="Original filename of the uploaded resume")
     resume_replacement_count = models.IntegerField(default=0, help_text="Number of times the resume has been replaced (max 2)")
     checked_in = models.BooleanField(default=False)
@@ -175,4 +177,13 @@ class Attendee(models.Model):
 
     def __str__(self):
         return f"{self.first_name} {self.last_name} <{self.email}>"
+    
+    @property
+    def is_authenticated(self):
+        """
+        Required property for Django REST Framework compatibility.
+        Since this is an Attendee instance returned by authentication,
+        it is always authenticated.
+        """
+        return True
 

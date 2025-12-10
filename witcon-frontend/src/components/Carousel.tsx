@@ -17,7 +17,7 @@ const slides = [slide1, slide2, slide3, slide4, slide5, slide6, slide7];
 
 export default function Carousel() {
   return (
-    <div className="w-full mx-auto pt-[10%]">
+    <div className="w-full mx-auto">
       <Swiper
         effect="coverflow"
         grabCursor={true}

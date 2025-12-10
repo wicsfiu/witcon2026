@@ -22,6 +22,11 @@ class Migration(migrations.Migration):
         ),
         migrations.AddField(
             model_name='attendee',
+            name='custom_allergy',
+            field=models.CharField(blank=True, max_length=100),
+        ),
+        migrations.AddField(
+            model_name='attendee',
             name='date_of_birth',
             field=models.DateField(blank=True, null=True),
         ),
@@ -39,6 +44,11 @@ class Migration(migrations.Migration):
             model_name='attendee',
             name='field_other',
             field=models.CharField(blank=True, max_length=100),
+        ),
+        migrations.AddField(
+            model_name='attendee',
+            name='food_allergies',
+            field=models.JSONField(blank=True, default=list),
         ),
         migrations.AddField(
             model_name='attendee',
@@ -69,6 +79,11 @@ class Migration(migrations.Migration):
             model_name='attendee',
             name='panther_id',
             field=models.CharField(blank=True, max_length=50),
+        ),
+        migrations.AddField(
+            model_name='attendee',
+            name='password',
+            field=models.CharField(blank=True, max_length=128),
         ),
         migrations.AddField(
             model_name='attendee',

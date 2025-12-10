@@ -143,7 +143,7 @@ export default function Faq() {
       <div className="mx-auto">
         <Header className="text-section"> FAQ </Header>
 
-        <div className="space-y-4 py-10">
+        <div className="space-y-4">
           {faqs.map((faq, index) => {
             const isOpen = openIndexes.includes(index);
 

@@ -82,6 +82,8 @@ export default function Register() {
 });
 
     const [resumeFile, setResumeFile] = useState<File | null>(null);
+    const [resumeError, setResumeError] = useState<string | null>(null);
+
     const [errors, setErrors] = useState<FormErrors>({});
     const [isSubmitted, setIsSubmitted] = useState(false);
 
@@ -209,9 +211,23 @@ export default function Register() {
 
     // Handle file input
     const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
-        if (e.target.files && e.target.files[0]) {
-            setResumeFile(e.target.files[0]);
+        const file = e.target.files?.[0];
+        if (!file) return;
+
+        const name = file.name.toLowerCase();
+
+        const isPDF =
+            file.type === "application/pdf" ||
+            name.endsWith(".pdf");
+
+        if (!isPDF) {
+            alert("Only PDF files are allowed.");
+            e.target.value = "";  // clear input
+            setResumeFile(null);
+            return;
         }
+
+        setResumeFile(file);
     };
 
     const validateAge = (dateOfBirth: string) => {
@@ -224,7 +240,6 @@ export default function Register() {
         }
         return age >= 18;
     };
-
 
     const validateForm = () => {
         const newErrors: FormErrors = {};
@@ -277,14 +292,18 @@ export default function Register() {
 
         const fd = new FormData();
         if (resumeFile) {
+        if (!resumeFile.name.toLowerCase().endsWith(".pdf")) {
+            alert("Resume must be a PDF file.");
+            return;
+        }
+        
         if (resumeFile.size > 600 * 1024) {
-                alert("Resume file size must be 600 KB or smaller");
-                return;
+            alert("Resume file size must be 600 KB or smaller");
+            return;
         }
+
         fd.append("resume", resumeFile);
-        }
-
-
+    }
 
     Object.entries(formData).forEach(([key, value]) => {
         if (value === null || value === undefined) return;
@@ -324,9 +343,33 @@ export default function Register() {
             } else {
                 const data = await res.json();
                 console.log("Registration success:", data);
-                // Store user ID and email in AuthContext so Profile page can fetch their data
-                if (data.id) {
-                    login(data.id, data.email || formData.email);
+                // Store tokens and user info in AuthContext
+                if (data.id && data.access_token && data.refresh_token) {
+                    login(
+                        data.access_token,
+                        data.refresh_token,
+                        data.id,
+                        data.email || formData.email
+                    );
+                } else if (data.id) {
+                    // Fallback: if tokens not in response, try to get them
+                    fetch(`${API_URL}/auth/token/`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ email: data.email || formData.email }),
+                    })
+                        .then(tokenRes => tokenRes.json())
+                        .then(tokenData => {
+                            if (tokenData.access_token && tokenData.refresh_token) {
+                                login(
+                                    tokenData.access_token,
+                                    tokenData.refresh_token,
+                                    data.id,
+                                    data.email || formData.email
+                                );
+                            }
+                        })
+                        .catch(err => console.error('Failed to get tokens:', err));
                 }
                 navigate("/profile");
                 setIsSubmitted(true);
@@ -371,16 +414,6 @@ return (
                 <div className="flex justify-between items-start">
                     <h3 className="text-2xl font-bold text-[color:var(--color-primary-pink)]"
                     style={{ fontFamily: 'Actor, sans-serif' }}>Register here</h3>
-
-                    <div className="text-right text-sm">
-                        <span className="text-gray-700 mr-2">Already Registered?</span>
-                        <button
-                            type="button"
-                            className="bg-[color:var(--color-primary-yellow)] text-white font-semibold px-3 py-1 rounded-md hover:bg-yellow-500 transition"
-                        >
-                            Click Here
-                        </button>
-                    </div>
                 </div>
       
                     <div className="grid grid-cols-1 gap-4">
@@ -514,7 +547,7 @@ return (
                             type="file"
                             onChange={handleFileChange}
                             className="w-full text-sm text-gray-700 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-[color:var(--color-primary-pink)] file:text-white hover:file:bg-pink-600"
-                            accept=".pdf"
+                            accept=".pdf,application/pdf"
                             required
                         />
                         {errors.resume && <div className="text-red-600 text-sm mt-2">{errors.resume}</div>}

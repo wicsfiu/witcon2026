@@ -78,7 +78,7 @@ export default function RegistrationModal({
       onClick={onClose}
     >
       <div
-        className="bg-secondary-yellow dark:bg-gray-900 rounded-2xl p-6 max-w-md w-full shadow-lg relative animate-scaleIn mx-4"
+        className="bg-secondary-yellow dark:bg-gray-900 p-6 max-w-md w-full shadow-lg relative animate-scaleIn mx-4 comic-image"
         onClick={(e) => e.stopPropagation()}
       >
         {/* Close X button */}
@@ -90,8 +90,8 @@ export default function RegistrationModal({
         </button>
 
         <div className="mt-5 mb-3">
-          <Header className="text-2xl sm:text-3xl mb-4 sm:mb-6 text-center">{headerText}</Header>
-          <Text className="pb-2 text-primary-pink text-sm sm:text-base">{bodyText}</Text>
+          <Header className="text-8xl mb-4 sm:mb-6 text-center">{headerText}</Header>
+          <Text className="font-bold pb-2 text-primary-pink text-sm sm:text-base">{bodyText}</Text>
 
           <div className="flex justify-center">
             <button

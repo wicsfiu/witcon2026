@@ -138,6 +138,8 @@ class AttendeeSerializer(serializers.ModelSerializer):
         return value
 
     def validate_resume(self, value):
+        if value and not value.name.lower().endswith(".pdf"):
+            raise serializers.ValidationError("Resume must be a PDF file.")
         if value and value.size > 600 * 1024:
             raise serializers.ValidationError("Resume size must be <= 600 KB")
         return value
