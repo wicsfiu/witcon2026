@@ -39,11 +39,6 @@ const WiCS: Team[] = [
         image:""
     },
 
-    {
-        name: "Sruti Simran",
-        position: "WiTCON Chair",
-        image:""
-    },
 
     {
         name: "Devin Diaz",
