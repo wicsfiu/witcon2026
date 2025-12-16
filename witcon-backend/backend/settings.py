@@ -195,6 +195,7 @@ if USE_S3:
     
     # Media URL for accessing files
     MEDIA_URL = f"https://{AWS_STORAGE_BUCKET_NAME}.s3.us-east-2.amazonaws.com/"
+    AWS_S3_CUSTOM_DOMAIN = "witcon-resumes.s3.us-east-2.amazonaws.com"
     
     # Use S3 as the default file storage backend
     # Django 4.2+ uses STORAGES dictionary, but DEFAULT_FILE_STORAGE still works for backwards compatibility
