@@ -194,7 +194,7 @@ if USE_S3:
     AWS_QUERYSTRING_AUTH = False  # Don't require query string authentication
     
     # Media URL for accessing files
-    MEDIA_URL = f"https://{AWS_STORAGE_BUCKET_NAME}.s3.{AWS_S3_REGION_NAME}.amazonaws.com/"
+    MEDIA_URL = f"https://{AWS_STORAGE_BUCKET_NAME}.s3.us-east-2.amazonaws.com/"
     
     # Use S3 as the default file storage backend
     # Django 4.2+ uses STORAGES dictionary, but DEFAULT_FILE_STORAGE still works for backwards compatibility
