@@ -1,9 +1,11 @@
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 
+
 export default function Navbar() {
   const { userId, logout } = useAuth();
   const navigate = useNavigate();
+
 
   const getApiUrl = () => {
     const envUrl = import.meta.env.VITE_API_URL;
@@ -14,7 +16,9 @@ export default function Navbar() {
     return "https://witcon.duckdns.org/backend-api";
   };
 
+
   const API_URL = getApiUrl();
+
 
   const handleRegisterClick = (e: React.MouseEvent) => {
     e.preventDefault();
@@ -24,18 +28,29 @@ export default function Navbar() {
       const currentUrl = window.location.origin;
       const redirectUri = `${currentUrl}/register`;
 
+
       // Construct OAuth URL - ensure API_URL doesn't have trailing slash
       const baseUrl = API_URL.endsWith('/') ? API_URL.slice(0, -1) : API_URL;
       const oauthUrl = `${baseUrl}/auth/google/?redirect_uri=${encodeURIComponent(redirectUri)}`;
       window.location.href = `${baseUrl}/auth/google/?redirect_uri=${encodeURIComponent(redirectUri)}`;
       console.log('Register clicked - OAuth URL:', oauthUrl);
-      
+     
       // Direct navigation - this bypasses React Router completely
       window.location.href = oauthUrl;
     } catch (error) {
       console.error('Error in handleRegisterClick:', error);
     }
   };
+
+  const scrollToSection = (id: string) => {
+  const element = document.getElementById(id);
+  if (element) {
+    element.scrollIntoView({
+      behavior: "smooth",
+      block: "start",
+    });
+  }
+};
 
   const handleLoginClick = (e: React.MouseEvent) => {
     e.preventDefault();
@@ -46,11 +61,14 @@ export default function Navbar() {
     window.location.href = `${baseUrl}/auth/google/?redirect_uri=${encodeURIComponent(redirectUri)}`;
   };
 
+
   const handleLogout = () => {
+
 
     logout();
     window.location.href = '/';
   };
+
 
   return (
     <nav className="sticky top-0 z-50 bg-primary-pink text-tertiary-yellow px-6 py-3 shadow-md font-actor text-xl">
@@ -60,40 +78,36 @@ export default function Navbar() {
           <img src="/witcon-logo.png" alt="WiTCON Logo" className="h-10 w-auto" />
         </Link>
 
+
         {/* Center: Links */}
         <div className="flex space-x-6 justify-center flex-1">
-          <Link to="/" className="hover:text-secondary-mint">
+          <button
+            onClick={() => scrollToSection("hero")}
+            className="hover:text-secondary-mint bg-transparent border-none cursor-pointer"
+          >
             Home
-          </Link>
-          {!userId && (
-            <>
-              <button
-                onClick={handleLoginClick}
-                className="hover:text-secondary-mint bg-transparent border-none cursor-pointer"
-              >
-                Login
-              </button>
-              <button
-                onClick={handleRegisterClick}
-                className="hover:text-secondary-mint bg-transparent border-none cursor-pointer"
-              >
-                Register
-              </button>
-            </>
-          )}
-          {userId && (
-            <>
-              <Link to="/profile" className="hover:text-secondary-mint">
-                Profile
-              </Link>
-              <button
-                onClick={handleLogout}
-                className="hover:text-secondary-mint bg-transparent border-none cursor-pointer"
-              >
-                Logout
-              </button>
-            </>
-          )}
+          </button>
+
+          <button
+            onClick={() => scrollToSection("about")}
+            className="hover:text-secondary-mint bg-transparent border-none cursor-pointer"
+          >
+            What is WiTCON?
+          </button>
+
+          <button
+            onClick={() => scrollToSection("teams")}
+            className="hover:text-secondary-mint bg-transparent border-none cursor-pointer"
+          >
+            Meet the Team
+          </button>
+
+          <button
+            onClick={() => scrollToSection("faq")}
+            className="hover:text-secondary-mint bg-transparent border-none cursor-pointer"
+          >
+            FAQ
+          </button>
         </div>
 
         {/* Right: Empty div to balance flex layout */}
