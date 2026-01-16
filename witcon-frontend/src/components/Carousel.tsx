@@ -27,7 +27,7 @@ export default function Carousel() {
         loop={true}
         speed={800}
         autoplay={{
-          delay: 500,
+          delay: 2000,
         }}
         coverflowEffect={{
           rotate: 0,
