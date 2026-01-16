@@ -92,14 +92,14 @@ export default function Navbar() {
             onClick={() => scrollToSection("about")}
             className="hover:text-secondary-mint bg-transparent border-none cursor-pointer"
           >
-            What is WiTCON?
+            WiTCON
           </button>
 
           <button
             onClick={() => scrollToSection("teams")}
             className="hover:text-secondary-mint bg-transparent border-none cursor-pointer"
           >
-            Meet the Team
+            Team
           </button>
 
           <button
