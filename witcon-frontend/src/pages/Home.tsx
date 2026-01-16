@@ -9,34 +9,33 @@ import Faq from "../sections/Faq";
 export default function Home() {
   return (
     <div className="flex flex-col gap-y-40">
-      <section id="hero">
+      <section id="hero" className="scroll-mt-24">
         <Hero />
       </section>
 
-      <section id="timer">
+      <section id="timer" className="scroll-mt-24">
         <Timer />
       </section>
 
-      <section id="about">
+      <section id="about" className="scroll-mt-24">
         <WhatIsWiTCON />
       </section>
 
-      <section id="carousel">
+      <section id="carousel" className="scroll-mt-24">
         <Carousel />
       </section>
 
-      <section id="testimonials">
+      <section id="testimonials" className="scroll-mt-24">
         <Testimonials />
       </section>
 
-      <section id="teams">
+      <section id="teams" className="scroll-mt-24">
         <Teams />
       </section>
 
-      <section id="faq">
+      <section id="faq" className="scroll-mt-24">
         <Faq />
       </section>
     </div>
   );
 }
-
