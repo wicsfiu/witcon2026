@@ -37,7 +37,7 @@ export default function Hero() {
         <div>
           <img
             className="w-full h-auto object-cover max-h-96 mx-auto comic-image comic-image-pop"
-            src={hero}
+            src="https://i.postimg.cc/4dBSz0x0/image.png"
             alt="WiTCON 2025 volunteer crew"
           />
         </div>
