@@ -284,7 +284,7 @@ export default function Teams() {
             }
 
             .panel-natalia{
-              background-position: top -80px center;
+              background-position: top 0px center;
             }
 
             .panel-gabriela{
