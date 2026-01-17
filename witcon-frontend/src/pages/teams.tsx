@@ -178,6 +178,9 @@ export default function Teams() {
                 `}
       </style>
 
+      <Header className="col-span-full text-section">Testimonials</Header>
+      
+
       <article className="comic">
         {WiCS.map((member, index) => (
           <div key={index} className="panel">
