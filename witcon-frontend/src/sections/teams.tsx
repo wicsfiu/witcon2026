@@ -322,30 +322,29 @@ export default function Teams() {
         <Header className="col-span-full text-section">Meet the Team!</Header>
   
         <article className="comic">
-  {WiCS.map((member, index) => (
-    <a
-      key={index}
-      href={member.link ?? "#"}
-      target={member.link ? "_blank" : undefined}
-      rel="noopener noreferrer"
-      className="panel"
-      style={{ display: "block" }}
-    >
-      <div
-        className={`panel-image ${member.panelClassName ?? ""}`}
-        style={
-          member.image
-            ? { backgroundImage: `url(${member.image})`, backgroundSize: "cover" }
-            : undefined
-        }
-      >
-        <div className="panel-name">{member.name}</div>
-        <div className="panel-position">{member.position}</div>
-      </div>
-    </a>
-  ))}
-</article>
-
+          {WiCS.map((member, index) => (
+            <a
+              key={index}
+              href={member.link ?? "#"}
+              target={member.link ? "_blank" : undefined}
+              rel="noopener noreferrer"
+              className="panel"
+              style={{ display: "block" }}
+            >
+              <div
+                className={`panel-image ${member.panelClassName ?? ""}`}
+                style={
+                  member.image
+                    ? { backgroundImage: `url(${member.image})`, backgroundSize: "cover" }
+                    : undefined
+                }
+              >
+                <div className="panel-name">{member.name}</div>
+                <div className="panel-position">{member.position}</div>
+              </div>
+            </a>
+          ))}
+        </article>
       </div>
     );
   }
