@@ -318,6 +318,8 @@ export default function Teams() {
             }
           `}
         </style>
+
+        <Header className="col-span-full text-section">Meet the Team!</Header>
   
         <article className="comic">
   {WiCS.map((member, index) => (
