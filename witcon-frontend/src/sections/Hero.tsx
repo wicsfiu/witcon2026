@@ -71,7 +71,7 @@ export default function Hero() {
             {/* Register button opens modal */}
             <button
               className="inline-block bg-secondary-yellow hover:bg-tertiary-yellow active:bg-primary-yellow text-primary-pink py-2 px-4 max-w-30 text-center text-md lg:text-lg comic-image"
-              onClick={() => window.location.href = "https://luma.com/hwyplw5v"}
+              onClick={() => window.location.href = " https://luma.com/krgt285e"}
               //onClick={openRegisterModal}
             >
               Register
