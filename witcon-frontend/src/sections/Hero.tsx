@@ -75,7 +75,8 @@ export default function Hero() {
             >
               Register
             </button>
-
+            
+            {/*}
             <Text className="text-primary-yellow text-md lg:text-lg">
               Already registered?{" "}
               <button
@@ -86,6 +87,7 @@ export default function Hero() {
               </button>
               .
             </Text>
+            */}
           </div>
         </div>
       </section>
