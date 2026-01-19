@@ -22,7 +22,6 @@ export default function Carousel() {
         effect="coverflow"
         grabCursor={true}
         centeredSlides={true}
-        slidesPerView={2}
         slideToClickedSlide={true}
         loop={true}
         speed={800}
@@ -38,7 +37,13 @@ export default function Carousel() {
           slideShadows: false,
         }}
         modules={[EffectCoverflow, Autoplay]}
-        className="w-full max-w-full h-[16vh] sm:h-[20vh] md:h-[24vh] lg:h-[80%]"
+        className="w-full max-w-full h-[30vh] lg:h-[80%]"
+        breakpoints={{
+          0: { slidesPerView: 1.1 },
+          640: { slidesPerView: 1.3 },
+          768: { slidesPerView: 2 },
+          1024: { slidesPerView: 2 },
+        }}
       >
         {slides.map((image, index) => (
           <SwiperSlide key={index} className="overflow-hidden comic-imager">
