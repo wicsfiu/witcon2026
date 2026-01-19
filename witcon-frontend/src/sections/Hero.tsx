@@ -4,6 +4,8 @@ import Subtitle from "../components/text/Subtitle";
 import Text from "../components/text/Text";
 import RegistrationModal from "../components/RegistrationModal";
 import hero from "../assets/hero.png";
+import Arrow from "../assets/Arrow.png"
+import Bam from "../assets/Bam.png"
 
 export default function Hero() {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -33,12 +35,25 @@ export default function Hero() {
 
   return (
     <>
-      <section className="grid grid-cols-1 lg:grid-cols-2 items-center gap-x-10 gap-y-8 mt-5 md:mt-15">
-        <div>
+      <section className="grid grid-cols-1 lg:grid-cols-2 items-center gap-x-14 gap-y-8 mt-5 md:mt-15">
+        <div className="comic-image comic-image-pop">
           <img
-            className="w-full h-auto object-cover max-h-96 mx-auto comic-image comic-image-pop"
+            className="w-full h-auto object-cover max-h-96 mx-auto "
             src="https://i.postimg.cc/4dBSz0x0/image.png"
             alt="WiTCON 2025 volunteer crew"
+          />
+
+          <img 
+            src ={Bam}
+            alt = 'Bam'
+            className = 'absolute -top-6 -left-6 w-20 h-20 lg:w-30 lg:h-30 lg:-top-10 lg:-left-10 pointer-events-none'
+          />
+
+          <img 
+            src = {Arrow}
+            alt = "Arrow"
+            className = 'absolute -bottom-10 -right-6 w-15 h-15 lg:w-20 lg:h-20 lg:-bottom-10 lg:-right-10 pointer-events-none rotate-[180deg]'
+          
           />
         </div>
 

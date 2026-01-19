@@ -103,10 +103,10 @@ export default function Navbar() {
           </button>
 
           <button
-            onClick={() => scrollToSection("faq")}
+            onClick={() => window.location.href = " https://luma.com/krgt285e"}
             className="hover:text-secondary-mint bg-transparent border-none cursor-pointer"
           >
-            FAQ
+            Register
           </button>
         </div>
 

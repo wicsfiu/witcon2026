@@ -2,6 +2,8 @@
 import Title from '../components/text/Title';
 import Header from '../components/text/Header';
 import Text from '../components/text/Text';
+import Wow from '../assets/Wow.png'
+import Megaphone from '../assets/Megaphone.png'
 
 
 interface Testimonial {
@@ -19,9 +21,9 @@ const testimonials: Testimonial[] = [
     },
 
     {
-        name: "Karletty Medina",
-        title: "CodePath, Community Partner",
-        quote: "WiTCON offers an incredible opportunity to connect with students and expose them to what the tech industry seeks. As an organization committed to reprogramming CS education, CodePath values the chance to engage directly with students while collaborating with the amazing WiCS Team.",
+        name: "Rebeca Serralta's",
+        title: "Student at FIU",
+        quote: "WiTCON is honestly a great place for building community. I’ve made a lot of friends, and fellow tech girlies at this event. The environment is chill and fun and there are plenty of engaging activities and workshops to attend. I love the vibe and aesthetic always eats!!!! You can see the dedication the organizers put in behind the scenes.",
     },
     {   name: "Agoritsa Polyzou",
         title: "FIU Professor, Advisor",
@@ -38,7 +40,7 @@ const testimonials: Testimonial[] = [
 export default function Testimonials() {
     return (
 
-        <div style = {{margin: 0, padding: 0}}>
+        <div style = {{margin: 0, padding: 0}} className = "relative">
             <style> 
                 {`
                     .text-section{
@@ -139,9 +141,19 @@ export default function Testimonials() {
                         font-weight: bold;
                     }
                     
+                    .speechbubble:last-of-type {
+                        margin-bottom: -40px;
+                    }
+                    
                 
                 `}
             </style>
+
+            <img 
+                src={Wow}
+                alt="Wow"
+                className="absolute -top-4 right-4 md:right-10 w-16 md:w-28 pointer-events-none z-10"
+            />
 
             <Header className="col-span-full text-section">Testimonials</Header>
 
@@ -162,6 +174,14 @@ export default function Testimonials() {
                     </div>
                 ))}
             </div>
+
+            <img 
+                src={Megaphone}
+                alt="Megaphone"
+                className="absolute -bottom-30 -left-4 md:-left-10 w-16 md:w-28 pointer-events-none z-10 -scale-x-100"
+            />
+
+
         </div>
     );
 }

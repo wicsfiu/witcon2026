@@ -23,7 +23,7 @@ export default function Footer() {
           </a>
 
           <a
-            href="https://www.linkedin.com/company/wicsfiu"
+            href="https://www.linkedin.com/company/wicsatfiu"
             target="_blank"
             rel="noopener noreferrer"
             className="text-tertiary-yellow hover:text-secondary-mint transition"
@@ -32,7 +32,7 @@ export default function Footer() {
           </a>
 
           <a
-            href="https://discord.com/invite/yourdiscordlink"
+            href="https://discord.gg/H6pDQz5hMY"
             target="_blank"
             rel="noopener noreferrer"
             className="text-tertiary-yellow hover:text-secondary-mint transition"
