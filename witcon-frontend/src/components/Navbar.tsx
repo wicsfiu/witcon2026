@@ -96,10 +96,10 @@ export default function Navbar() {
           </button>
 
           <button
-            onClick={() => scrollToSection("teams")}
+            onClick={() => scrollToSection("faq")}
             className="hover:text-secondary-mint bg-transparent border-none cursor-pointer"
           >
-            Team
+            FAQ
           </button>
 
           <button
