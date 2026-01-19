@@ -42,7 +42,7 @@ export default function WhatIsWiTCON() {
           Join us for a full-day of learning, networking, and empowerment of
           underrepresented local talent in tech. The event is scheduled for
           March 27th, 2026, and will be held at the Graham Center Ballrooms at
-          FIU Modesto Maidique Campus from 9AM - 8PM.
+          FIU Modesto Maidique Campus from 9AM - 9PM.
         </Text>
       </div>
     </section>
