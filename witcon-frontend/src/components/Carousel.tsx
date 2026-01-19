@@ -38,7 +38,7 @@ export default function Carousel() {
           slideShadows: false,
         }}
         modules={[EffectCoverflow, Autoplay]}
-        className="w-full max-w-full h-[30vh] lg:h-[80%]"
+        className="w-full max-w-full h-[16vh] sm:h-[20vh] md:h-[24vh] lg:h-[80%]"
       >
         {slides.map((image, index) => (
           <SwiperSlide key={index} className="overflow-hidden comic-imager">
