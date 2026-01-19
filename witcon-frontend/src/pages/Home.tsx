@@ -13,7 +13,7 @@ export default function Home() {
         <Hero />
       </section>
 
-      <section id="timer" className="scroll-mt-24">
+      <section id="timer" className="scroll-mt-24 -mt-8">
         <Timer />
       </section>
 
