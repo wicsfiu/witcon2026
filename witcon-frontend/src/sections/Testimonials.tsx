@@ -152,7 +152,7 @@ export default function Testimonials() {
             <img 
                 src={Wow}
                 alt="Wow"
-                className="absolute -top-4 right-4 md:right-10 w-16 md:w-28 pointer-events-none z-10"
+                className="absolute -top-5 -right-6 md:right-16 w-16 md:w-28 sm:right-20 pointer-events-none z-10"
             />
 
             <Header className="col-span-full text-section">Testimonials</Header>
@@ -178,7 +178,7 @@ export default function Testimonials() {
             <img 
                 src={Megaphone}
                 alt="Megaphone"
-                className="absolute -bottom-30 -left-4 md:-left-10 w-16 md:w-28 pointer-events-none z-10 -scale-x-100"
+                className="absolute -bottom-25 -left-4 md:-left-10 md:-bottom-30 lg:-bottom-30 w-16 md:w-28 pointer-events-none z-10 -scale-x-100"
             />
 
 
