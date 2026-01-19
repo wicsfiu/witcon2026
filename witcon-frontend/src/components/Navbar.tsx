@@ -71,16 +71,16 @@ export default function Navbar() {
 
 
   return (
-    <nav className="sticky top-0 z-50 bg-primary-pink text-tertiary-yellow px-6 py-3 shadow-md font-actor text-xl">
+    <nav className="sticky top-0 z-50 bg-primary-pink text-tertiary-yellow px-6 py-3 shadow-md font-actor text-lg">
       <div className="flex items-center justify-between mx-auto w-full">
         {/* Left: Logo */}
         <Link to="/">
-          <img src="/witcon-logo.png" alt="WiTCON Logo" className="h-10 w-auto" />
+          <img src="/witcon-logo.png" alt="WiTCON Logo" className="h-10 w-auto pr-4" />
         </Link>
 
 
         {/* Center: Links */}
-        <div className="flex space-x-6 justify-center flex-1">
+        <div className="flex space-x-4 justify-center flex-1">
           <button
             onClick={() => scrollToSection("hero")}
             className="hover:text-secondary-mint bg-transparent border-none cursor-pointer"

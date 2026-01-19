@@ -2,7 +2,7 @@ import Header from "../components/text/Header";
 import Text from "../components/text/Text";
 import witcon_group from "../assets/witcon_group.jpg";
 import Cute from "../assets/Cute.png"
-import OMG from "../assets/OMG.png"
+
 
 export default function WhatIsWiTCON() {
   return (
@@ -36,7 +36,7 @@ export default function WhatIsWiTCON() {
         <img 
             src ={Cute}
             alt = 'Bam'
-            className = 'absolute -top-6 -left-6 w-20 h-20 lg:w-25 lg:h-25 lg:-top-10 lg:-left-10 pointer-events-none'
+            className = 'absolute -top-6 -left-6 w-15 h-15 lg:w-25 lg:h-25 lg:-top-10 lg:-left-10 pointer-events-none'
           />
 
           
@@ -52,7 +52,7 @@ export default function WhatIsWiTCON() {
           Join us for a full-day of learning, networking, and empowerment of
           underrepresented local talent in tech. The event is scheduled for
           March 27th, 2026, and will be held at the Graham Center Ballrooms at
-          FIU Modesto Maidique Campus from 9AM - 9PM.
+          FIU Modesto Maidique Campus from 9AM - 8PM.
         </Text>
       </div>
     </section>

@@ -13,27 +13,27 @@ export default function Home() {
         <Hero />
       </section>
 
-      <section id="timer" className="scroll-mt-24 -mt-8">
+      <section id="timer" className="scroll-mt-24 -mt-10">
         <Timer />
       </section>
 
-      <section id="about" className="scroll-mt-24">
+      <section id="about" className="scroll-mt-24 -mt-6 pb-2">
         <WhatIsWiTCON />
       </section>
 
-      <section id="carousel" className="scroll-mt-24">
+      <section id="carousel" className="scroll-mt-24 -my-7">
         <Carousel />
       </section>
 
-      <section id="testimonials" className="scroll-mt-24 pb-12">
+      <section id="testimonials" className="scroll-mt-24 py-10 -mt-4">
         <Testimonials />
       </section>
 
-      <section id="teams" className="scroll-mt-24">
+      <section id="teams" className="scroll-mt-24 pt-5">
         <Teams />
       </section>
 
-      <section id="faq" className="scroll-mt-24">
+      <section id="faq" className="scroll-mt-24 -mt-10">
         <Faq />
       </section>
     </div>
