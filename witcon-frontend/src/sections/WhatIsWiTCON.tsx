@@ -1,6 +1,8 @@
 import Header from "../components/text/Header";
 import Text from "../components/text/Text";
 import witcon_group from "../assets/witcon_group.jpg";
+import Cute from "../assets/Cute.png"
+import OMG from "../assets/OMG.png"
 
 export default function WhatIsWiTCON() {
   return (
@@ -24,12 +26,20 @@ export default function WhatIsWiTCON() {
       </div>
 
       {/* Image - order 2 on mobile */}
-      <div className="order-2 md:order-none w-full">
+      <div className="order-2 md:order-none w-full comic-image-left comic-image-pop-left">
         <img
-          className="w-full h-auto object-cover comic-image-left comic-image-pop-left"
+          className="w-full h-auto object-cover"
           src={witcon_group}
           alt="WiTCON 2025 volunteer crew"
         />
+
+        <img 
+            src ={Cute}
+            alt = 'Bam'
+            className = 'absolute -top-6 -left-6 w-20 h-20 lg:w-25 lg:h-25 lg:-top-10 lg:-left-10 pointer-events-none'
+          />
+
+          
       </div>
 
       {/* Body text - order 3 on mobile, hidden on desktop */}

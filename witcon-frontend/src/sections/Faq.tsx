@@ -69,6 +69,22 @@ export default function Faq() {
         </>
       ),
     },
+
+    {
+      question: "Where can I update my resume?",
+      answer:(
+        <>
+        Please check your email inbox for your registration confirmation email. In there will be a link to update/submit your resume!
+        <br>
+        </br>
+        <a href = "https://luma.com/krgt285e" target = "_blank" rel = "noopener noreferrer" className="text-primary-pink underline hover:text-pink-300">
+          https://luma.com/krgt285e
+        </a>
+        </>
+        )
+        
+    },
+
     {
       question: "Do I need experience to participate?",
       answer:
@@ -139,7 +155,7 @@ export default function Faq() {
   };
 
   return (
-    <section className="py-12">
+    <section>
       <div className="mx-auto">
         <Header className="text-section"> FAQ </Header>
 

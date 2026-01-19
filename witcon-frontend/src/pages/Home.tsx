@@ -25,7 +25,7 @@ export default function Home() {
         <Carousel />
       </section>
 
-      <section id="testimonials" className="scroll-mt-24">
+      <section id="testimonials" className="scroll-mt-24 pb-2">
         <Testimonials />
       </section>
 
