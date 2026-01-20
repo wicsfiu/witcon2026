@@ -13,7 +13,7 @@ export default function Home() {
         <Hero />
       </section>
 
-      <section id="timer" className="scroll-mt-24 -mt-10">
+      <section id="timer" className="scroll-mt-24 -mt-15">
         <Timer />
       </section>
 
@@ -25,7 +25,7 @@ export default function Home() {
         <Carousel />
       </section>
 
-      <section id="testimonials" className="scroll-mt-24 py-10 -mt-4">
+      <section id="testimonials" className="scroll-mt-24 py-10 -mt-8">
         <Testimonials />
       </section>
 
@@ -33,7 +33,7 @@ export default function Home() {
         <Teams />
       </section>
 
-      <section id="faq" className="scroll-mt-24 -mt-10">
+      <section id="faq" className="scroll-mt-24 -mt-20">
         <Faq />
       </section>
     </div>

@@ -48,7 +48,7 @@ export default function CountdownTimer() {
   }, []);
 
   return (
-    <section className="grid place-content-center gap-y-7 mx-auto px-4">
+    <section className="grid place-content-center gap-y-7 mx-auto px-4 -mt-10">
       <div className="flex gap-x-2 py-4 justify-center items-start">
         {/* Days */}
         <div className="flex flex-col items-center">
