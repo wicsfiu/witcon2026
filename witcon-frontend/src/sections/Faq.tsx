@@ -103,7 +103,7 @@ export default function Faq() {
           <li>Note-taking Materials</li>
           <li>Resume / Business Cards</li>
           <li>Charged Electronic Devices</li>
-          <li>Comfortable Attire and Footwear</li>
+          <li>Comfortable, Business‑Casual Attire and Footwear</li>
           <li>A Positive Attitude!</li>
         </ul>
       ),
