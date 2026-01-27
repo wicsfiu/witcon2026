@@ -21,7 +21,7 @@ const testimonials: Testimonial[] = [
     },
 
     {
-        name: "Rebeca Serralta's",
+        name: "Rebeca Serralta",
         title: "Student at FIU",
         quote: "WiTCON is honestly a great place for building community. I’ve made a lot of friends, and fellow tech girlies at this event. The environment is chill and fun and there are plenty of engaging activities and workshops to attend. I love the vibe and aesthetic always eats!!!! You can see the dedication the organizers put in behind the scenes.",
     },
