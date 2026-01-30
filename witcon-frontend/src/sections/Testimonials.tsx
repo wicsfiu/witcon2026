@@ -2,8 +2,8 @@
 import Title from '../components/text/Title';
 import Header from '../components/text/Header';
 import Text from '../components/text/Text';
-import Wow from '../assets/Wow.png'
-import Megaphone from '../assets/Megaphone.png'
+import Wow from '../assets/Wow.webp'
+import Megaphone from '../assets/Megaphone.webp'
 
 
 interface Testimonial {
@@ -31,7 +31,7 @@ const testimonials: Testimonial[] = [
     },
 
     {
-        name: "Keren Rivera",
+        name: "Kerene Rivera",
         title: "FIU Student, Attendee",
         quote: "I’ve been going for two years and I love the energy this event brings. The participants are kind, the opportunities are abundant, and the workshops are incredibly valuable!",
     }

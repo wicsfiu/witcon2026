@@ -3,7 +3,7 @@ import Header from "../components/text/Header";
 import Subtitle from "../components/text/Subtitle";
 import Text from "../components/text/Text";
 import RegistrationModal from "../components/RegistrationModal";
-import hero from "../assets/hero.png";
+import hero from "../assets/hero.webp";
 import Arrow from "../assets/Arrow.png"
 import Bam from "../assets/Bam.png"
 
@@ -39,7 +39,7 @@ export default function Hero() {
         <div className="comic-image comic-image-pop">
           <img
             className="w-full h-auto object-cover max-h-96 mx-auto "
-            src="https://i.postimg.cc/k52DMGsm/Chat-GPT-Image-Jan-19-2026-07-12-59-PM.jpg"
+            src={hero}
             alt="WiTCON 2025 volunteer crew"
           />
 

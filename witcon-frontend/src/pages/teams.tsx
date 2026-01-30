@@ -109,7 +109,6 @@ export default function Teams() {
                         display: grid;
                         padding: 5px;
                         gap: 10px;
-                        justify-items: stretch;
                         grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
                     }
 
