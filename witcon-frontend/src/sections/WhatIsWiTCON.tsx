@@ -1,7 +1,7 @@
 import Header from "../components/text/Header";
 import Text from "../components/text/Text";
 import witcon_group from "../assets/witcon_group.webp";
-import Cute from "../assets/Cute.png"
+import Cute from "../stickers/Cute.png"
 
 
 export default function WhatIsWiTCON() {
