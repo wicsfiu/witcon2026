@@ -4,8 +4,8 @@ import Subtitle from "../components/text/Subtitle";
 import Text from "../components/text/Text";
 import RegistrationModal from "../components/RegistrationModal";
 import hero from "../assets/hero.webp";
-import Arrow from "../assets/Arrow.png"
-import Bam from "../assets/Bam.png"
+import Arrow from "../stickers/Arrow.png"
+import Bam from "../stickers/Bam.png"
 
 export default function Hero() {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -82,7 +82,7 @@ export default function Hero() {
             Women in Computer Science at Florida International University
           </Text>
 
-          <div className="flex flex-row gap-x-4 mt-5 items-center flex-wrap justify-center md:justify-start lg:justify-start">
+          <div className="flex flex-row gap-x-4 mt-5 items-center flex-wrap justify-center md:justify-center lg:justify-start">
             {/* Register button opens modal */}
             <button
               className="inline-block bg-secondary-yellow hover:bg-tertiary-yellow active:bg-primary-yellow text-primary-pink py-2 px-4 max-w-30 text-center text-md lg:text-lg comic-image"

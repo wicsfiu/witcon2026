@@ -2,8 +2,8 @@
 import Title from '../components/text/Title';
 import Header from '../components/text/Header';
 import Text from '../components/text/Text';
-import Wow from '../assets/Wow.webp'
-import Megaphone from '../assets/Megaphone.webp'
+import Wow from '../stickers/Wow.webp'
+import Megaphone from '../stickers/Megaphone.webp'
 
 
 interface Testimonial {

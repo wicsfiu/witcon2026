@@ -135,12 +135,12 @@ export default function Navbar() {
                 stroke="currentColor"
                 viewBox="0 0 24 24"
               >
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                <path strokeWidth={2} d="M19 9l-7 7-7-7" />
               </svg>
             </button>
 
             {isDropdownOpen && (
-              <div className="absolute top-full right-0 mt-2 bg-white border border-primary-pink rounded-md shadow-lg min-w-[150px] z-50">
+              <div className="absolute top-full right-0 mt-2 bg-white border border-primary-pink shadow-lg min-w-[150px] z-50">
                 
                 <a  href="https://luma.com/krgt285e"
                   target="_blank"
