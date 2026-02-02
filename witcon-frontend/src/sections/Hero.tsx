@@ -78,8 +78,8 @@ export default function Hero() {
           </div>
 
           <Text className="text-base lg:text-base">
-            Florida's largest student-led women in tech conference. Hosted by
-            Women in Computer Science at Florida International University
+            The 2nd Largest Student‑Led Women in Tech Conference in the United States. 
+            Hosted by Women in Computer Science at Florida International University
           </Text>
 
           <div className="flex flex-row gap-x-4 mt-5 items-center flex-wrap justify-center md:justify-center lg:justify-start">
