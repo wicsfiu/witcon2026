@@ -224,7 +224,7 @@ export default function Teams() {
             .comic {
               display: grid;
               padding: 5px;
-              gap: 10px;
+              gap: 15px;
               justify-items: stretch;
               /* Desktop / default: as many 200px panels per row as fit */
               grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
@@ -261,8 +261,12 @@ export default function Teams() {
               height: 200px;
               overflow: hidden;
               position: relative;
+              transition: transform(1.1) 0.3s ease-in-out;
             }
             
+            .panel:hover {
+              transform: scale(1.05);
+            }
               
             .panel-image {
               flex: 1;
@@ -303,7 +307,9 @@ export default function Teams() {
               padding: 3px 10px;
               border: solid 2px var(--color-primary-pink);
               font-size: 0.75em;
-              transform: skew(-15deg);
+              color: var(--color-primary-brown);
+              font-weight: bold;
+              font-family: 'Actor', sans-serif;
             }
   
             .panel-position {
@@ -313,8 +319,9 @@ export default function Teams() {
               background-color: #fff;
               padding: 3px 10px;
               border: solid 2px var(--color-primary-pink);
-              font-size: 0.75em;
-              transform: skew(-15deg);
+              font-size: 0.9em;
+              color: var(--color-primary-brown);
+              font-family: 'Actor', sans-serif;
             }
           `}
         </style>

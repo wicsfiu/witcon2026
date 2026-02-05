@@ -111,7 +111,7 @@ export default function Navbar() {
             onClick={() => scrollToSection("about")}
             className="hover:text-secondary-mint bg-transparent border-none cursor-pointer"
           >
-            WiTCON
+            About
           </button>
           <button
             onClick={() => scrollToSection("faq")}
@@ -140,7 +140,7 @@ export default function Navbar() {
             </button>
 
             {isDropdownOpen && (
-              <div className="absolute top-full right-0 mt-2 bg-white border border-primary-pink shadow-lg min-w-[150px] z-50">
+              <div className="absolute top-full right-0 mt-2 bg-white border border-primary-pink border-2 shadow-lg min-w-[150px] z-50">
                 
                 <a  href="https://luma.com/krgt285e"
                   target="_blank"

@@ -142,6 +142,25 @@ export default function Faq() {
         </>
       ),
     },
+    {
+      question: "How can I get ADA accommodations?",
+      answer:(
+        <>
+          Should you need an ADA accommodation to participate in a University event, program, or activity or need to request materials in an accessible format, 
+          please contact FIU’s Office of Civil Rights Compliance and Accessibility (CRCA) at {" "}
+          <a href = "tel:3053482785" className="text-primary-pink underline hover:text-pink-300">
+            305-348-2785
+          </a>{" "}
+          or via email at {" "}
+          <a href="mailto: accommodations@fiu.edu." className="text-primary-pink underline hover:text-pink-300"> 
+            accommodations@fiu.edu.
+          </a>
+          {" "}
+          All requests for ADA accommodation or accessible materials for this event must be submitted to CRCA at least seven (7) business days prior to the event or at the earliest 
+          possible opportunity.
+        </>
+      )
+    }
   ];
 
   const [openIndexes, setOpenIndexes] = useState<number[]>([]);
