@@ -188,12 +188,12 @@ const WiCS: Team[] = [
   //   link: "",
   // },
 
-  // {
-  //   name: "Maria (Belen) Silva",
-  //   position: "Creative Chair",
-  //   image:"/eboard/mabel.png",
-  //   link: "https://www.linkedin.com/in/maria-silva-929a78234/",
-  // },
+  {
+    name: "Maria (Belen) Silva",
+    position: "Creative Chair",
+    image:"/eboard/mabel.png",
+    link: "https://www.linkedin.com/in/maria-silva-929a78234/",
+  },
 
   {
     name: "Barbara Semidey",
