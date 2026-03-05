@@ -140,7 +140,7 @@ export default function Navbar() {
             </button>
 
             {isDropdownOpen && (
-              <div className="absolute top-full right-0 mt-2 bg-white border border-primary-pink border-2 shadow-lg min-w-[150px] z-50">
+              <div className="absolute top-full right-0 mt-2 bg-white border border-primary-pink border-2 shadow-lg min-w-[170px] z-50">
                 
                 <a  href="https://luma.com/krgt285e"
                   target="_blank"
@@ -158,6 +158,14 @@ export default function Navbar() {
                   onClick={() => setIsDropdownOpen(false)}
                 >
                   Tech Showcase
+                </a>
+                <a  href="https://airtable.com/appkju2gzzjQtCRbp/pagd8jwqeesxL7GEI/form"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="block px-4 py-2 text-primary-pink hover:bg-secondary-mint hover:text-primary-pink transition-colors"
+                  onClick={() => setIsDropdownOpen(false)}
+                >
+                  Volunteer
                 </a>
               </div>
             )}
