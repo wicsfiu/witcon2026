@@ -181,15 +181,15 @@ const WiCS: Team[] = [
     link: "https://www.linkedin.com/in/mia-mader-1a6a13278/",
   },
 
-  // {
-  //   name: "Bellany Abello",
-  //   position: "Creative Chair",
-  //   image:"/eboard/bellany.png",
-  //   link: "",
-  // },
+  {
+    name: "Bellany Abello",
+    position: "Creative Chair",
+    image:"/eboard/bellany.png",
+    link: "",
+  },
 
   {
-    name: "Maria (Belen) Silva",
+    name: "Mabel Silva",
     position: "Creative Chair",
     image:"/eboard/mabel.png",
     link: "https://www.linkedin.com/in/maria-silva-929a78234/",
