@@ -137,12 +137,12 @@ const WiCS: Team[] = [
     link: "https://www.linkedin.com/in/khanhtruong2610/",
   },
   
-  // {
-  //   name: "Minh Uyen (Abbi) Nguyen",
-  //   position: "Operations Chair",
-  //   image:"/eboard/abbi.png",
-  //   link: "",
-  // },
+  {
+    name: "Abbi Nguyen",
+    position: "Operations Chair",
+    image:"/eboard/abbi.png",
+    link: "",
+  },
 
   {
     name: "Mahi Patel",
