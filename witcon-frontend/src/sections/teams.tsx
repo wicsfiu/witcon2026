@@ -210,12 +210,12 @@ const WiCS: Team[] = [
     link: "https://www.linkedin.com/in/aisha-nish-aisha/",
   },
 
-  // {
-  //   name: "Tasnimah Arahim",
-  //   position: "Outreach Chair",
-  //   image:"/eboard/tasnimah.png",
-  //   link: "https://www.linkedin.com/in/tasnimaharahim/",
-  // },
+  {
+    name: "Tasnimah Arahim",
+    position: "Outreach Chair",
+    image:"/eboard/tasnimah.png",
+    link: "https://www.linkedin.com/in/tasnimaharahim/",
+  },
 
   {
     name: "Emily Salgueiros",
