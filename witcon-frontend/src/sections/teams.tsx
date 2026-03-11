@@ -217,7 +217,7 @@ const WiCS: Team[] = [
     link: "https://www.linkedin.com/in/tasnimaharahim/",
   },
 
-  {
+  {cd
     name: "Emily Salgueiros",
     position: "Alumni Advisor",
     image:"/eboard/emily.png",
