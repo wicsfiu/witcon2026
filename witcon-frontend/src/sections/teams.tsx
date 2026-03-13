@@ -141,7 +141,7 @@ const WiCS: Team[] = [
     name: "Abbi Nguyen",
     position: "Operations Chair",
     image:"/eboard/abbi.png",
-    link: "",
+    link: "https://www.linkedin.com/in/uyen-nguyen-357005335/",
   },
 
   {
