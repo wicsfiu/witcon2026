@@ -185,7 +185,7 @@ const WiCS: Team[] = [
     name: "Bellany Abello",
     position: "Creative Chair",
     image:"/eboard/bellany.png",
-    link: "",
+    link: "https://www.linkedin.com/in/bellany-abello-0302b3282/",
   },
 
   {
