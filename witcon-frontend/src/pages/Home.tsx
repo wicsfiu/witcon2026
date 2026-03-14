@@ -5,6 +5,7 @@ import Testimonials from "../sections/Testimonials";
 import Teams from "../sections/teams";
 import Carousel from "../components/Carousel";
 import Faq from "../sections/Faq";
+import Sponsors from "../sections/Sponsors";
 
 export default function Home() {
   return (
@@ -23,6 +24,10 @@ export default function Home() {
 
       <section id="carousel" className="scroll-mt-24 -my-7">
         <Carousel />
+      </section>
+
+      <section id="sponsors" className="scroll-mt-24 -mt-10 -mb-15">
+        <Sponsors />
       </section>
 
       <section id="testimonials" className="scroll-mt-24 py-10 -mt-8">
