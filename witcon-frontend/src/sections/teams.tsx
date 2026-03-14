@@ -15,116 +15,119 @@ interface Team {
 
 const WiCS: Team[] = [
 
-  {
+ {
     name: "Gabriela Lopez",
     position: "WiTCON Director",
     image:"/eboard/gabriela.png",
     panelClassName: "panel-gabriela",
     link: "https://www.linkedin.com/in/gabriela-lopez-fiu/",
+ },
+  {
+    name: "Yana Kostenko",
+    position: "WiTCON Chair",
+    image:"/eboard/yana.png",
+    link: "https://www.linkedin.com/in/yana-kostenko/",
     
-
-},
-{
-  name: "Yana Kostenko",
-  position: "WiTCON Chair",
-  image:"/eboard/yana.png",
-  link: "https://www.linkedin.com/in/yana-kostenko/",
-  
-},
-
-    {
-        name: "Margarita Guitierrez",
-        position: "President",
-        image:"/eboard/marg.png",
-        link: "https://www.linkedin.com/in/margarita-rosa/",
-    },
-
-    {
-        name: "Amber Garcia",
-        position: "Vice President",
-        image:"/eboard/amber.png",
-        link: "https://www.linkedin.com/in/amberg12/",
-    },
-
-    {
-        name: "Agoritsa Polyzou",
-        position: "Faculty Advisor",
-        image:"/eboard/agoritsa.png",
-        link: "https://www.linkedin.com/in/agoritsa-polyzou/",
-    },
-    
-
-    {
-        name: "Devin Diaz",
-        position: "Industry Relations Director",
-        image: "/eboard/devin.png",
-        link: "https://www.linkedin.com/in/devinldiaz/",
-    },
-
-    {
-        name: "Rhode Sanchez",
-        position: "Industry Relations Lead",
-        image:"/eboard/rhode.png",
-        link: "https://www.linkedin.com/in/rhode-sanchez/",
-    },
-
-
-    {
-        name: "Narel Rodriguez",
-        position: "Industry Relations Chair",
-        image:"/eboard/narel.png",
-        link: "https://www.linkedin.com/in/narel-rodriguez/",
-    },
-
-    {
-        name: "Victoria Hernandez",
-        position: "Industry Relations Chair",
-        image:"/eboard/victoria.png",
-        panelClassName: "panel-fix",
-        link: "https://www.linkedin.com/in/victoriadez/",
-    },
-    {
-      name: "Aaiena Sattar",
-      position: "Treasurer",
-      image:"/eboard/aaiena.png",
-      link: "",
   },
-    {
-        name: "Allison Romero",
-        position: "Marketing & Comms Director",
-        image:"/eboard/allison.png",
-        link: "https://www.linkedin.com/in/allisonrome5002/",
-    },
+  {
+    name: "Margarita Guitierrez",
+    position: "President",
+    image:"/eboard/marg.png",
+    link: "https://www.linkedin.com/in/margarita-rosa/",
+  },
+
+  {
+    name: "Amber Garcia",
+    position: "Vice President",
+    image:"/eboard/amber.png",
+    link: "https://www.linkedin.com/in/amberg12/",
+  },
+
+  {
+    name: "Agoritsa Polyzou",
+    position: "Faculty Advisor",
+    image:"/eboard/agoritsa.png",
+    link: "https://www.linkedin.com/in/agoritsa-polyzou/",
+  },
+    
+  {
+    name: "Devin Diaz",
+    position: "Industry Relations Director",
+    image: "/eboard/devin.png",
+    link: "https://www.linkedin.com/in/devinldiaz/",
+  },
+
+  {
+    name: "Rhode Sanchez",
+    position: "Industry Relations Lead",
+    image:"/eboard/rhode.png",
+    link: "https://www.linkedin.com/in/rhode-sanchez/",
+  },
+
+  {
+    name: "Narel Rodriguez",
+    position: "Industry Relations Chair",
+    image:"/eboard/narel.png",
+    link: "https://www.linkedin.com/in/narel-rodriguez/",
+  },
+
+  {
+    name: "Victoria Hernandez",
+    position: "Industry Relations Chair",
+    image:"/eboard/victoria.png",
+    panelClassName: "panel-fix",
+    link: "https://www.linkedin.com/in/victoriadez/",
+  },
+
+  {
+    name: "Aaiena Sattar",
+    position: "Treasurer",
+    image:"/eboard/aaiena.png",
+    link: "",
+  },
+
+  {
+    name: "Allison Romero",
+    position: "Marketing & Comms Director",
+    image:"/eboard/allison.png",
+    link: "https://www.linkedin.com/in/allisonrome5002/",
+  },
 
     
+  {
+    name: "Natalia Boodhram",
+    position: "Marketing Lead",
+    image:"/eboard/natalia.png",
+    panelClassName: "panel-natalia",
+    link: "https://www.linkedin.com/in/nataliaboodhram/",
+  },
 
     {
-        name: "Natalia Boodhram",
-        position: "Marketing Lead",
-        image:"/eboard/natalia.png",
-        panelClassName: "panel-natalia",
-        link: "https://www.linkedin.com/in/nataliaboodhram/",
-    },
+    name: "Naw Lin Lun Nway",
+    position: "Marketing Chair",
+    image:"/eboard/nawlin.png",
+    link: "https://www.linkedin.com/in/nawlin/",
+  },
 
-    {
-        name: "Manar Alhamad",
-        position: "Comms Lead",
-        image:"/eboard/manar.png",
-        link: "http://linkedin.com/in/manar-alhamad",
-    },
+  {
+    name: "Manar Alhamad",
+    position: "Comms Lead",
+    image:"/eboard/manar.png",
+    link: "http://linkedin.com/in/manar-alhamad",
+  },
 
-    {
-        name: "Laiba Mahmud",
-        position: "Digital Media",
-        image:"/eboard/laiba.png",
-        link: "https://www.linkedin.com/in/laibam/",
-    },
+  {
+    name: "Laiba Mahmud",
+    position: "Digital Media",
+    image:"/eboard/laiba.png",
+    link: "https://www.linkedin.com/in/laibam/",
+  },
 
-    {
-      name: "Angela Banov",
-      position: "Operations Director",
-      image:"/eboard/angela.png",
-      link: "https://www.linkedin.com/in/angela-banov-168953232/",
+  {
+    name: "Angela Banov",
+    position: "Operations Director",
+    image:"/eboard/angela.png",
+    link: "https://www.linkedin.com/in/angela-banov-168953232/",
   },
 
   {
@@ -132,14 +135,20 @@ const WiCS: Team[] = [
     position: "Operations Chair",
     image:"/eboard/khanh.png",
     link: "https://www.linkedin.com/in/khanhtruong2610/",
-},
+  },
+  
+  {
+    name: "Abbi Nguyen",
+    position: "Operations Chair",
+    image:"/eboard/abbi.png",
+    link: "https://www.linkedin.com/in/uyen-nguyen-357005335/",
+  },
 
-
-    {
-      name: "Mahi Patel",
-      position: "RSO",
-      image:"/eboard/mahi.png",
-      link: "https://www.linkedin.com/in/mahipatel18/",
+  {
+    name: "Mahi Patel",
+    position: "RSO",
+    image:"/eboard/mahi.png",
+    link: "https://www.linkedin.com/in/mahipatel18/",
   },
 
   {
@@ -147,68 +156,88 @@ const WiCS: Team[] = [
     position: "Web Dev",
     image:"/eboard/shatoya.png",
     link: "https://www.linkedin.com/in/shatoya-gardner/",
-},
+ },
 
-{
-  name: "Alessandra Uribe",
-  position: "Web Dev",
-  image:"/eboard/alessandra.png",
-  panelClassName: "panel-alessandra",
-  link: "https://www.linkedin.com/in/aleuribeencina05/",
-},
+  {
+    name: "Alessandra Uribe",
+    position: "Web Dev",
+    image:"/eboard/alessandra.png",
+    panelClassName: "panel-alessandra",
+    link: "https://www.linkedin.com/in/aleuribeencina05/",
+  },
 
-{
-  name: "Pooja Lad",
-  position: "Creative Director",
-  image:"/eboard/pooja.png",
-  panelClassName: "panel-fix",
-  link: "https://www.linkedin.com/in/pooja-lad/",
-  
-},
+  {
+    name: "Pooja Lad",
+    position: "Creative Director",
+    image:"/eboard/pooja.png",
+    panelClassName: "panel-fix",
+    link: "https://www.linkedin.com/in/pooja-lad/",
+  },
 
-{
-  name: "Mia Mader",
-  position: "Creative Lead",
-  image:"/eboard/mia.png",
-  link: "https://www.linkedin.com/in/mia-mader-1a6a13278/",
-},
+  {
+    name: "Mia Mader",
+    position: "Creative Lead",
+    image:"/eboard/mia.png",
+    link: "https://www.linkedin.com/in/mia-mader-1a6a13278/",
+  },
 
-{
-  name: "Barbara Semidey",
-  position: "Outreach Lead",
-  image:"/eboard/barb.png",
-  panelClassName: "panel-fix",
-  link: "https://www.linkedin.com/in/barbarasemidey/",
-},
+  {
+    name: "Bellany Abello",
+    position: "Creative Chair",
+    image:"/eboard/bellany.png",
+    link: "https://www.linkedin.com/in/bellany-abello-0302b3282/",
+  },
 
-{
-  name: "Aisha Nishat",
-  position: "Outreach Lead",
-  image:"/eboard/aisha.png",
-  link: "https://www.linkedin.com/in/aisha-nish-aisha/",
-},
+  {
+    name: "Mabel Silva",
+    position: "Creative Chair",
+    image:"/eboard/mabel.png",
+    link: "https://www.linkedin.com/in/maria-silva-929a78234/",
+  },
 
-{
-  name: "Emily Salgueiros",
-  position: "Alumni Advisor",
-  image:"/eboard/emily.png",
-  link: "https://www.linkedin.com/in/emily-salgueiros"
-},
+  {
+    name: "Barbara Semidey",
+    position: "Outreach Lead",
+    image:"/eboard/barb.png",
+    panelClassName: "panel-fix",
+    link: "https://www.linkedin.com/in/barbarasemidey/",
+  },
 
-{
-  name: "Fer Pacheco",
-  position: "Alumni Advisor",
-  image:"/eboard/fer.png",
-  link: "https://www.linkedin.com/in/pmfer/",
-},
+  {
+    name: "Aisha Nishat",
+    position: "Outreach Lead",
+    image:"/eboard/aisha.png",
+    link: "https://www.linkedin.com/in/aisha-nish-aisha/",
+  },
 
-{
-  name: "Alessandra Ortega",
-  position: "Alumni Relations",
-  image:"/eboard/ale.png",
-  panelClassName: "panel-fix",
-  link: "https://www.linkedin.com/in/alessandra-ortega-arrieta/",
-},
+  {
+    name: "Tasnimah Arahim",
+    position: "Outreach Chair",
+    image:"/eboard/tasnimah.png",
+    link: "https://www.linkedin.com/in/tasnimaharahim/",
+  },
+
+  {
+    name: "Emily Salgueiros",
+    position: "Alumni Advisor",
+    image:"/eboard/emily.png",
+    link: "https://www.linkedin.com/in/emily-salgueiros"
+  },
+
+  {
+    name: "Fer Pacheco",
+    position: "Alumni Advisor",
+    image:"/eboard/fer.png",
+    link: "https://www.linkedin.com/in/pmfer/",
+  },
+
+  {
+    name: "Alessandra Ortega",
+    position: "Alumni Relations",
+    image:"/eboard/ale.png",
+    panelClassName: "panel-fix",
+    link: "https://www.linkedin.com/in/alessandra-ortega-arrieta/",
+  },
 
 ]
 
