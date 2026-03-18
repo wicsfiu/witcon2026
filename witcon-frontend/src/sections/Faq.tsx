@@ -110,8 +110,20 @@ export default function Faq() {
     },
     {
       question: "Is parking free for attendees?",
-      answer:
-        'Yes, parking is completely free for all WiTCON 2026 attendees. You just have to <a href="https://www.offstreet.io/events/SK5ICFUX" target="_blank" rel="noopener noreferrer">Register Here!</a>.',
+      answer: (
+        <>
+          Yes, parking is completely free for all WiTCON 2026 attendees. You just have to register for your free parking pass here:{" "}
+          <a
+            href="https://www.offstreet.io/events/SK5ICFUX"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-primary-pink underline hover:text-pink-300"
+          >
+            Register Here!
+          </a>
+          .
+        </>
+      ),
     },
     {
       question: "Do you provide travel or accommodation reimbursement for attendees?",
