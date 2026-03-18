@@ -109,7 +109,7 @@ export default function Faq() {
       ),
     },
     {
-      question: "Do you provide travel or accommodation for attendees?",
+      question: "Do you provide travel or accommodation reimbursement for attendees?",
       answer:
         "No, WiTCON 2026 does not provide or cover travel or accommodation for attendees. Participants are responsible for arranging their own transportation and lodging.",
     },
