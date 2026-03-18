@@ -121,7 +121,6 @@ export default function Faq() {
           >
             Register Here!
           </a>
-          .
         </>
       ),
     },
