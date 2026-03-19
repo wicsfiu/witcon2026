@@ -68,7 +68,7 @@ export default function Faq() {
           Disclaimer: Parking registrations after the event will not be accepted. WiCS FIU is not responsible for parking reimbursements outside the allowed garages.
         </>
       ),
-    }
+    },
     {
       question: "Where can I update my resume?",
       answer:(
@@ -83,7 +83,6 @@ export default function Faq() {
         )
         
     },
-
     {
       question: "Do I need experience to participate?",
       answer:
