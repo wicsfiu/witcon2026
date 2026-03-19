@@ -159,14 +159,6 @@ export default function Navbar() {
                 >
                   Tech Showcase
                 </a>
-                <a  href="https://airtable.com/appkju2gzzjQtCRbp/pagd8jwqeesxL7GEI/form"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="block px-4 py-2 text-primary-pink hover:bg-secondary-mint hover:text-primary-pink transition-colors"
-                  onClick={() => setIsDropdownOpen(false)}
-                >
-                  Volunteer
-                </a>
               </div>
             )}
           </div>
