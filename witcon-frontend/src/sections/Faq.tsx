@@ -27,17 +27,18 @@ export default function Faq() {
       question: "Where do I park?",
       answer: (
         <>
-          Not an FIU Student? Email us to register for parking at{" "}
+          Parking is completely free for all WiTCON 2026 attendees. You just have to register for your free parking pass here:{" "}
           <a
-            href="mailto:wics@fiu.edu"
+            href="https://www.offstreet.io/events/SK5ICFUX"
             target="_blank"
             rel="noopener noreferrer"
             className="text-primary-pink underline hover:text-pink-300"
           >
-            wics@fiu.edu
+            Register Here!
           </a>
           <br />
           <br />
+    
           <a
             href="https://maps.app.goo.gl/PdyrwhGaaGSaEqrX8?g_st=ic"
             target="_blank"
@@ -50,6 +51,7 @@ export default function Faq() {
           10880 SW 16 ST, Miami, FL 33174
           <br />
           <br />
+    
           <a
             href="https://maps.app.goo.gl/ZvGJMHQcLbBnGVQL9?g_st=ic"
             target="_blank"
@@ -62,14 +64,11 @@ export default function Faq() {
           10720 SW 16 ST, Miami, FL 33165
           <br />
           <br />
-          Disclaimer: you must register for free parking before arriving at FIU.
-          Parking registrations after the event will not be accepted. WiCS FIU
-          is not responsible for parking reimbursements outside the allowed
-          garages.
+    
+          Disclaimer: Parking registrations after the event will not be accepted. WiCS FIU is not responsible for parking reimbursements outside the allowed garages.
         </>
       ),
-    },
-
+    }
     {
       question: "Where can I update my resume?",
       answer:(
@@ -106,22 +105,6 @@ export default function Faq() {
           <li>Comfortable, Business‑Casual Attire and Footwear</li>
           <li>A Positive Attitude!</li>
         </ul>
-      ),
-    },
-    {
-      question: "Is parking free for attendees?",
-      answer: (
-        <>
-          Yes, parking is completely free for all WiTCON 2026 attendees. You just have to register for your free parking pass here:{" "}
-          <a
-            href="https://www.offstreet.io/events/SK5ICFUX"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="text-primary-pink underline hover:text-pink-300"
-          >
-            Register Here!
-          </a>
-        </>
       ),
     },
     {
