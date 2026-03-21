@@ -144,7 +144,6 @@ export default function Testimonials() {
                     .speechbubble:last-of-type {
                         margin-bottom: -40px;
                     }
-                    
                 
                 `}
             </style>
