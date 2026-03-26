@@ -3,7 +3,23 @@ import Header from "../components/text/Header";
 import Text from "../components/text/Text";
 
 export default function Faq() {
-  const faqs = [
+  const faqs = [ 
+   {
+      question: "Where can I see the schedule for the day?",
+      answer: (
+        <>
+          Everything you need to know about WiTCON day off can be found on our attendee guide!{" "}
+          <a
+            href="https://www.notion.so/WiTCON-2026-Attendee-Guide-30bafbfc8e95808cb09ad3fa61e57854?source=copy_link"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-primary-pink underline hover:text-pink-300"
+          >
+            WiTCON 2026 Attendee Guide
+          </a>
+        </>
+      ),
+    },
     {
       question: "Who can attend?",
       answer:
