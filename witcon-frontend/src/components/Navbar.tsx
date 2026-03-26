@@ -150,15 +150,7 @@ export default function Navbar() {
                 >
                   WiTCON
                 </a>
-                
-                <a  href="https://airtable.com/appkju2gzzjQtCRbp/pagoyadOZvoKnq8qi/form"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="block px-4 py-2 text-primary-pink hover:bg-secondary-mint hover:text-primary-pink transition-colors"
-                  onClick={() => setIsDropdownOpen(false)}
-                >
-                  Tech Showcase
-                </a>
+              
               </div>
             )}
           </div>
