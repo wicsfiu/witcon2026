@@ -121,7 +121,7 @@ export default function Navbar() {
           </button>
 
           {/* Register Dropdown */}
-          <div className="relative" ref={dropdownRef}>
+          {/* <div className="relative" ref={dropdownRef}>
             <button
               onClick={() =>{
                 console.log('Dropdown toggle clicked');
@@ -153,7 +153,7 @@ export default function Navbar() {
               
               </div>
             )}
-          </div>
+          </div> */}
         </div>
 
         {/* Right: Empty div to balance flex layout */}
