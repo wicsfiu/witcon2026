@@ -43,7 +43,7 @@ export default function Faq() {
       question: "Where do I park?",
       answer: (
         <>
-          Parking is completely free for all WiTCON 2026 attendees. You just have to register for your free parking pass here:{" "}
+          {/* Parking is completely free for all WiTCON 2026 attendees. You just have to register for your free parking pass here:{" "}
           <a
             href="https://www.offstreet.io/events/SK5ICFUX"
             target="_blank"
@@ -53,7 +53,7 @@ export default function Faq() {
             Register Here!
           </a>
           <br />
-          <br />
+          <br /> */}
     
           <a
             href="https://maps.app.goo.gl/PdyrwhGaaGSaEqrX8?g_st=ic"
