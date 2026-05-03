@@ -200,7 +200,7 @@ export default function Sponsors() {
           `}
         </style>
 
-        <Header className="col-span-full text-section">Sponsors</Header>
+        <Header className="col-span-full text-section"> WiTCON 2026 Sponsors</Header>
   
         <article className="sponsor-container">
           {Spon.map((member, index) => (

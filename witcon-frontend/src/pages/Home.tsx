@@ -15,8 +15,11 @@ export default function Home() {
         <Hero />
       </section>
 
-      <section id="timer" className="scroll-mt-24 -mt-15">
+      {/* <section id="timer" className="scroll-mt-24 -mt-15">
         <Timer />
+      </section> */}
+      <section className="text-7xl text-center text-primary-pink font-bukhari">
+        See you next year!
       </section>
 
       <section id="about" className="scroll-mt-24 -mt-6 pb-2">
